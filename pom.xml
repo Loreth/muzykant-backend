@@ -16,10 +16,13 @@
   <description>Engineering Thesis - musician classified ads app</description>
 
   <properties>
+    <db.user>root</db.user>
+    <db.password>P@ssw0rd</db.password>
+
     <java.version>14</java.version>
     <specification-arg-resolver.version>2.4.1</specification-arg-resolver.version>
     <mapstruct.version>1.4.0.Beta2</mapstruct.version>
-    <flyway-core.version>6.5.0</flyway-core.version>
+    <flyway.version>6.5.0</flyway.version>
     <validation-api.version>2.0.1.Final</validation-api.version>
   </properties>
 
@@ -27,10 +30,6 @@
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-data-jpa</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-security</artifactId>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -71,11 +70,6 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>org.springframework.security</groupId>
-      <artifactId>spring-security-test</artifactId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
       <groupId>net.kaczmarzyk</groupId>
       <artifactId>specification-arg-resolver</artifactId>
       <version>${specification-arg-resolver.version}</version>
@@ -88,7 +82,7 @@
     <dependency>
       <groupId>org.flywaydb</groupId>
       <artifactId>flyway-core</artifactId>
-      <version>${flyway-core.version}</version>
+      <version>${flyway.version}</version>
     </dependency>
     <dependency>
       <groupId>javax.validation</groupId>
@@ -102,6 +96,16 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.flywaydb</groupId>
+        <artifactId>flyway-maven-plugin</artifactId>
+        <version>${flyway.version}</version>
+        <configuration>
+          <url>jdbc:mysql://localhost:3306/muzykant?serverTimezone=UTC</url>
+          <user>${db.user}</user>
+          <password>${db.password}</password>
+        </configuration>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
