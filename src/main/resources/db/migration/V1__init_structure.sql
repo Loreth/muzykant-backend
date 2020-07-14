@@ -4,7 +4,7 @@ CREATE TABLE Credentials
     id       int          NOT NULL AUTO_INCREMENT,
     email    varchar(255) NOT NULL UNIQUE,
     username varchar(30)  NOT NULL UNIQUE,
-    password char(60)     NOT NULL,
+    password varchar(60)  NOT NULL,
     PRIMARY KEY (id)
 );
 CREATE TABLE Voivodeship
@@ -32,8 +32,8 @@ CREATE TABLE Genre
 CREATE TABLE Vocal_range
 (
     id           int     NOT NULL AUTO_INCREMENT,
-    lowest_note  char(2) NOT NULL,
-    highest_note char(2) NOT NULL,
+    lowest_note  varchar(2) NOT NULL,
+    highest_note varchar(2) NOT NULL,
     PRIMARY KEY (id)
 );
 CREATE TABLE Vocal_technique

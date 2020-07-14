@@ -6,12 +6,14 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import lombok.Data;
 
 @Data
 @Entity
 @Table(name = "musician")
+@PrimaryKeyJoinColumn(name = "user_id")
 public class MusicianEntity extends UserEntity {
 
   @OneToOne
@@ -22,6 +24,6 @@ public class MusicianEntity extends UserEntity {
   @JoinColumn(name = "vocal_range_id")
   private VocalRangeEntity vocalRange;
 
-  @OneToMany(mappedBy = "musician",fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "musician", fetch = FetchType.LAZY)
   private Set<EquipmentEntity> equipment;
 }

@@ -41,18 +41,27 @@ public class UserEntity extends AbstractPersistable<Integer> {
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   private Set<AdEntity> ads;
 
-  @OneToMany(mappedBy = "user",fetch = FetchType.LAZY)
+  @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   private Set<ImageEntity> images;
 
   @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(name = "ad_preferred_genre")
+  @JoinTable(
+      name = "user_genre",
+      joinColumns = @JoinColumn(name = "user_id"),
+      inverseJoinColumns = @JoinColumn(name = "genre_id"))
   private Set<GenreEntity> genres;
 
   @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(name = "ad_preferred_instrument")
+  @JoinTable(
+      name = "user_instrument",
+      joinColumns = @JoinColumn(name = "user_id"),
+      inverseJoinColumns = @JoinColumn(name = "instrument_id"))
   private Set<InstrumentEntity> instruments;
 
   @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(name = "ad_preferred_vocal_technique")
+  @JoinTable(
+      name = "user_vocal_technique",
+      joinColumns = @JoinColumn(name = "user_id"),
+      inverseJoinColumns = @JoinColumn(name = "vocal_technique_id"))
   private Set<VocalTechniqueEntity> vocalTechniques;
 }

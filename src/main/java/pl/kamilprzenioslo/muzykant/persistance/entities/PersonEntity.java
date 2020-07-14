@@ -21,6 +21,6 @@ public class PersonEntity extends AbstractPersistable<Integer> {
   private String lastName;
 
   private String pseudo;
-  private String gender;
+  private Character gender;
   private LocalDate birthdate;
 }

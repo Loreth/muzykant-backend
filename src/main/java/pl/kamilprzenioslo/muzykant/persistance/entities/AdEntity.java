@@ -29,7 +29,7 @@ public class AdEntity extends AbstractPersistable<Integer> {
   private String description;
 
   @Column(name = "preferred_gender")
-  private String preferredGender;
+  private Character preferredGender;
 
   private boolean commercial;
 
@@ -38,14 +38,23 @@ public class AdEntity extends AbstractPersistable<Integer> {
   private UserEntity user;
 
   @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(name = "Ad_preferred_genre")
+  @JoinTable(
+      name = "Ad_preferred_genre",
+      joinColumns = @JoinColumn(name = "ad_id"),
+      inverseJoinColumns = @JoinColumn(name = "genre_id"))
   private Set<GenreEntity> preferredGenres;
 
   @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(name = "Ad_preferred_instrument")
+  @JoinTable(
+      name = "Ad_preferred_instrument",
+      joinColumns = @JoinColumn(name = "ad_id"),
+      inverseJoinColumns = @JoinColumn(name = "instrument_id"))
   private Set<InstrumentEntity> preferredInstruments;
 
   @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(name = "Ad_preferred_vocal_technique")
+  @JoinTable(
+      name = "Ad_preferred_vocal_technique",
+      joinColumns = @JoinColumn(name = "ad_id"),
+      inverseJoinColumns = @JoinColumn(name = "vocal_technique_id"))
   private Set<VocalTechniqueEntity> preferredVocalTechniques;
 }
