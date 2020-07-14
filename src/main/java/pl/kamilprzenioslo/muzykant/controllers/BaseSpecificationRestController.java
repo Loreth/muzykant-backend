@@ -11,15 +11,16 @@ import pl.kamilprzenioslo.muzykant.dtos.IdentifiableDto;
 import pl.kamilprzenioslo.muzykant.service.SpecificationCrudService;
 
 @RestController
-public abstract class BaseSpecificationCrudController<
+public abstract class BaseSpecificationRestController<
         T extends IdentifiableDto<ID>,
         ID extends Serializable,
         E extends Persistable<ID>,
         S extends Specification<E>>
     extends BaseRestController<T, ID> {
+
   private final SpecificationCrudService<T, E, ID> service;
 
-  public BaseSpecificationCrudController(SpecificationCrudService<T, E, ID> service) {
+  public BaseSpecificationRestController(SpecificationCrudService<T, E, ID> service) {
     super(service);
     this.service = service;
   }

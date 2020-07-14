@@ -65,12 +65,12 @@ CREATE TABLE `User`
 );
 CREATE TABLE Ad
 (
-    id               int     NOT NULL AUTO_INCREMENT,
+    id               int  NOT NULL AUTO_INCREMENT,
     published_date   date,
     description      varchar(400),
     preferred_gender char(1),
-    commercial       tinyint NOT NULL,
-    user_id          int     NOT NULL,
+    commercial       bool NOT NULL,
+    user_id          int  NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT FK_Ad_User FOREIGN KEY (user_id) REFERENCES `User` (id)
 );

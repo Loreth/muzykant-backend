@@ -1,7 +1,6 @@
 package pl.kamilprzenioslo.muzykant.service;
 
 import java.io.Serializable;
-import java.util.Optional;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
@@ -30,18 +29,6 @@ public abstract class BaseCrudService<
   @Override
   public void deleteById(ID id) {
     repository.deleteById(id);
-  }
-
-  @Override
-  public Optional<T> updateById(T dto, ID id) {
-    Optional<E> entityOptional = repository.findById(id);
-
-    return entityOptional.map(
-        entity -> {
-          dto.setId(id);
-          repository.save(mapper.mapToEntity(dto));
-          return mapper.mapToDto(entity);
-        });
   }
 
   @Override
