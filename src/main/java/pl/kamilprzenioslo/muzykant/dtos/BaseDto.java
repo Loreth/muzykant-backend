@@ -8,7 +8,7 @@ import pl.kamilprzenioslo.muzykant.validation.OnCreate;
 
 @Data
 @JsonPropertyOrder({"id"})
-public abstract class BaseGeneratedIdDto<ID extends Serializable> implements IdentifiableDto<ID> {
+public abstract class BaseDto<ID extends Serializable> implements IdentifiableDto<ID> {
 
   @Null(groups = {OnCreate.class})
   private ID id;
