@@ -14,7 +14,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Data
 @NoArgsConstructor
@@ -26,11 +25,8 @@ public class AdEntity extends AbstractPersistable<Integer> {
   @Column(name = "published_date")
   private LocalDate publishedDate;
 
+  private String location;
   private String description;
-
-  @Column(name = "preferred_gender")
-  private Character preferredGender;
-
   private boolean commercial;
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -50,11 +46,4 @@ public class AdEntity extends AbstractPersistable<Integer> {
       joinColumns = @JoinColumn(name = "ad_id"),
       inverseJoinColumns = @JoinColumn(name = "instrument_id"))
   private Set<InstrumentEntity> preferredInstruments;
-
-  @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(
-      name = "Ad_preferred_vocal_technique",
-      joinColumns = @JoinColumn(name = "ad_id"),
-      inverseJoinColumns = @JoinColumn(name = "vocal_technique_id"))
-  private Set<VocalTechniqueEntity> preferredVocalTechniques;
 }

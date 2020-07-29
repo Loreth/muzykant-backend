@@ -7,7 +7,6 @@ import javax.persistence.InheritanceType;
 import javax.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.jpa.domain.AbstractPersistable;
 
 @Data
 @NoArgsConstructor

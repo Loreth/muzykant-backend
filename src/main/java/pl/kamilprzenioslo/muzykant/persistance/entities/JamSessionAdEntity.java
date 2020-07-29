@@ -9,7 +9,4 @@ import lombok.Data;
 @Entity
 @Table(name = "jam_session_ad")
 @PrimaryKeyJoinColumn(name = "ad_id")
-public class JamSessionAdEntity extends AdEntity {
-
-  private String location;
-}
+public class JamSessionAdEntity extends AdEntity {}

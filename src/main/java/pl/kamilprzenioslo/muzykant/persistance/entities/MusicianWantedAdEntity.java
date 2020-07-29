@@ -1,5 +1,6 @@
 package pl.kamilprzenioslo.muzykant.persistance.entities;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -14,13 +15,16 @@ import lombok.Data;
 @PrimaryKeyJoinColumn(name = "ad_id")
 public class MusicianWantedAdEntity extends AdEntity {
 
+  @Column(name = "preferred_gender")
+  private Character preferredGender;
+
   @Column(name = "min_age")
   private Byte minAge;
 
   @Column(name = "max_age")
   private Byte maxAge;
 
-  @ManyToOne
+  @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "vocal_range_id")
   private VocalRangeEntity vocalRange;
 }

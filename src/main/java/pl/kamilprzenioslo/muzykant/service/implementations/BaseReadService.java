@@ -1,4 +1,4 @@
-package pl.kamilprzenioslo.muzykant.service;
+package pl.kamilprzenioslo.muzykant.service.implementations;
 
 import java.io.Serializable;
 import java.util.List;
@@ -11,6 +11,7 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import pl.kamilprzenioslo.muzykant.dtos.IdentifiableDto;
+import pl.kamilprzenioslo.muzykant.service.ReadService;
 import pl.kamilprzenioslo.muzykant.service.mapper.BaseMapper;
 
 @Service

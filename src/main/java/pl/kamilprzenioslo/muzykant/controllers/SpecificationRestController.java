@@ -8,19 +8,21 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import pl.kamilprzenioslo.muzykant.dtos.IdentifiableDto;
-import pl.kamilprzenioslo.muzykant.service.SpecificationCrudService;
+import pl.kamilprzenioslo.muzykant.service.CrudService;
+import pl.kamilprzenioslo.muzykant.service.SpecificationService;
 
 @RestController
-public abstract class BaseSpecificationRestController<
+public abstract class SpecificationRestController<
         T extends IdentifiableDto<ID>,
-        ID extends Serializable,
         E extends Persistable<ID>,
-        S extends Specification<E>>
+        ID extends Serializable,
+        S extends Specification<E>,
+        U extends CrudService<T, ID> & SpecificationService<T, E, ID>>
     extends BaseRestController<T, ID> {
 
-  private final SpecificationCrudService<T, E, ID> service;
+  private final U service;
 
-  public BaseSpecificationRestController(SpecificationCrudService<T, E, ID> service) {
+  public SpecificationRestController(U service) {
     super(service);
     this.service = service;
   }

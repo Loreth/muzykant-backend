@@ -1,4 +1,4 @@
-#strong entities
+-- strong entities
 CREATE TABLE Credentials
 (
     id       int          NOT NULL AUTO_INCREMENT,
@@ -31,7 +31,7 @@ CREATE TABLE Genre
 );
 CREATE TABLE Vocal_range
 (
-    id           int     NOT NULL AUTO_INCREMENT,
+    id           int        NOT NULL AUTO_INCREMENT,
     lowest_note  varchar(2) NOT NULL,
     highest_note varchar(2) NOT NULL,
     PRIMARY KEY (id)
@@ -44,12 +44,12 @@ CREATE TABLE Vocal_technique
 );
 CREATE TABLE Instrument
 (
-    id          int         NOT NULL AUTO_INCREMENT,
-    name        varchar(40) NOT NULL UNIQUE,
-    player_name varchar(50) NOT NULL UNIQUE,
+    id   int         NOT NULL AUTO_INCREMENT,
+    name varchar(40) NOT NULL UNIQUE,
     PRIMARY KEY (id)
 );
-#weak entities
+
+-- weak entities
 CREATE TABLE `User`
 (
     id             int         NOT NULL AUTO_INCREMENT,
@@ -62,17 +62,6 @@ CREATE TABLE `User`
     PRIMARY KEY (id),
     CONSTRAINT FK_User_Voivodeship FOREIGN KEY (voivodeship_id) REFERENCES Voivodeship (id),
     CONSTRAINT FK_User_Credentials FOREIGN KEY (credentials_id) REFERENCES Credentials (id)
-);
-CREATE TABLE Ad
-(
-    id               int  NOT NULL AUTO_INCREMENT,
-    published_date   date,
-    description      varchar(400),
-    preferred_gender char(1),
-    commercial       bool NOT NULL,
-    user_id          int  NOT NULL,
-    PRIMARY KEY (id),
-    CONSTRAINT FK_Ad_User FOREIGN KEY (user_id) REFERENCES `User` (id)
 );
 CREATE TABLE Band
 (
@@ -100,6 +89,17 @@ CREATE TABLE Regular_user
     CONSTRAINT FK_Regular_user_User FOREIGN KEY (user_id) REFERENCES `User` (id),
     CONSTRAINT FK_Regular_user_Person FOREIGN KEY (person_id) REFERENCES Person (id)
 );
+CREATE TABLE Ad
+(
+    id             int  NOT NULL AUTO_INCREMENT,
+    published_date date,
+    location       varchar(255),
+    description    varchar(400),
+    commercial     bool NOT NULL DEFAULT FALSE,
+    user_id        int  NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT FK_Ad_User FOREIGN KEY (user_id) REFERENCES `User` (id)
+);
 CREATE TABLE Band_wanted_ad
 (
     ad_id int NOT NULL,
@@ -108,18 +108,18 @@ CREATE TABLE Band_wanted_ad
 );
 CREATE TABLE Musician_wanted_ad
 (
-    ad_id          int NOT NULL,
-    min_age        tinyint,
-    max_age        tinyint,
-    vocal_range_id int,
+    ad_id            int NOT NULL,
+    preferred_gender char(1),
+    min_age          tinyint,
+    max_age          tinyint,
+    vocal_range_id   int,
     PRIMARY KEY (ad_id),
     CONSTRAINT FK_Musician_wanted_Ad FOREIGN KEY (ad_id) REFERENCES Ad (id),
     CONSTRAINT FK_Musician_wanted_Vocal_range FOREIGN KEY (vocal_range_id) REFERENCES Vocal_range (id)
 );
 CREATE TABLE Jam_session_ad
 (
-    ad_id    int NOT NULL,
-    location varchar(255),
+    ad_id int NOT NULL,
     PRIMARY KEY (ad_id),
     CONSTRAINT FK_Jam_session_Ad FOREIGN KEY (ad_id) REFERENCES Ad (id)
 );
@@ -138,14 +138,6 @@ CREATE TABLE Ad_preferred_instrument
     PRIMARY KEY (ad_id, instrument_id),
     CONSTRAINT FK_Ad_preferred_instrument_Instrument FOREIGN KEY (instrument_id) REFERENCES Instrument (id),
     CONSTRAINT FK_Ad_preferred_instrument_Ad FOREIGN KEY (ad_id) REFERENCES Ad (id)
-);
-CREATE TABLE Ad_preferred_vocal_technique
-(
-    ad_id              int NOT NULL,
-    vocal_technique_id int NOT NULL,
-    PRIMARY KEY (ad_id, vocal_technique_id),
-    CONSTRAINT FK_Ad_preferred_vocal_technique_Ad FOREIGN KEY (ad_id) REFERENCES Ad (id),
-    CONSTRAINT FK_Ad_preferred_vocal_technique_Vocal_technique FOREIGN KEY (vocal_technique_id) REFERENCES Vocal_technique (id)
 );
 CREATE TABLE Predefined_vocal_range
 (
