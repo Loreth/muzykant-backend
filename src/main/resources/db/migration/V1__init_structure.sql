@@ -1,12 +1,4 @@
 -- strong entities
-CREATE TABLE Credentials
-(
-    id       int          NOT NULL AUTO_INCREMENT,
-    email    varchar(255) NOT NULL UNIQUE,
-    username varchar(30)  NOT NULL UNIQUE,
-    password varchar(60)  NOT NULL,
-    PRIMARY KEY (id)
-);
 CREATE TABLE Voivodeship
 (
     id   int         NOT NULL AUTO_INCREMENT,
@@ -58,10 +50,18 @@ CREATE TABLE `User`
     phone          varchar(60),
     city           varchar(60),
     voivodeship_id int         NOT NULL,
-    credentials_id int         NOT NULL,
     PRIMARY KEY (id),
-    CONSTRAINT FK_User_Voivodeship FOREIGN KEY (voivodeship_id) REFERENCES Voivodeship (id),
-    CONSTRAINT FK_User_Credentials FOREIGN KEY (credentials_id) REFERENCES Credentials (id)
+    CONSTRAINT FK_User_Voivodeship FOREIGN KEY (voivodeship_id) REFERENCES Voivodeship (id)
+);
+CREATE TABLE Credentials
+(
+    id        int          NOT NULL AUTO_INCREMENT,
+    email     varchar(255) NOT NULL UNIQUE,
+    password  varchar(60)  NOT NULL,
+    user_id   int          NOT NULL,
+    user_type varchar(20)  NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT FK_Credentials_User FOREIGN KEY (user_id) REFERENCES User (id)
 );
 CREATE TABLE Band
 (

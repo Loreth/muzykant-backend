@@ -52,7 +52,7 @@ class MusicianWantedAdControllerIntegrationTest {
             .queryParam("publishedDateBeforeInclusive", "2020-07-19")
             .queryParam("minAge", 20)
             .queryParam("maxAge", 123)
-            .queryParam("location", "Wrocław,Zamość,Warszawa")
+            .queryParam("location", "Zamość")
             .queryParam("preferredGenreIds", "22,12,7")
             .build()
             .encode()

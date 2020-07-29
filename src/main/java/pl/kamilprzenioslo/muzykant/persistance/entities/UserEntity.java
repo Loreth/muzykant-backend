@@ -33,10 +33,6 @@ public class UserEntity extends AbstractPersistable<Integer> {
   @JoinColumn(name = "voivodeship_id", nullable = false)
   private VoivodeshipEntity voivodeship;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "credentials_id", nullable = false)
-  private CredentialsEntity credentials;
-
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
   private Set<AdEntity> ads;
 

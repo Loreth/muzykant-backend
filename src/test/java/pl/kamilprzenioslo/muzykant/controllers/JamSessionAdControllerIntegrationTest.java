@@ -62,7 +62,7 @@ class JamSessionAdControllerIntegrationTest {
     ObjectReader listReader = objectMapper.readerFor(new TypeReference<List<JamSessionAd>>() {});
     List<JamSessionAd> responseAdList = listReader.readValue(jsonResponseBody.get("content"));
 
-    assertThat(responseAdList.stream().map(JamSessionAd::getId)).hasSize(3);
+    assertThat(responseAdList.stream().map(JamSessionAd::getId)).hasSize(1);
   }
 
   @FlywayTest

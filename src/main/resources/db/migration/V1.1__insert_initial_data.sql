@@ -1,13 +1,3 @@
-INSERT INTO Credentials(id, email, username, password)
-VALUES (1, 'adam@gmail.com', 'adam', 'TEMPORARY'),
-       (2, 'daniel@gmail.com', 'danieldaniel', 'TEMPORARY'),
-       (3, 'grajek@gmail.com', 'grajek', 'TEMPORARY'),
-       (4, 'muzyk@yahoo.com', 'muzyk', 'TEMPORARY'),
-       (5, 'ciekawska@yahoo.com', 'ciekawski_nick', 'TEMPORARY'),
-       (6, 'superzespol@yahoo.com', 'zespol123', 'TEMPORARY'),
-       (7, 'anna.kowalska@onet.pl', 'ania', 'TEMPORARY'),
-       (8, 'jan.kowalski@onet.pl', 'jk', 'TEMPORARY');
-
 INSERT INTO Voivodeship(id, name)
 VALUES (1, 'dolnośląskie'),
        (2, 'kujawsko-pomorskie'),
@@ -132,16 +122,25 @@ VALUES (1, 'Akordeon'),
        (46, 'Gitara akustyczna'),
        (47, 'Gitara klasyczna');
 
+INSERT INTO `User`(id, link_name, description, phone, city, voivodeship_id)
+VALUES (1, 'adi', 'Coś o mnie', '837473123', 'Wrocław', 1),
+       (2, 'dani', 'Coś o mnie', '125373123', 'Wrocław', 1),
+       (3, 'grajek', 'Coś o mnie', '923645183', 'Radwanice', 1),
+       (4, 'slash', 'Coś o mnie', '182543765', 'Katowice', 12),
+       (5, 'koko', 'Coś o mnie', '', 'Sosnowiec', 12),
+       (6, 'swietni', 'Coś o nas', '458342643', 'Wrocław', 1),
+       (7, 'anka', 'Coś o nas', '123123123', 'Wrocław', 1),
+       (8, 'jk', 'Coś o nas', '', 'Warszawa', 7);
 
-INSERT INTO `User`(id, link_name, description, phone, city, voivodeship_id, credentials_id)
-VALUES (1, 'adi', 'Coś o mnie', '837473123', 'Wrocław', 1, 1),
-       (2, 'dani', 'Coś o mnie', '125373123', 'Wrocław', 1, 2),
-       (3, 'grajek', 'Coś o mnie', '923645183', 'Radwanice', 1, 3),
-       (4, 'slash', 'Coś o mnie', '182543765', 'Katowice', 12, 4),
-       (5, 'koko', 'Coś o mnie', '', 'Sosnowiec', 12, 5),
-       (6, 'swietni', 'Coś o nas', '458342643', 'Wrocław', 1, 6),
-       (7, 'anka', 'Coś o nas', '123123123', 'Wrocław', 1, 7),
-       (8, 'jk', 'Coś o nas', '', 'Warszawa', 7, 8);
+INSERT INTO Credentials(id, email, password, user_id, user_type)
+VALUES (1, 'adam@gmail.com', 'TEMPORARY', 1, 'REGULAR'),
+       (2, 'daniel@gmail.com', 'TEMPORARY', 2, 'MUSICIAN'),
+       (3, 'grajek@gmail.com', 'TEMPORARY', 3, 'MUSICIAN'),
+       (4, 'muzyk@yahoo.com', 'TEMPORARY', 4, 'MUSICIAN'),
+       (5, 'ciekawska@yahoo.com', 'TEMPORARY', 5, 'MUSICIAN'),
+       (6, 'superzespol@yahoo.com', 'TEMPORARY', 6, 'BAND'),
+       (7, 'anna.kowalska@onet.pl', 'TEMPORARY', 7, 'BAND'),
+       (8, 'jan.kowalski@onet.pl', 'TEMPORARY', 8, 'BAND');
 
 INSERT INTO Band(user_id, name, formation_year)
 VALUES (6, 'Turbo', 2016),
