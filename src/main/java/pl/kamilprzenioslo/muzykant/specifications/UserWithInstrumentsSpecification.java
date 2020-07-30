@@ -8,22 +8,21 @@ import javax.persistence.criteria.Root;
 import javax.persistence.criteria.SetJoin;
 import lombok.Data;
 import org.springframework.data.jpa.domain.Specification;
-import pl.kamilprzenioslo.muzykant.persistance.entities.AdEntity;
-import pl.kamilprzenioslo.muzykant.persistance.entities.AdEntity_;
 import pl.kamilprzenioslo.muzykant.persistance.entities.InstrumentEntity;
 import pl.kamilprzenioslo.muzykant.persistance.entities.InstrumentEntity_;
+import pl.kamilprzenioslo.muzykant.persistance.entities.UserEntity;
+import pl.kamilprzenioslo.muzykant.persistance.entities.UserEntity_;
 
 @Data
-public class AdWithPreferredInstrumentsSpecification<T extends AdEntity>
-    implements Specification<T> {
+public class UserWithInstrumentsSpecification<T extends UserEntity> implements Specification<T> {
 
-  private final List<Integer> preferredInstrumentIds;
+  private final List<Integer> instrumentIds;
 
   @Override
   public Predicate toPredicate(Root<T> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
-    if (preferredInstrumentIds != null) {
-      SetJoin<T, InstrumentEntity> genreJoin = root.join(AdEntity_.preferredInstruments);
-      cq.distinct(true).where(genreJoin.get(InstrumentEntity_.id).in(preferredInstrumentIds));
+    if (instrumentIds != null) {
+      SetJoin<T, InstrumentEntity> genreJoin = root.join(UserEntity_.instruments);
+      cq.distinct(true).where(genreJoin.get(InstrumentEntity_.id).in(instrumentIds));
     }
 
     return cq.getRestriction();

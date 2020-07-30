@@ -1,6 +1,7 @@
 package pl.kamilprzenioslo.muzykant.persistance.entities;
 
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -16,7 +17,7 @@ import lombok.Data;
 @PrimaryKeyJoinColumn(name = "user_id")
 public class MusicianEntity extends UserEntity {
 
-  @OneToOne
+  @OneToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "person_id", nullable = false)
   private PersonEntity person;
 

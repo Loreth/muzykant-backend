@@ -70,7 +70,7 @@ class JamSessionAdControllerIntegrationTest {
   void shouldNotReturnAnyAdsForGivenGenres() throws IOException {
     URI requestUri =
         UriComponentsBuilder.fromHttpUrl(RESOURCE_LINK + "/search")
-            .queryParam("preferredGenreIds", "1,35")
+            .queryParam("preferredGenreIds", "1,2")
             .build()
             .encode()
             .toUri();

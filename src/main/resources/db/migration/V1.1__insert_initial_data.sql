@@ -20,7 +20,7 @@ INSERT INTO Person(id, first_name, last_name, pseudo, gender, birthdate)
 VALUES (1, 'Adam', 'Dąbek', 'Adi', 'M', '1997-02-03'),
        (2, 'Daniel', 'Wójcikowski', 'Dan', 'M', '1994-04-07'),
        (3, 'Andrzej', 'Zalewski', 'Grajek', 'M', '1985-11-12'),
-       (4, 'Joanna', 'Wieczorowska', '', 'K', '1990-08-15'),
+       (4, 'Joanna', 'Wieczorowska', null, 'K', '1990-08-15'),
        (5, 'Wiktoria', 'Dobrzyńska', 'Wiki', 'K', '2000-01-02');
 
 
@@ -120,17 +120,18 @@ VALUES (1, 'Akordeon'),
        (44, 'Wokal wspierający'),
        (45, 'Gitara elektryczna'),
        (46, 'Gitara akustyczna'),
-       (47, 'Gitara klasyczna');
+       (47, 'Gitara klasyczna'),
+       (48, 'Flet poprzeczny');
 
 INSERT INTO `User`(id, link_name, description, phone, city, voivodeship_id)
 VALUES (1, 'adi', 'Coś o mnie', '837473123', 'Wrocław', 1),
        (2, 'dani', 'Coś o mnie', '125373123', 'Wrocław', 1),
        (3, 'grajek', 'Coś o mnie', '923645183', 'Radwanice', 1),
        (4, 'slash', 'Coś o mnie', '182543765', 'Katowice', 12),
-       (5, 'koko', 'Coś o mnie', '', 'Sosnowiec', 12),
+       (5, 'koko', 'Coś o mnie', null, 'Sosnowiec', 12),
        (6, 'swietni', 'Coś o nas', '458342643', 'Wrocław', 1),
-       (7, 'anka', 'Coś o nas', '123123123', 'Wrocław', 1),
-       (8, 'jk', 'Coś o nas', '', 'Warszawa', 7);
+       (7, 'muzykanci', 'Coś o nas', '123123123', 'Wrocław', 1),
+       (8, 'jk', 'Coś o nas', null, 'Warszawa', 7);
 
 INSERT INTO Credentials(id, email, password, user_id, user_type)
 VALUES (1, 'adam@gmail.com', 'TEMPORARY', 1, 'REGULAR'),
@@ -143,7 +144,7 @@ VALUES (1, 'adam@gmail.com', 'TEMPORARY', 1, 'REGULAR'),
        (8, 'jan.kowalski@onet.pl', 'TEMPORARY', 8, 'BAND');
 
 INSERT INTO Band(user_id, name, formation_year)
-VALUES (6, 'Turbo', 2016),
+VALUES (6, 'Turbo akcja', 2016),
        (7, 'Szakalaka', 2020),
        (8, 'Revolta', 2010);
 
@@ -239,7 +240,7 @@ VALUES (2, 1),
        (3, 3),
        (3, 11),
        (3, 8),
-       (4, 18),
+       (4, 3),
        (5, 15),
        (5, 3),
        (5, 13),
@@ -268,7 +269,14 @@ VALUES (2, 8),
        (5, 29),
        (5, 44),
        (5, 46),
-       (5, 34);
+       (5, 34),
+       (7, 5),
+       (7, 15),
+       (8, 24),
+       (8, 25),
+       (8, 26),
+       (8, 11),
+       (8, 36);
 
 -- TODO
 --  INSERT INTO User_vocal_technique(user_id, vocal_technique_id)

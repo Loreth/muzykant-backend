@@ -73,7 +73,7 @@ class MusicianWantedAdControllerIntegrationTest {
   void shouldNotReturnAnyAdsForGivenGenres() throws IOException {
     URI requestUri =
         UriComponentsBuilder.fromHttpUrl(RESOURCE_LINK + "/search")
-            .queryParam("preferredGenreIds", "22,12,7,50")
+            .queryParam("preferredGenreIds", "24,13,50")
             .build()
             .encode()
             .toUri();
@@ -90,7 +90,7 @@ class MusicianWantedAdControllerIntegrationTest {
 
   @FlywayTest
   @Test
-  void shouldReturnAllAdsThatHaveAtLeastAllOfGivenInstruments() throws IOException {
+  void shouldReturnAllAdsThatHaveAtLeastOneOfGivenInstruments() throws IOException {
     URI requestUri =
         UriComponentsBuilder.fromHttpUrl(RESOURCE_LINK + "/search")
             .queryParam("preferredInstrumentIds", "1,2,3")
@@ -105,7 +105,7 @@ class MusicianWantedAdControllerIntegrationTest {
         objectMapper.readerFor(new TypeReference<List<MusicianWantedAd>>() {});
     List<MusicianWantedAd> responseAdList = listReader.readValue(jsonResponseBody.get("content"));
 
-    assertThat(responseAdList).hasSize(2);
+    assertThat(responseAdList).hasSize(3);
   }
 
   @FlywayTest
