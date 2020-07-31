@@ -1,11 +1,11 @@
 package pl.kamilprzenioslo.muzykant.persistance.entities;
 
 import java.io.Serializable;
+import java.util.Objects;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
-import lombok.EqualsAndHashCode;
 import org.springframework.data.domain.Persistable;
 import org.springframework.lang.Nullable;
 
@@ -14,10 +14,9 @@ import org.springframework.lang.Nullable;
  * instead of protected (which allows for DTO to Entity mapping)
  */
 @MappedSuperclass
-@EqualsAndHashCode
 public abstract class AbstractPersistable<ID extends Serializable> implements Persistable<ID> {
 
-  @Id @GeneratedValue private @Nullable ID id;
+  @Id @GeneratedValue @Nullable private ID id;
 
   @Nullable
   @Override
@@ -38,5 +37,23 @@ public abstract class AbstractPersistable<ID extends Serializable> implements Pe
   @Override
   public String toString() {
     return String.format("Entity of type %s with id: %s", this.getClass().getName(), getId());
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    AbstractPersistable<?> that = (AbstractPersistable<?>) o;
+    return Objects.equals(id, that.id);
+  }
+
+  @Override
+  public int hashCode() {
+    // can't use only ID in hashCode, as object can't change it's hashcode after being added to Set
+    return 1;
   }
 }

@@ -1,5 +1,6 @@
 package pl.kamilprzenioslo.muzykant.persistance.entities;
 
+import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,11 +13,14 @@ import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode.Exclude;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
+@ToString
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "user")
@@ -34,6 +38,7 @@ public class UserEntity extends AbstractPersistable<Integer> {
   private VoivodeshipEntity voivodeship;
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+  @Exclude
   private Set<AdEntity> ads;
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
@@ -59,4 +64,24 @@ public class UserEntity extends AbstractPersistable<Integer> {
       joinColumns = @JoinColumn(name = "user_id"),
       inverseJoinColumns = @JoinColumn(name = "vocal_technique_id"))
   private Set<VocalTechniqueEntity> vocalTechniques;
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    if (!super.equals(o)) {
+      return false;
+    }
+    UserEntity that = (UserEntity) o;
+    return linkName.equals(that.linkName);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(super.hashCode(), linkName);
+  }
 }

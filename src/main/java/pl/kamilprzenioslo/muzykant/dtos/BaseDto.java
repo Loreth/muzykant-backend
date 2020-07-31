@@ -2,7 +2,6 @@ package pl.kamilprzenioslo.muzykant.dtos;
 
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.io.Serializable;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import lombok.Data;
 import pl.kamilprzenioslo.muzykant.validation.OnPost;
@@ -11,7 +10,6 @@ import pl.kamilprzenioslo.muzykant.validation.OnPost;
 @JsonPropertyOrder({"id"})
 public abstract class BaseDto<ID extends Serializable> implements IdentifiableDto<ID> {
 
-  @NotNull
-  @Null(groups = {OnPost.class})
+  @Null(groups = OnPost.class)
   private ID id;
 }

@@ -1,5 +1,6 @@
 package pl.kamilprzenioslo.muzykant.dtos;
 
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Equipment extends BaseDto<Integer> {
-
-  private String name;
-  private Musician musician;
+  @NotNull private String name;
+  @NotNull
+  private Integer musicianId;
 }

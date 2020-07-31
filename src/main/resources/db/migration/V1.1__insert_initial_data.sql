@@ -282,11 +282,15 @@ VALUES (2, 8),
 --  INSERT INTO User_vocal_technique(user_id, vocal_technique_id)
 --  VALUES ();
 
--- TODO
---  INSERT INTO Equipment(id, name, musician_user_id)
---  VALUES ();
+INSERT INTO Equipment(id, name, musician_user_id)
+VALUES (1, 'Marshall DSL40', 2),
+       (2, 'Vox AC30', 2),
+       (3, 'Shure SM47 x2', 2),
+       (4, 'Yamaha PSR-EW410 (keyboard)', 4);
 
--- TODO
---  INSERT INTO Image(id, link, user_id)
---  VALUES ();
+
+INSERT INTO Image(id, link, user_id)
+VALUES (1, 'placeholder', 2),
+       (2, 'placeholder', 2),
+       (3, 'placeholder', 3);
 

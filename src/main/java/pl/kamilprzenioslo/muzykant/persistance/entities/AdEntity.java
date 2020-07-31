@@ -12,11 +12,13 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
-@Data
-@NoArgsConstructor
+@Getter
+@Setter
+@ToString
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "Ad")
@@ -46,4 +48,11 @@ public class AdEntity extends AbstractPersistable<Integer> {
       joinColumns = @JoinColumn(name = "ad_id"),
       inverseJoinColumns = @JoinColumn(name = "instrument_id"))
   private Set<InstrumentEntity> preferredInstruments;
+
+  @Override
+  public int hashCode() {
+    // necessary due to lack of a natural key - can't use only ID in hashCode, as object can't
+    // change it's hashcode after being added to Set
+    return 1;
+  }
 }

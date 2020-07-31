@@ -1,5 +1,6 @@
 package pl.kamilprzenioslo.muzykant.dtos;
 
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Image extends BaseDto<Integer> {
-
-  private String link;
-  private Integer userId;
+  @NotNull private String link;
+  @NotNull private Integer userId;
 }

@@ -19,6 +19,7 @@ public final class RestMappings {
   public static final String IMAGE = "/images";
   public static final String PREDEFINED_VOCAL_RANGE = "/predefined-vocal-ranges";
   public static final String VOCAL_TECHNIQUE = "/vocal-techniques";
+  public static final String VOIVODESHIP = "/voivodeships";
 
   private RestMappings() {}
 }
