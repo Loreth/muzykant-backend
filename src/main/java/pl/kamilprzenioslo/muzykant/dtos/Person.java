@@ -13,6 +13,6 @@ public class Person extends BaseDto<Integer> {
   private String firstName;
   private String lastName;
   private String pseudo;
-  private Character gender;
+  private String gender;
   private LocalDate birthdate;
 }

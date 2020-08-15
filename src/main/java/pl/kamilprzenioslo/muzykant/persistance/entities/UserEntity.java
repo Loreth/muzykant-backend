@@ -3,7 +3,10 @@ package pl.kamilprzenioslo.muzykant.persistance.entities;
 import java.util.Objects;
 import java.util.Set;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
@@ -17,16 +20,22 @@ import lombok.EqualsAndHashCode.Exclude;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import pl.kamilprzenioslo.muzykant.persistance.UserType;
 
 @Getter
 @Setter
 @ToString
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "user_type")
 @Table(name = "user")
-public class UserEntity extends AbstractPersistable<Integer> {
+public abstract class UserEntity extends AbstractPersistable<Integer> {
 
-  @Column(name = "link_name")
+  @Enumerated(EnumType.STRING)
+  @Column(name = "user_type", nullable = false, insertable = false, updatable = false)
+  private UserType userType;
+
+  @Column(name = "link_name", nullable = false)
   private String linkName;
 
   private String description;
@@ -84,4 +93,6 @@ public class UserEntity extends AbstractPersistable<Integer> {
   public int hashCode() {
     return Objects.hash(super.hashCode(), linkName);
   }
+
+  public abstract String getDisplayName();
 }

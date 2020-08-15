@@ -83,7 +83,7 @@ class RegularUserControllerIntegrationTest {
     Person person = new Person();
     person.setFirstName("Janina");
     person.setLastName("Kowalska");
-    person.setGender('K');
+    person.setGender("K");
     person.setBirthdate(LocalDate.of(1980, 2, 3));
 
     requestDto.setPerson(person);

@@ -2,6 +2,7 @@ package pl.kamilprzenioslo.muzykant.persistance.entities;
 
 import java.util.Set;
 import javax.persistence.CascadeType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -12,12 +13,14 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import pl.kamilprzenioslo.muzykant.persistance.UserType.Values;
 
 @Getter
 @Setter
 @ToString
 @Entity
 @Table(name = "musician")
+@DiscriminatorValue(Values.MUSICIAN)
 @PrimaryKeyJoinColumn(name = "user_id")
 public class MusicianEntity extends UserEntity {
 
@@ -31,4 +34,9 @@ public class MusicianEntity extends UserEntity {
 
   @OneToMany(mappedBy = "musician", fetch = FetchType.LAZY)
   private Set<EquipmentEntity> equipment;
+
+  @Override
+  public String getDisplayName() {
+    return person.getDisplayName();
+  }
 }

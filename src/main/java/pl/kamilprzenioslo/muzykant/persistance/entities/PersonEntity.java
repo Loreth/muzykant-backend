@@ -22,6 +22,10 @@ public class PersonEntity extends AbstractPersistable<Integer> {
   private String lastName;
 
   private String pseudo;
-  private Character gender;
+  private String gender;
   private LocalDate birthdate;
+
+  public String getDisplayName() {
+    return getPseudo() == null ? getFirstName() + " " + getLastName() : getPseudo();
+  }
 }

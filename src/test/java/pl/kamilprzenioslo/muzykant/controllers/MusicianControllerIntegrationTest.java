@@ -130,7 +130,7 @@ class MusicianControllerIntegrationTest {
     Person person = new Person();
     person.setFirstName("Jan");
     person.setLastName("Kowalski");
-    person.setGender('M');
+    person.setGender("M");
     person.setBirthdate(LocalDate.of(1987, 2, 3));
 
     requestDto.setPerson(person);

@@ -20,7 +20,7 @@ import lombok.ToString;
 public class MusicianWantedAdEntity extends AdEntity {
 
   @Column(name = "preferred_gender")
-  private Character preferredGender;
+  private String preferredGender;
 
   @Column(name = "min_age")
   private Byte minAge;

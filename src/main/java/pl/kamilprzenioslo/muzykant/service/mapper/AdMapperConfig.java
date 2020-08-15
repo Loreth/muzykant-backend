@@ -13,6 +13,9 @@ import pl.kamilprzenioslo.muzykant.persistance.entities.AdEntity;
 public interface AdMapperConfig extends BaseMapper<Ad, AdEntity> {
 
   @Mapping(target = "userId", source = "user.id")
+  @Mapping(target = "userType", source = "user.userType")
+  @Mapping(target = "userDisplayName", source = "user.displayName")
+  @Mapping(target = "userGenres", source = "user.genres")
   @Override
   Ad mapToDto(AdEntity entity);
 

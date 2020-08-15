@@ -30,6 +30,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import pl.kamilprzenioslo.muzykant.dtos.Genre;
 import pl.kamilprzenioslo.muzykant.dtos.MusicianWantedAd;
 import pl.kamilprzenioslo.muzykant.dtos.VocalRange;
+import pl.kamilprzenioslo.muzykant.persistance.UserType;
 
 @FlywayTestExtension
 @FlywayTest
@@ -222,6 +223,10 @@ class MusicianWantedAdControllerIntegrationTest {
     assertEquals("Warszawa", responseDto.getLocation());
     assertEquals(LocalDate.parse("2020-08-13"), responseDto.getPublishedDate());
     assertEquals(3, responseDto.getUserId());
+    assertEquals(UserType.MUSICIAN, responseDto.getUserType());
+    assertEquals("Grajek", responseDto.getUserDisplayName());
+    assertThat(responseDto.getUserGenres().stream().map(Genre::getId))
+        .containsExactlyInAnyOrder(3, 11, 8);
     assertFalse(responseDto.isCommercial());
   }
 }

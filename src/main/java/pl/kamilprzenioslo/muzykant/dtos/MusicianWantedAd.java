@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class MusicianWantedAd extends Ad {
 
-  private Character preferredGender;
+  private String preferredGender;
   private Byte minAge;
   private Byte maxAge;
   private VocalRange vocalRange;

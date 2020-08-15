@@ -11,7 +11,7 @@ CREATE TABLE Person
     first_name varchar(50) NOT NULL,
     last_name  varchar(50) NOT NULL,
     pseudo     varchar(30),
-    gender     char(1)     NOT NULL,
+    gender     varchar(1)     NOT NULL,
     birthdate  date        NOT NULL,
     PRIMARY KEY (id)
 );
@@ -45,6 +45,7 @@ CREATE TABLE Instrument
 CREATE TABLE `User`
 (
     id             int         NOT NULL AUTO_INCREMENT,
+    user_type      varchar(30) NOT NULL,
     link_name      varchar(30) NOT NULL UNIQUE,
     description    varchar(400),
     phone          varchar(60),
@@ -59,7 +60,6 @@ CREATE TABLE Credentials
     email     varchar(255) NOT NULL UNIQUE,
     password  varchar(60)  NOT NULL,
     user_id   int          NOT NULL,
-    user_type varchar(20)  NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT FK_Credentials_User FOREIGN KEY (user_id) REFERENCES User (id) ON DELETE CASCADE
 );
@@ -109,7 +109,7 @@ CREATE TABLE Band_wanted_ad
 CREATE TABLE Musician_wanted_ad
 (
     ad_id            int NOT NULL,
-    preferred_gender char(1),
+    preferred_gender varchar(1),
     min_age          tinyint,
     max_age          tinyint,
     vocal_range_id   int,
