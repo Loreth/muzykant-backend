@@ -39,8 +39,7 @@ class VoivodeshipControllerIntegrationTest {
   @FlywayTest
   @Test
   void shouldReturnAllExistingResourcesPagedProperly() throws IOException {
-    URI requestUri =
-        UriComponentsBuilder.fromHttpUrl(RESOURCE_LINK).build().encode().toUri();
+    URI requestUri = UriComponentsBuilder.fromHttpUrl(RESOURCE_LINK).build().encode().toUri();
 
     ResponseEntity<String> responseEntity = restTemplate.getForEntity(requestUri, String.class);
 
@@ -49,7 +48,9 @@ class VoivodeshipControllerIntegrationTest {
     List<Voivodeship> responseAdList = listReader.readValue(jsonResponseBody.get("content"));
 
     assertEquals(1, jsonResponseBody.get("totalPages").intValue());
-    assertThat(responseAdList.stream().map(Voivodeship::getId)).hasSize(16).allMatch(Objects::nonNull);
+    assertThat(responseAdList.stream().map(Voivodeship::getId))
+        .hasSize(16)
+        .allMatch(Objects::nonNull);
   }
 
   @FlywayTest

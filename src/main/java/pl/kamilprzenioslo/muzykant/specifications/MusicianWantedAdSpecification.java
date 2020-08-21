@@ -12,11 +12,15 @@ import pl.kamilprzenioslo.muzykant.persistance.entities.MusicianWantedAdEntity;
 @Conjunction(
     value = {
       @Or({
-        @Spec(path = "maxAge", params = "minAge", spec = GreaterThanOrEqual.class),
+        @Spec(
+            path = "maxAge",
+            params = "minAge",
+            defaultVal = "0",
+            spec = GreaterThanOrEqual.class),
         @Spec(path = "maxAge", params = "minAge", constVal = "true", spec = Null.class)
       }),
       @Or({
-        @Spec(path = "minAge", params = "maxAge", spec = LessThanOrEqual.class),
+        @Spec(path = "minAge", params = "maxAge", defaultVal = "100", spec = LessThanOrEqual.class),
         @Spec(path = "minAge", params = "maxAge", constVal = "true", spec = Null.class)
       })
     },

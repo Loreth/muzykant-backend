@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Image extends BaseDto<Integer> {
+public class UserImage extends BaseDto<Integer> {
   @NotNull private String link;
   @NotNull private Integer userId;
+  @NotNull private int orderIndex;
 }

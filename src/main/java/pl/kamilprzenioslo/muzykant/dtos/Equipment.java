@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Equipment extends BaseDto<Integer> {
   @NotNull private String name;
-  @NotNull
-  private Integer musicianId;
+  @NotNull private Integer musicianId;
 }

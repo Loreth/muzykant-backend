@@ -27,6 +27,7 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
+import pl.kamilprzenioslo.muzykant.dtos.Ad;
 import pl.kamilprzenioslo.muzykant.dtos.Genre;
 import pl.kamilprzenioslo.muzykant.dtos.MusicianWantedAd;
 import pl.kamilprzenioslo.muzykant.dtos.VocalRange;
@@ -107,6 +108,46 @@ class MusicianWantedAdControllerIntegrationTest {
     List<MusicianWantedAd> responseAdList = listReader.readValue(jsonResponseBody.get("content"));
 
     assertThat(responseAdList).hasSize(3);
+  }
+
+  @FlywayTest
+  @Test
+  void shouldReturnAllAdsThatHaveAtLeastOneOfGivenLookingPreferredGenres() throws IOException {
+    URI requestUri =
+        UriComponentsBuilder.fromHttpUrl(RESOURCE_LINK + "/search")
+            .queryParam("lookingPreferredGenreIds", "1,4,8,32")
+            .build()
+            .encode()
+            .toUri();
+
+    ResponseEntity<String> responseEntity = restTemplate.getForEntity(requestUri, String.class);
+
+    JsonNode jsonResponseBody = objectMapper.readTree(responseEntity.getBody());
+    ObjectReader listReader =
+        objectMapper.readerFor(new TypeReference<List<MusicianWantedAd>>() {});
+    List<MusicianWantedAd> responseAdList = listReader.readValue(jsonResponseBody.get("content"));
+
+    assertThat(responseAdList.stream().map(Ad::getId)).containsExactlyInAnyOrder(3, 4);
+  }
+
+  @FlywayTest
+  @Test
+  void shouldReturnAllAdsThatHaveAtLeastOneOfGivenVoivodeships() throws IOException {
+    URI requestUri =
+        UriComponentsBuilder.fromHttpUrl(RESOURCE_LINK + "/search")
+            .queryParam("voivodeshipIds", "1,3,12,4")
+            .build()
+            .encode()
+            .toUri();
+
+    ResponseEntity<String> responseEntity = restTemplate.getForEntity(requestUri, String.class);
+
+    JsonNode jsonResponseBody = objectMapper.readTree(responseEntity.getBody());
+    ObjectReader listReader =
+        objectMapper.readerFor(new TypeReference<List<MusicianWantedAd>>() {});
+    List<MusicianWantedAd> responseAdList = listReader.readValue(jsonResponseBody.get("content"));
+
+    assertThat(responseAdList).hasSize(4);
   }
 
   @FlywayTest
@@ -218,7 +259,7 @@ class MusicianWantedAdControllerIntegrationTest {
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     assertEquals((byte) 20, responseDto.getMinAge());
     assertEquals((byte) 30, responseDto.getMaxAge());
-    assertEquals('K', responseDto.getPreferredGender());
+    assertEquals("K", responseDto.getPreferredGender());
     assertEquals("Opis opis", responseDto.getDescription());
     assertEquals("Warszawa", responseDto.getLocation());
     assertEquals(LocalDate.parse("2020-08-13"), responseDto.getPublishedDate());
@@ -227,6 +268,9 @@ class MusicianWantedAdControllerIntegrationTest {
     assertEquals("Grajek", responseDto.getUserDisplayName());
     assertThat(responseDto.getUserGenres().stream().map(Genre::getId))
         .containsExactlyInAnyOrder(3, 11, 8);
+    assertEquals(
+        "http://localhost:8080/user-images/image-uploads/3_profile-image.jpg",
+        responseDto.getUserProfileImageLink());
     assertFalse(responseDto.isCommercial());
   }
 }

@@ -8,10 +8,16 @@ import pl.kamilprzenioslo.muzykant.dtos.Ad;
 import pl.kamilprzenioslo.muzykant.persistance.entities.AdEntity;
 
 @MapperConfig(
-    uses = {EntityFactory.class, GenreMapper.class, InstrumentMapper.class},
+    uses = {
+      EntityFactory.class,
+      GenreMapper.class,
+      InstrumentMapper.class,
+      VoivodeshipMapper.class
+    },
     mappingInheritanceStrategy = AUTO_INHERIT_FROM_CONFIG)
 public interface AdMapperConfig extends BaseMapper<Ad, AdEntity> {
 
+  @Mapping(target = "userProfileImageLink", source = "user.profileImageLink")
   @Mapping(target = "userId", source = "user.id")
   @Mapping(target = "userType", source = "user.userType")
   @Mapping(target = "userDisplayName", source = "user.displayName")

@@ -39,17 +39,20 @@ class PredefinedVocalRangeControllerIntegrationTest {
   @FlywayTest
   @Test
   void shouldReturnAllExistingResourcesPagedProperly() throws IOException {
-    URI requestUri =
-        UriComponentsBuilder.fromHttpUrl(RESOURCE_LINK).build().encode().toUri();
+    URI requestUri = UriComponentsBuilder.fromHttpUrl(RESOURCE_LINK).build().encode().toUri();
 
     ResponseEntity<String> responseEntity = restTemplate.getForEntity(requestUri, String.class);
 
     JsonNode jsonResponseBody = objectMapper.readTree(responseEntity.getBody());
-    ObjectReader listReader = objectMapper.readerFor(new TypeReference<List<PredefinedVocalRange>>() {});
-    List<PredefinedVocalRange> responseAdList = listReader.readValue(jsonResponseBody.get("content"));
+    ObjectReader listReader =
+        objectMapper.readerFor(new TypeReference<List<PredefinedVocalRange>>() {});
+    List<PredefinedVocalRange> responseAdList =
+        listReader.readValue(jsonResponseBody.get("content"));
 
     assertEquals(1, jsonResponseBody.get("totalPages").intValue());
-    assertThat(responseAdList.stream().map(PredefinedVocalRange::getId)).hasSize(6).allMatch(Objects::nonNull);
+    assertThat(responseAdList.stream().map(PredefinedVocalRange::getId))
+        .hasSize(6)
+        .allMatch(Objects::nonNull);
   }
 
   @FlywayTest

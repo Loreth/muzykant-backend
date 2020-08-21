@@ -23,7 +23,6 @@ VALUES (1, 'Adam', 'Dąbek', 'Adi', 'M', '1997-02-03'),
        (4, 'Joanna', 'Wieczorowska', null, 'K', '1990-08-15'),
        (5, 'Wiktoria', 'Dobrzyńska', 'Wiki', 'K', '2000-01-02');
 
-
 INSERT INTO Genre(id, name)
 VALUES (1, 'Pop'),
        (2, 'Rap'),
@@ -59,7 +58,10 @@ VALUES (1, 'Pop'),
        (32, 'Techno'),
        (33, 'Trash Metal'),
        (34, 'Death Metal'),
-       (35, 'Muzyka weselna');
+       (35, 'Muzyka weselna'),
+       (36, 'Punk rock'),
+       (37, 'Math rock'),
+       (38, 'Jazz');
 
 INSERT INTO Vocal_range(id, lowest_note, highest_note)
 VALUES (1, 'C4', 'C6'),
@@ -133,6 +135,10 @@ VALUES (1, 'REGULAR', 'adi', 'Coś o mnie', '837473123', 'Wrocław', 1),
        (7, 'BAND', 'muzykanci', 'Coś o nas', '123123123', 'Wrocław', 1),
        (8, 'BAND', 'jk', 'Coś o nas', null, 'Warszawa', 7);
 
+UPDATE User
+SET profile_image_link='http://localhost:8080/user-images/image-uploads/3_profile-image.jpg'
+WHERE id = 3;
+
 INSERT INTO Credentials(id, email, password, user_id)
 VALUES (1, 'adam@gmail.com', 'TEMPORARY', 1),
        (2, 'daniel@gmail.com', 'TEMPORARY', 2),
@@ -157,21 +163,21 @@ VALUES (2, 2, null),
 INSERT INTO Regular_user(user_id, person_id)
 VALUES (1, 1);
 
-INSERT INTO Ad(id, published_date, location, description, commercial, user_id)
-VALUES (1, '2020-07-19', 'Wrocław', null, false, 1),
-       (2, '2020-08-10', 'Radwanice', null, true, 1),
-       (3, '2020-08-12', 'Wrocław', 'Zapraszam do wspólnej gry :)', false, 2),
-       (4, '2020-08-13', 'Warszawa', 'Opis opis', false, 3),
-       (5, '2020-07-14', 'Zamość', 'Tylko zawodowcy!', true, 4),
-       (6, '2020-08-13', 'Katowice', null, false, 5),
-       (7, '2020-08-23', 'Wrocław', null, false, 6),
-       (8, '2020-06-10', 'Radwanice',
-        'Ostrzegam, nie jestem najlepszy(głównie pentatonika), ale szybko się uczę :D. Ktoś chętny na wspólny jam?',
+INSERT INTO Ad(id, ad_type, published_date, location, description, commercial, user_id)
+VALUES (1, 'BAND_WANTED', '2020-07-19', 'Wrocław', null, false, 1),
+       (2, 'BAND_WANTED', '2020-08-10', 'Radwanice', null, true, 1),
+       (3, 'MUSICIAN_WANTED', '2020-08-12', 'Wrocław', 'Zapraszam do wspólnej gry :)', false, 2),
+       (4, 'MUSICIAN_WANTED', '2020-08-13', 'Warszawa', 'Opis opis', false, 3),
+       (5, 'MUSICIAN_WANTED', '2020-07-14', 'Zamość', 'Tylko zawodowcy!', true, 4),
+       (6, 'MUSICIAN_WANTED', '2020-08-13', 'Katowice', null, false, 5),
+       (7, 'MUSICIAN_WANTED', '2020-08-23', 'Wrocław', null, false, 6),
+       (8, 'JAM_SESSION', '2020-06-10', 'Radwanice',
+        'Ostrzegam, nie jestem najlepszy (głównie pentatonika), ale szybko się uczę :). Ktoś chętny na wspólny jam?',
         false, 3),
-       (9, '2020-07-23', 'Katowice',
+       (9, 'JAM_SESSION', '2020-07-23', 'Katowice',
         'Mam studio (perksuja, bas, gitary i dużo ampów - chętnie użyczę), można razem pobrzdąkać do woli',
         false, 8),
-       (10, '2020-07-23', 'Wrocław, klub Nietota',
+       (10, 'JAM_SESSION', '2020-07-23', 'Wrocław, klub Nietota',
         'Zapraszamy na jam session w naszym klubie każdego piątkowego wieczoru. Zainteresowanych prosimy o kontakt telefoniczny.',
         false, 1);
 
@@ -191,7 +197,18 @@ VALUES (8),
        (9),
        (10);
 
-INSERT INTO ad_preferred_genre(ad_id, genre_id)
+INSERT INTO Ad_voivodeship(ad_id, voivodeship_id)
+VALUES (1, 1),
+       (2, 1),
+       (3, 1),
+       (4, 7),
+       (5, 3),
+       (6, 12),
+       (7, 1),
+       (8, 12),
+       (9, 1);
+
+INSERT INTO Ad_preferred_genre(ad_id, genre_id)
 VALUES (1, 12),
        (1, 23),
        (2, 5),
@@ -208,7 +225,7 @@ VALUES (1, 12),
        (8, 3),
        (9, 35);
 
-INSERT INTO ad_preferred_instrument(ad_id, instrument_id)
+INSERT INTO Ad_preferred_instrument(ad_id, instrument_id)
 VALUES (1, 5),
        (1, 34),
        (1, 15),
@@ -226,7 +243,7 @@ VALUES (1, 5),
        (7, 46),
        (8, 7);
 
-INSERT INTO predefined_vocal_range(vocal_range_id, name)
+INSERT INTO Predefined_vocal_range(vocal_range_id, name)
 VALUES (1, 'sopran'),
        (2, 'mezzosopran'),
        (3, 'kontralt'),
@@ -288,9 +305,7 @@ VALUES (1, 'Marshall DSL40', 2),
        (3, 'Shure SM47 x2', 2),
        (4, 'Yamaha PSR-EW410 (keyboard)', 4);
 
-
-INSERT INTO Image(id, link, user_id)
-VALUES (1, 'placeholder', 2),
-       (2, 'placeholder', 2),
-       (3, 'placeholder', 3);
-
+INSERT INTO User_image(id, link, user_id, order_index)
+VALUES (1, 'placeholder', 2, 0),
+       (2, 'placeholder', 2, 1),
+       (3, 'placeholder', 3, 0);

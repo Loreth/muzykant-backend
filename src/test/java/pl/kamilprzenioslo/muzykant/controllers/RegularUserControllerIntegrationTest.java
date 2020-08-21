@@ -100,7 +100,7 @@ class RegularUserControllerIntegrationTest {
     assertEquals("Kowalska", responseDto.getPerson().getLastName());
     assertEquals(LocalDate.of(1980, 2, 3), responseDto.getPerson().getBirthdate());
     assertNotNull(responseDto.getPerson().getId());
-    assertEquals('K', responseDto.getPerson().getGender());
+    assertEquals("K", responseDto.getPerson().getGender());
     assertEquals("city", responseDto.getCity());
     assertEquals(5, responseDto.getVoivodeship().getId());
     assertEquals("zwyczajny", requestDto.getLinkName());

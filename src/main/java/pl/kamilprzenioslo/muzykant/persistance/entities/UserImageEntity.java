@@ -1,6 +1,7 @@
 package pl.kamilprzenioslo.muzykant.persistance.entities;
 
 import java.util.Objects;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -14,14 +15,17 @@ import lombok.ToString;
 @Setter
 @ToString
 @Entity
-@Table(name = "image")
-public class ImageEntity extends AbstractPersistable<Integer> {
+@Table(name = "user_image")
+public class UserImageEntity extends AbstractPersistable<Integer> {
 
   private String link;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id", nullable = false)
   private UserEntity user;
+
+  @Column(name = "order_index")
+  private int orderIndex;
 
   @Override
   public boolean equals(Object o) {
@@ -34,7 +38,7 @@ public class ImageEntity extends AbstractPersistable<Integer> {
     if (!super.equals(o)) {
       return false;
     }
-    ImageEntity that = (ImageEntity) o;
+    UserImageEntity that = (UserImageEntity) o;
     return link.equals(that.link);
   }
 

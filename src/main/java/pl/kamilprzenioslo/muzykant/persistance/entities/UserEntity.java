@@ -42,6 +42,9 @@ public abstract class UserEntity extends AbstractPersistable<Integer> {
   private String phone;
   private String city;
 
+  @Column(name = "profile_image_link")
+  private String profileImageLink;
+
   @ManyToOne
   @JoinColumn(name = "voivodeship_id", nullable = false)
   private VoivodeshipEntity voivodeship;
@@ -51,7 +54,7 @@ public abstract class UserEntity extends AbstractPersistable<Integer> {
   private Set<AdEntity> ads;
 
   @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
-  private Set<ImageEntity> images;
+  private Set<UserImageEntity> images;
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(

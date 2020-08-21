@@ -7,6 +7,7 @@ import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.kamilprzenioslo.muzykant.persistance.AdType;
 import pl.kamilprzenioslo.muzykant.persistance.UserType;
 
 @Data
@@ -14,7 +15,9 @@ import pl.kamilprzenioslo.muzykant.persistance.UserType;
 @AllArgsConstructor
 public class Ad extends BaseDto<Integer> {
 
+  private AdType adType;
   private LocalDate publishedDate;
+  private Set<Voivodeship> voivodeships;
   private String location;
   private String description;
   private boolean commercial;
@@ -24,4 +27,5 @@ public class Ad extends BaseDto<Integer> {
   private UserType userType;
   private String userDisplayName;
   private List<Genre> userGenres;
+  private String userProfileImageLink;
 }

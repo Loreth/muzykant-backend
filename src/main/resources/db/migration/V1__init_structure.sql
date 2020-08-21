@@ -11,7 +11,7 @@ CREATE TABLE Person
     first_name varchar(50) NOT NULL,
     last_name  varchar(50) NOT NULL,
     pseudo     varchar(30),
-    gender     varchar(1)     NOT NULL,
+    gender     varchar(1)  NOT NULL,
     birthdate  date        NOT NULL,
     PRIMARY KEY (id)
 );
@@ -44,22 +44,23 @@ CREATE TABLE Instrument
 -- weak entities
 CREATE TABLE `User`
 (
-    id             int         NOT NULL AUTO_INCREMENT,
-    user_type      varchar(30) NOT NULL,
-    link_name      varchar(30) NOT NULL UNIQUE,
-    description    varchar(400),
-    phone          varchar(60),
-    city           varchar(60),
-    voivodeship_id int         NOT NULL,
+    id                 int         NOT NULL AUTO_INCREMENT,
+    user_type          varchar(30) NOT NULL,
+    link_name          varchar(30) NOT NULL UNIQUE,
+    description        varchar(400),
+    phone              varchar(60),
+    city               varchar(60),
+    voivodeship_id     int         NOT NULL,
+    profile_image_link varchar(1000),
     PRIMARY KEY (id),
     CONSTRAINT FK_User_Voivodeship FOREIGN KEY (voivodeship_id) REFERENCES Voivodeship (id)
 );
 CREATE TABLE Credentials
 (
-    id        int          NOT NULL AUTO_INCREMENT,
-    email     varchar(255) NOT NULL UNIQUE,
-    password  varchar(60)  NOT NULL,
-    user_id   int          NOT NULL,
+    id       int          NOT NULL AUTO_INCREMENT,
+    email    varchar(255) NOT NULL UNIQUE,
+    password varchar(60)  NOT NULL,
+    user_id  int          NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT FK_Credentials_User FOREIGN KEY (user_id) REFERENCES User (id) ON DELETE CASCADE
 );
@@ -91,12 +92,13 @@ CREATE TABLE Regular_user
 );
 CREATE TABLE Ad
 (
-    id             int  NOT NULL AUTO_INCREMENT,
+    id             int         NOT NULL AUTO_INCREMENT,
+    ad_type        varchar(30) NOT NULL,
     published_date date,
     location       varchar(255),
     description    varchar(400),
-    commercial     bool NOT NULL DEFAULT FALSE,
-    user_id        int  NOT NULL,
+    commercial     bool        NOT NULL DEFAULT FALSE,
+    user_id        int         NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT FK_Ad_User FOREIGN KEY (user_id) REFERENCES `User` (id) ON DELETE CASCADE
 );
@@ -122,6 +124,14 @@ CREATE TABLE Jam_session_ad
     ad_id int NOT NULL,
     PRIMARY KEY (ad_id),
     CONSTRAINT FK_Jam_session_Ad FOREIGN KEY (ad_id) REFERENCES Ad (id) ON DELETE CASCADE
+);
+CREATE TABLE Ad_voivodeship
+(
+    ad_id          int NOT NULL,
+    voivodeship_id int NOT NULL,
+    PRIMARY KEY (ad_id, voivodeship_id),
+    CONSTRAINT FK_Ad_Voivodeship_Ad FOREIGN KEY (ad_id) REFERENCES Ad (id) ON DELETE CASCADE,
+    CONSTRAINT FK_Ad_Voivodeship_Voivodeship FOREIGN KEY (voivodeship_id) REFERENCES `Voivodeship` (id)
 );
 CREATE TABLE Ad_preferred_genre
 (
@@ -178,11 +188,12 @@ CREATE TABLE Equipment
     PRIMARY KEY (id),
     CONSTRAINT FK_Equipment_Musician FOREIGN KEY (musician_user_id) REFERENCES Musician (user_id) ON DELETE CASCADE
 );
-CREATE TABLE Image
+CREATE TABLE User_image
 (
-    id      int           NOT NULL AUTO_INCREMENT,
-    link    varchar(1000) NOT NULL,
-    user_id int           NOT NULL,
+    id          int           NOT NULL AUTO_INCREMENT,
+    link        varchar(1000) NOT NULL,
+    user_id     int           NOT NULL,
+    order_index int           NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT FK_Image_User FOREIGN KEY (user_id) REFERENCES `User` (id) ON DELETE CASCADE
 );

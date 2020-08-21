@@ -124,7 +124,9 @@ class InstrumentControllerIntegrationTest {
     List<Instrument> responseAdList = listReader.readValue(jsonResponseBody.get("content"));
 
     assertEquals(3, jsonResponseBody.get("totalPages").intValue());
-    assertThat(responseAdList.stream().map(Instrument::getId)).hasSize(20).allMatch(Objects::nonNull);
+    assertThat(responseAdList.stream().map(Instrument::getId))
+        .hasSize(20)
+        .allMatch(Objects::nonNull);
   }
 
   @FlywayTest

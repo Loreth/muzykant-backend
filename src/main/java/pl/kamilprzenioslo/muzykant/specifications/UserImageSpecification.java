@@ -7,19 +7,19 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import lombok.Data;
 import org.springframework.data.jpa.domain.Specification;
-import pl.kamilprzenioslo.muzykant.persistance.entities.ImageEntity;
-import pl.kamilprzenioslo.muzykant.persistance.entities.ImageEntity_;
 import pl.kamilprzenioslo.muzykant.persistance.entities.UserEntity;
 import pl.kamilprzenioslo.muzykant.persistance.entities.UserEntity_;
+import pl.kamilprzenioslo.muzykant.persistance.entities.UserImageEntity;
+import pl.kamilprzenioslo.muzykant.persistance.entities.UserImageEntity_;
 
 @Data
-public class ImageSpecification implements Specification<ImageEntity> {
+public class UserImageSpecification implements Specification<UserImageEntity> {
   private final Integer userId;
 
   @Override
-  public Predicate toPredicate(Root<ImageEntity> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
+  public Predicate toPredicate(Root<UserImageEntity> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
     if (userId != null) {
-      Join<ImageEntity, UserEntity> userJoin = root.join(ImageEntity_.user);
+      Join<UserImageEntity, UserEntity> userJoin = root.join(UserImageEntity_.user);
       cq.where(cb.equal(userJoin.get(UserEntity_.id), userId));
     }
 

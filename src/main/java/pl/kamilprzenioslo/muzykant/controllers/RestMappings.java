@@ -16,10 +16,13 @@ public final class RestMappings {
   public static final String INSTRUMENT = "/instruments";
   public static final String GENRE = "/genres";
   public static final String EQUIPMENT = "/equipments";
-  public static final String IMAGE = "/images";
+  public static final String USER_IMAGE = "/user-images";
   public static final String PREDEFINED_VOCAL_RANGE = "/predefined-vocal-ranges";
   public static final String VOCAL_TECHNIQUE = "/vocal-techniques";
   public static final String VOIVODESHIP = "/voivodeships";
+
+  public static final String IMAGE_UPLOAD = "/upload";
+  public static final String IMAGE_UPLOADS = "/image-uploads";
 
   private RestMappings() {}
 }

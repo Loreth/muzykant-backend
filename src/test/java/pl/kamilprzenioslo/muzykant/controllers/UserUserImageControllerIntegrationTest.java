@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectReader;
 import java.io.IOException;
 import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 import org.flywaydb.test.annotation.FlywayTest;
@@ -19,21 +21,29 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
-import pl.kamilprzenioslo.muzykant.dtos.Image;
+import pl.kamilprzenioslo.muzykant.dtos.UserImage;
 
 @FlywayTestExtension
 @FlywayTest
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class ImageControllerIntegrationTest {
+class UserUserImageControllerIntegrationTest {
   @Autowired private TestRestTemplate restTemplate;
   @Autowired private ObjectMapper objectMapper;
   private final String RESOURCE_LINK;
 
-  public ImageControllerIntegrationTest(@LocalServerPort int port) {
-    RESOURCE_LINK = "http://localhost:" + port + "/images";
+  public UserUserImageControllerIntegrationTest(@LocalServerPort int port) {
+    RESOURCE_LINK = "http://localhost:" + port + "/user-images";
   }
 
   @FlywayTest
@@ -49,8 +59,8 @@ class ImageControllerIntegrationTest {
     ResponseEntity<String> responseEntity = restTemplate.getForEntity(requestUri, String.class);
 
     JsonNode jsonResponseBody = objectMapper.readTree(responseEntity.getBody());
-    ObjectReader listReader = objectMapper.readerFor(new TypeReference<List<Image>>() {});
-    List<Image> responseAdList = listReader.readValue(jsonResponseBody.get("content"));
+    ObjectReader listReader = objectMapper.readerFor(new TypeReference<List<UserImage>>() {});
+    List<UserImage> responseAdList = listReader.readValue(jsonResponseBody.get("content"));
 
     assertThat(responseAdList).hasSize(2);
   }
@@ -68,8 +78,8 @@ class ImageControllerIntegrationTest {
     ResponseEntity<String> responseEntity = restTemplate.getForEntity(requestUri, String.class);
 
     JsonNode jsonResponseBody = objectMapper.readTree(responseEntity.getBody());
-    ObjectReader listReader = objectMapper.readerFor(new TypeReference<List<Image>>() {});
-    List<Image> responseAdList = listReader.readValue(jsonResponseBody.get("content"));
+    ObjectReader listReader = objectMapper.readerFor(new TypeReference<List<UserImage>>() {});
+    List<UserImage> responseAdList = listReader.readValue(jsonResponseBody.get("content"));
 
     assertThat(responseAdList).hasSize(3);
   }
@@ -77,13 +87,13 @@ class ImageControllerIntegrationTest {
   @FlywayTest
   @Test
   void shouldCreateEntityAndReturnDtoWithId() {
-    Image requestDto = new Image();
+    UserImage requestDto = new UserImage();
     requestDto.setLink("link");
     requestDto.setUserId(6);
 
-    ResponseEntity<Image> responseEntity =
-        restTemplate.postForEntity(RESOURCE_LINK, requestDto, Image.class);
-    Image responseDto = responseEntity.getBody();
+    ResponseEntity<UserImage> responseEntity =
+        restTemplate.postForEntity(RESOURCE_LINK, requestDto, UserImage.class);
+    UserImage responseDto = responseEntity.getBody();
 
     assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
     assertEquals("link", responseDto.getLink());
@@ -92,11 +102,11 @@ class ImageControllerIntegrationTest {
   @FlywayTest
   @Test
   void shouldNotCreateEntityWithoutMusicianIdInRequest() {
-    Image requestDto = new Image();
+    UserImage requestDto = new UserImage();
     requestDto.setLink("link");
 
-    ResponseEntity<Image> responseEntity =
-        restTemplate.postForEntity(RESOURCE_LINK, requestDto, Image.class);
+    ResponseEntity<UserImage> responseEntity =
+        restTemplate.postForEntity(RESOURCE_LINK, requestDto, UserImage.class);
 
     assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
   }
@@ -104,18 +114,18 @@ class ImageControllerIntegrationTest {
   @FlywayTest
   @Test
   void shouldUpdateExistingEntityCorrectly() {
-    ResponseEntity<Image> initialResponse =
-        restTemplate.getForEntity(RESOURCE_LINK + "/1", Image.class);
+    ResponseEntity<UserImage> initialResponse =
+        restTemplate.getForEntity(RESOURCE_LINK + "/1", UserImage.class);
 
-    Image existingResourceDto = initialResponse.getBody();
+    UserImage existingResourceDto = initialResponse.getBody();
     existingResourceDto.setLink("new Image link");
 
     restTemplate.put(RESOURCE_LINK + "/1", existingResourceDto);
 
-    ResponseEntity<Image> afterUpdateResponse =
-        restTemplate.getForEntity(RESOURCE_LINK + "/1", Image.class);
+    ResponseEntity<UserImage> afterUpdateResponse =
+        restTemplate.getForEntity(RESOURCE_LINK + "/1", UserImage.class);
 
-    Image updatedResourceDto = afterUpdateResponse.getBody();
+    UserImage updatedResourceDto = afterUpdateResponse.getBody();
 
     assertEquals("new Image link", updatedResourceDto.getLink());
   }
@@ -129,19 +139,19 @@ class ImageControllerIntegrationTest {
     ResponseEntity<String> responseEntity = restTemplate.getForEntity(requestUri, String.class);
 
     JsonNode jsonResponseBody = objectMapper.readTree(responseEntity.getBody());
-    ObjectReader listReader = objectMapper.readerFor(new TypeReference<List<Image>>() {});
-    List<Image> responseAdList = listReader.readValue(jsonResponseBody.get("content"));
+    ObjectReader listReader = objectMapper.readerFor(new TypeReference<List<UserImage>>() {});
+    List<UserImage> responseAdList = listReader.readValue(jsonResponseBody.get("content"));
 
     assertEquals(1, jsonResponseBody.get("totalPages").intValue());
-    assertThat(responseAdList.stream().map(Image::getId)).hasSize(3).allMatch(Objects::nonNull);
+    assertThat(responseAdList.stream().map(UserImage::getId)).hasSize(3).allMatch(Objects::nonNull);
   }
 
   @FlywayTest
   @Test
   void shouldReturnDtoUnderExistingId() {
-    ResponseEntity<Image> responseEntity =
-        restTemplate.getForEntity(RESOURCE_LINK + "/2", Image.class);
-    Image responseDto = responseEntity.getBody();
+    ResponseEntity<UserImage> responseEntity =
+        restTemplate.getForEntity(RESOURCE_LINK + "/2", UserImage.class);
+    UserImage responseDto = responseEntity.getBody();
 
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     assertEquals("placeholder", responseDto.getLink());
@@ -152,9 +162,46 @@ class ImageControllerIntegrationTest {
   @FlywayTest
   @Test
   void shouldNotReturnDtoUnderNotExistingId() {
-    ResponseEntity<Image> responseEntity =
-        restTemplate.getForEntity(RESOURCE_LINK + "/123", Image.class);
+    ResponseEntity<UserImage> responseEntity =
+        restTemplate.getForEntity(RESOURCE_LINK + "/123", UserImage.class);
 
     assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+  }
+
+  @FlywayTest
+  @Test
+  void shouldSaveUploadedImageInUploadDirectoryAndCreateUserImageEntity() throws IOException {
+    MultipartFile imageFile =
+        new MockMultipartFile("img123321", "filename.jpg", "image/jpeg", "mock img".getBytes());
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.MULTIPART_FORM_DATA);
+    MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+    body.add("file", imageFile.getResource());
+    body.add("userId", 3);
+    body.add("orderIndex", 1);
+
+    HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
+
+    ResponseEntity<String> responseEntity =
+        restTemplate.postForEntity(RESOURCE_LINK + "/upload", requestEntity, String.class);
+
+    String createdImageLink = responseEntity.getBody();
+
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    assertEquals(createdImageLink, RESOURCE_LINK + "/image-uploads/3_2.jpg");
+
+    //cleanup
+    Files.deleteIfExists(Path.of("./test-uploads/3_2.jpg"));
+  }
+
+  @FlywayTest
+  @Test
+  void downloadUserImage() {
+    ResponseEntity<Resource> responseEntity =
+        restTemplate.getForEntity(RESOURCE_LINK + "/image-uploads/3_1.jpg", Resource.class);
+
+    Resource body = responseEntity.getBody();
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    assertEquals("3_1.jpg", body.getFilename());
   }
 }

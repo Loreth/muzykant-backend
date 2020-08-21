@@ -12,8 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 import pl.kamilprzenioslo.muzykant.dtos.BandWantedAd;
 import pl.kamilprzenioslo.muzykant.persistance.entities.BandWantedAdEntity;
 import pl.kamilprzenioslo.muzykant.service.BandWantedAdService;
+import pl.kamilprzenioslo.muzykant.specifications.AdWithLookingPreferredGenresSpecification;
+import pl.kamilprzenioslo.muzykant.specifications.AdWithLookingPreferredInstrumentsSpecification;
 import pl.kamilprzenioslo.muzykant.specifications.AdWithPreferredGenresSpecification;
 import pl.kamilprzenioslo.muzykant.specifications.AdWithPreferredInstrumentsSpecification;
+import pl.kamilprzenioslo.muzykant.specifications.AdWithVoivodeshipsSpecification;
 import pl.kamilprzenioslo.muzykant.specifications.BandWantedAdSpecification;
 
 @RestController
@@ -30,16 +33,24 @@ public class BandWantedAdController extends BaseRestController<BandWantedAd, Int
   @GetMapping(RestMappings.SEARCH)
   public Page<BandWantedAd> getAllWithGivenParameters(
       BandWantedAdSpecification specification,
+      @RequestParam(required = false) List<Integer> voivodeshipIds,
       @RequestParam(required = false) List<Integer> preferredGenreIds,
       @RequestParam(required = false) List<Integer> preferredInstrumentIds,
+      @RequestParam(required = false) List<Integer> lookingPreferredGenreIds,
+      @RequestParam(required = false) List<Integer> lookingPreferredInstrumentIds,
       Pageable pageable) {
 
     return service.findAll(
         Stream.of(
                 specification,
+                new AdWithVoivodeshipsSpecification<BandWantedAdEntity>(voivodeshipIds),
                 new AdWithPreferredGenresSpecification<BandWantedAdEntity>(preferredGenreIds),
                 new AdWithPreferredInstrumentsSpecification<BandWantedAdEntity>(
-                    preferredInstrumentIds))
+                    preferredInstrumentIds),
+                new AdWithLookingPreferredGenresSpecification<BandWantedAdEntity>(
+                    lookingPreferredGenreIds),
+                new AdWithLookingPreferredInstrumentsSpecification<BandWantedAdEntity>(
+                    lookingPreferredInstrumentIds))
             .collect(Collectors.toList()),
         pageable);
   }

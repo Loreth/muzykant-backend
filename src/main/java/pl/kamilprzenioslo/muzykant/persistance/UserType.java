@@ -15,7 +15,7 @@ public enum UserType {
     return value;
   }
 
-  // workaround for annotations being unable to use enums they can use values from this class
+  // workaround for annotations being unable to use enums. They can use values from this class
   // instead
   public static class Values {
     public static final String BAND = "BAND";

@@ -71,7 +71,7 @@ class GenreControllerIntegrationTest {
     ObjectReader listReader = objectMapper.readerFor(new TypeReference<List<Genre>>() {});
     List<Genre> responseAdList = listReader.readValue(jsonResponseBody.get("content"));
 
-    assertThat(responseAdList).hasSize(35);
+    assertThat(responseAdList).hasSize(38);
   }
 
   @FlywayTest

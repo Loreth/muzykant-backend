@@ -51,9 +51,11 @@ public abstract class AbstractPersistable<ID extends Serializable> implements Pe
     return Objects.equals(id, that.id);
   }
 
+  /** Override only if entity contains a natural key - do not use any other field */
   @Override
   public int hashCode() {
-    // can't use only ID in hashCode, as object can't change it's hashcode after being added to Set
+    // necessary, because we can't simply use ID in hashCode, as object can't change its hashcode
+    // after being added to Set
     return 1;
   }
 }
