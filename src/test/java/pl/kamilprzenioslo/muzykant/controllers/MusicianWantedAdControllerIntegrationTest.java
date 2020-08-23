@@ -31,7 +31,7 @@ import pl.kamilprzenioslo.muzykant.dtos.Ad;
 import pl.kamilprzenioslo.muzykant.dtos.Genre;
 import pl.kamilprzenioslo.muzykant.dtos.MusicianWantedAd;
 import pl.kamilprzenioslo.muzykant.dtos.VocalRange;
-import pl.kamilprzenioslo.muzykant.persistance.UserType;
+import pl.kamilprzenioslo.muzykant.persistance.enums.UserType;
 
 @FlywayTestExtension
 @FlywayTest

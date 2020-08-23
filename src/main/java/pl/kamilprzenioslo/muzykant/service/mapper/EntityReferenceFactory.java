@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
-public class EntityFactory {
+public class EntityReferenceFactory {
 
   @PersistenceContext private EntityManager em;
 

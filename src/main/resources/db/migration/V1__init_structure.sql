@@ -40,6 +40,12 @@ CREATE TABLE Instrument
     name varchar(40) NOT NULL UNIQUE,
     PRIMARY KEY (id)
 );
+CREATE TABLE Authority
+(
+    id   int         NOT NULL AUTO_INCREMENT,
+    name varchar(30) NOT NULL UNIQUE,
+    PRIMARY KEY (id)
+);
 
 -- weak entities
 CREATE TABLE `User`
@@ -57,11 +63,13 @@ CREATE TABLE `User`
 );
 CREATE TABLE Credentials
 (
-    id       int          NOT NULL AUTO_INCREMENT,
-    email    varchar(255) NOT NULL UNIQUE,
-    password varchar(60)  NOT NULL,
-    user_id  int          NOT NULL,
+    id           int          NOT NULL AUTO_INCREMENT,
+    email        varchar(255) NOT NULL UNIQUE,
+    password     varchar(60)  NOT NULL,
+    authority_id int          NOT NULL,
+    user_id      int          NOT NULL,
     PRIMARY KEY (id),
+    CONSTRAINT FK_Credentials_Authority FOREIGN KEY (authority_id) REFERENCES Authority (id),
     CONSTRAINT FK_Credentials_User FOREIGN KEY (user_id) REFERENCES User (id) ON DELETE CASCADE
 );
 CREATE TABLE Band

@@ -5,7 +5,7 @@ import org.mapstruct.Mapping;
 import pl.kamilprzenioslo.muzykant.dtos.UserImage;
 import pl.kamilprzenioslo.muzykant.persistance.entities.UserImageEntity;
 
-@Mapper(uses = EntityFactory.class)
+@Mapper(uses = EntityReferenceFactory.class)
 public interface UserImageMapper extends BaseMapper<UserImage, UserImageEntity> {
 
   @Mapping(target = "userId", source = "user.id")

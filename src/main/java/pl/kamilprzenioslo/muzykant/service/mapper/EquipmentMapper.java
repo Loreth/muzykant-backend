@@ -5,7 +5,7 @@ import org.mapstruct.Mapping;
 import pl.kamilprzenioslo.muzykant.dtos.Equipment;
 import pl.kamilprzenioslo.muzykant.persistance.entities.EquipmentEntity;
 
-@Mapper(uses = EntityFactory.class)
+@Mapper(uses = EntityReferenceFactory.class)
 public interface EquipmentMapper extends BaseMapper<Equipment, EquipmentEntity> {
 
   @Mapping(target = "musicianId", source = "musician.id")

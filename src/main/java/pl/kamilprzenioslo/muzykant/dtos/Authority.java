@@ -3,14 +3,12 @@ package pl.kamilprzenioslo.muzykant.dtos;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import pl.kamilprzenioslo.muzykant.persistance.enums.UserAuthority;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Credentials extends BaseDto<Integer> {
+public class Authority extends BaseDto<Integer> {
 
-  private String email;
-  private String password;
-  private Authority authority;
-  private Integer userId;
+  private UserAuthority userAuthority;
 }

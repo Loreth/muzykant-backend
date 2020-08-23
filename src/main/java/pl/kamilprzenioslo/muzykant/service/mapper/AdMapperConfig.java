@@ -9,7 +9,7 @@ import pl.kamilprzenioslo.muzykant.persistance.entities.AdEntity;
 
 @MapperConfig(
     uses = {
-      EntityFactory.class,
+      EntityReferenceFactory.class,
       GenreMapper.class,
       InstrumentMapper.class,
       VoivodeshipMapper.class

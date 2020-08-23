@@ -25,6 +25,7 @@
     <flyway.version>6.5.0</flyway.version>
     <flyway-spring-test.version>6.4.0</flyway-spring-test.version>
     <hibernate-jpamodelgen.version>5.4.18.Final</hibernate-jpamodelgen.version>
+    <jjwt.version>0.9.1</jjwt.version>
   </properties>
 
   <dependencies>
@@ -108,6 +109,12 @@
       <version>${flyway-spring-test.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>io.jsonwebtoken</groupId>
+      <artifactId>jjwt</artifactId>
+      <version>${jjwt.version}</version>
+    </dependency>
+
   </dependencies>
 
   <build>

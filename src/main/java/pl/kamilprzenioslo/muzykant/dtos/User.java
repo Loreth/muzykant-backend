@@ -1,10 +1,11 @@
 package pl.kamilprzenioslo.muzykant.dtos;
 
 import java.util.Set;
+import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.kamilprzenioslo.muzykant.persistance.UserType;
+import pl.kamilprzenioslo.muzykant.persistance.enums.UserType;
 
 @Data
 @NoArgsConstructor
@@ -12,7 +13,7 @@ import pl.kamilprzenioslo.muzykant.persistance.UserType;
 public class User extends BaseDto<Integer> {
 
   private UserType userType;
-  private String linkName;
+  @NotNull private String linkName;
   private String description;
   private String phone;
   private String city;

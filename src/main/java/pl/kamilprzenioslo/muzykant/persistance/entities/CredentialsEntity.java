@@ -3,6 +3,8 @@ package pl.kamilprzenioslo.muzykant.persistance.entities;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +22,10 @@ public class CredentialsEntity extends AbstractPersistable<Integer> {
 
   @Column(name = "user_id")
   private int userId;
+
+  @ManyToOne
+  @JoinColumn(name = "authority_id")
+  private AuthorityEntity authority;
 
   @Override
   public boolean equals(Object o) {

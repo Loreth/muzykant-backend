@@ -17,7 +17,8 @@ public class UserImageSpecification implements Specification<UserImageEntity> {
   private final Integer userId;
 
   @Override
-  public Predicate toPredicate(Root<UserImageEntity> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
+  public Predicate toPredicate(
+      Root<UserImageEntity> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
     if (userId != null) {
       Join<UserImageEntity, UserEntity> userJoin = root.join(UserImageEntity_.user);
       cq.where(cb.equal(userJoin.get(UserEntity_.id), userId));

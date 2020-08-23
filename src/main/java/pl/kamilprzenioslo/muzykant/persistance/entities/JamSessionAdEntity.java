@@ -4,7 +4,7 @@ import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
-import pl.kamilprzenioslo.muzykant.persistance.AdType.Values;
+import pl.kamilprzenioslo.muzykant.persistance.enums.AdType.Values;
 
 @Entity
 @Table(name = "jam_session_ad")

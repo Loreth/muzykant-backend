@@ -190,7 +190,7 @@ class UserUserImageControllerIntegrationTest {
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     assertEquals(createdImageLink, RESOURCE_LINK + "/image-uploads/3_2.jpg");
 
-    //cleanup
+    // cleanup
     Files.deleteIfExists(Path.of("./test-uploads/3_2.jpg"));
   }
 

@@ -125,6 +125,11 @@ VALUES (1, 'Akordeon'),
        (47, 'Gitara klasyczna'),
        (48, 'Flet poprzeczny');
 
+INSERT INTO Authority(id, name)
+VALUES (1, 'ROLE_MUSICIAN'),
+       (2, 'ROLE_BAND'),
+       (3, 'ROLE_REGULAR_USER');
+
 INSERT INTO `User`(id, user_type, link_name, description, phone, city, voivodeship_id)
 VALUES (1, 'REGULAR', 'adi', 'Coś o mnie', '837473123', 'Wrocław', 1),
        (2, 'MUSICIAN', 'dani', 'Coś o mnie', '125373123', 'Wrocław', 1),
@@ -139,15 +144,16 @@ UPDATE User
 SET profile_image_link='http://localhost:8080/user-images/image-uploads/3_profile-image.jpg'
 WHERE id = 3;
 
-INSERT INTO Credentials(id, email, password, user_id)
-VALUES (1, 'adam@gmail.com', 'TEMPORARY', 1),
-       (2, 'daniel@gmail.com', 'TEMPORARY', 2),
-       (3, 'grajek@gmail.com', 'TEMPORARY', 3),
-       (4, 'muzyk@yahoo.com', 'TEMPORARY', 4),
-       (5, 'ciekawska@yahoo.com', 'TEMPORARY', 5),
-       (6, 'superzespol@yahoo.com', 'TEMPORARY', 6),
-       (7, 'anna.kowalska@onet.pl', 'TEMPORARY', 7),
-       (8, 'jan.kowalski@onet.pl', 'TEMPORARY', 8);
+INSERT INTO Credentials(id, email, password, authority_id, user_id)
+VALUES (1, 'adam@gmail.com', '$2a$10$zifVLlf8WvlHvfeLLiqvKe44GxtATH2uo2TPjl6VSuRmHC/9rkFJC', 3,
+        1), -- mocnehaslo123
+       (2, 'daniel@gmail.com', 'TEMPORARY', 1, 2),
+       (3, 'grajek@gmail.com', 'TEMPORARY', 1, 3),
+       (4, 'muzyk@yahoo.com', 'TEMPORARY', 1, 4),
+       (5, 'ciekawska@yahoo.com', 'TEMPORARY', 1, 5),
+       (6, 'superzespol@yahoo.com', 'TEMPORARY', 2, 6),
+       (7, 'anna.kowalska@onet.pl', 'TEMPORARY', 2, 7),
+       (8, 'jan.kowalski@onet.pl', 'TEMPORARY', 2, 8);
 
 INSERT INTO Band(user_id, name, formation_year)
 VALUES (6, 'Turbo akcja', 2016),

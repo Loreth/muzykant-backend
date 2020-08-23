@@ -1,4 +1,4 @@
-package pl.kamilprzenioslo.muzykant.persistance;
+package pl.kamilprzenioslo.muzykant.persistance.enums;
 
 public enum AdType {
   BAND_WANTED(Values.BAND_WANTED),

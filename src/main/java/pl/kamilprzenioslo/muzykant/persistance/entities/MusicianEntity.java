@@ -13,7 +13,7 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import pl.kamilprzenioslo.muzykant.persistance.UserType.Values;
+import pl.kamilprzenioslo.muzykant.persistance.enums.UserType.Values;
 
 @Getter
 @Setter

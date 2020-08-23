@@ -1,18 +1,24 @@
-package pl.kamilprzenioslo.muzykant.persistance;
+package pl.kamilprzenioslo.muzykant.persistance.enums;
 
 public enum UserType {
-  BAND(Values.BAND),
-  MUSICIAN(Values.MUSICIAN),
-  REGULAR(Values.REGULAR);
+  BAND(Values.BAND, UserAuthority.ROLE_BAND),
+  MUSICIAN(Values.MUSICIAN, UserAuthority.ROLE_MUSICIAN),
+  REGULAR(Values.REGULAR, UserAuthority.ROLE_REGULAR_USER);
 
   private final String value;
+  private final UserAuthority userAuthority;
 
-  UserType(String value) {
+  UserType(String value, UserAuthority userAuthority) {
     this.value = value;
+    this.userAuthority = userAuthority;
   }
 
   public String getValue() {
     return value;
+  }
+
+  public UserAuthority getUserAuthority() {
+    return userAuthority;
   }
 
   // workaround for annotations being unable to use enums. They can use values from this class

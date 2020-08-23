@@ -7,8 +7,8 @@ import javax.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import pl.kamilprzenioslo.muzykant.persistance.AdType;
-import pl.kamilprzenioslo.muzykant.persistance.UserType;
+import pl.kamilprzenioslo.muzykant.persistance.enums.AdType;
+import pl.kamilprzenioslo.muzykant.persistance.enums.UserType;
 
 @Data
 @NoArgsConstructor

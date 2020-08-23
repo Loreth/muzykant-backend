@@ -6,11 +6,16 @@ import java.util.stream.Stream;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.kamilprzenioslo.muzykant.dtos.Musician;
+import pl.kamilprzenioslo.muzykant.dtos.security.SignUpRequest;
 import pl.kamilprzenioslo.muzykant.persistance.entities.MusicianEntity;
+import pl.kamilprzenioslo.muzykant.persistance.enums.UserAuthority;
+import pl.kamilprzenioslo.muzykant.service.CredentialsService;
 import pl.kamilprzenioslo.muzykant.service.MusicianService;
 import pl.kamilprzenioslo.muzykant.specifications.MusicianSpecification;
 import pl.kamilprzenioslo.muzykant.specifications.UserWithGenresSpecification;
@@ -21,9 +26,11 @@ import pl.kamilprzenioslo.muzykant.specifications.UserWithInstrumentsSpecificati
 public class MusicianController extends BaseRestController<Musician, Integer> {
 
   private final MusicianService service;
+  private final CredentialsService credentialsService;
 
-  public MusicianController(MusicianService service) {
+  public MusicianController(CredentialsService credentialsService, MusicianService service) {
     super(service);
+    this.credentialsService = credentialsService;
     this.service = service;
   }
 
@@ -41,5 +48,11 @@ public class MusicianController extends BaseRestController<Musician, Integer> {
                 new UserWithInstrumentsSpecification<MusicianEntity>(instrumentIds))
             .collect(Collectors.toList()),
         pageable);
+  }
+
+  @PostMapping(RestMappings.SIGN_UP)
+  public void signUp(@RequestBody SignUpRequest<Musician> signUpRequest) {
+    Musician savedMusician = service.save(signUpRequest.getUser());
+    credentialsService.signUp(signUpRequest, UserAuthority.ROLE_MUSICIAN, savedMusician.getId());
   }
 }

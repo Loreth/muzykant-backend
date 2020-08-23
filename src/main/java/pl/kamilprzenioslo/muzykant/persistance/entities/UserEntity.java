@@ -20,7 +20,7 @@ import lombok.EqualsAndHashCode.Exclude;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import pl.kamilprzenioslo.muzykant.persistance.UserType;
+import pl.kamilprzenioslo.muzykant.persistance.enums.UserType;
 
 @Getter
 @Setter

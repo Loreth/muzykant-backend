@@ -11,7 +11,7 @@ import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import pl.kamilprzenioslo.muzykant.persistance.AdType.Values;
+import pl.kamilprzenioslo.muzykant.persistance.enums.AdType.Values;
 
 @Getter
 @Setter
