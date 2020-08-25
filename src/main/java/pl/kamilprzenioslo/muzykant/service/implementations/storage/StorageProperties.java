@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 
 @Getter
 @Setter
-@ConfigurationProperties(prefix = "storage")
+@ConfigurationProperties(prefix = "app.storage")
 public class StorageProperties {
 
   @NotNull private String location;

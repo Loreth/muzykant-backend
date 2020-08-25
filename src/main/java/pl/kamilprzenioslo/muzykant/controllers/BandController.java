@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -50,7 +51,7 @@ public class BandController extends BaseRestController<Band, Integer> {
   }
 
   @PostMapping(RestMappings.SIGN_UP)
-  public void signUp(SignUpRequest<Band> signUpRequest) {
+  public void signUp(@RequestBody SignUpRequest<Band> signUpRequest) {
     Band savedBand = service.save(signUpRequest.getUser());
     credentialsService.signUp(signUpRequest, UserAuthority.ROLE_BAND, savedBand.getId());
   }

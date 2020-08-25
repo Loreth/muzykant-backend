@@ -42,6 +42,14 @@ public class CredentialsServiceImpl
   }
 
   @Override
+  public Credentials findByEmail(String username) {
+    return mapper.mapToDto(
+        repository
+            .findByEmail(username)
+            .orElseThrow(() -> new UsernameNotFoundException(username)));
+  }
+
+  @Override
   public void signUp(SignUpRequest<?> signUpRequest, UserAuthority userAuthority, Integer userId) {
     AuthorityEntity authorityEntity = authorityRepository.findByUserAuthority(userAuthority);
     CredentialsEntity credentialsEntity = new CredentialsEntity();

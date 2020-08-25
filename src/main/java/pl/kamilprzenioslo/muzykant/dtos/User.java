@@ -17,6 +17,7 @@ public class User extends BaseDto<Integer> {
   private String description;
   private String phone;
   private String city;
+  @NotNull
   private Voivodeship voivodeship;
   private String profileImageLink;
   private Set<UserImage> userImages;

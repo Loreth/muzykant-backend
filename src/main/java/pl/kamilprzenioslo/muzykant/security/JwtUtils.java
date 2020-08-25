@@ -1,11 +1,11 @@
 package pl.kamilprzenioslo.muzykant.security;
 
-import io.jsonwebtoken.ExpiredJwtException;
+import static pl.kamilprzenioslo.muzykant.security.JwtConstants.JWT_PREFIX;
+
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.SignatureException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.security.Keys;
 import java.util.Date;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,37 +23,36 @@ public class JwtUtils {
   @Value("${app.jwtExpirationMs}")
   private int jwtExpirationMs;
 
-  public String generateToken(Authentication authentication) {
+  public String generateToken(Authentication authentication, Claims claims) {
     UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
 
     return Jwts.builder()
-        .setSubject((userPrincipal.getUsername()))
+        .setClaims(claims)
+        .setSubject(userPrincipal.getUsername())
         .setIssuedAt(new Date())
         .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
-        .signWith(SignatureAlgorithm.HS512, jwtSecret)
+        .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()), SignatureAlgorithm.HS256)
         .compact();
   }
 
   public String getUsernameFromToken(String token) {
-    return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
+    return Jwts.parserBuilder()
+        .setSigningKey(jwtSecret)
+        .build()
+        .parseClaimsJws(token)
+        .getBody()
+        .getSubject();
   }
 
-  public boolean validateToken(String token) {
-    try {
-      Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token);
-      return true;
-    } catch (SignatureException e) {
-      log.error("Invalid JWT signature: {}", e.getMessage());
-    } catch (MalformedJwtException e) {
-      log.error("Invalid JWT token: {}", e.getMessage());
-    } catch (ExpiredJwtException e) {
-      log.error("JWT token is expired: {}", e.getMessage());
-    } catch (UnsupportedJwtException e) {
-      log.error("JWT token is unsupported: {}", e.getMessage());
-    } catch (IllegalArgumentException e) {
-      log.error("JWT claims string is empty: {}", e.getMessage());
+  public void validateToken(String token) {
+    Jwts.parserBuilder().setSigningKey(jwtSecret).build().parseClaimsJws(token);
+  }
+
+  public String parseJwtHeader(String header) {
+    if (header != null && header.startsWith(JWT_PREFIX)) {
+      return header.substring(7);
     }
 
-    return false;
+    return null;
   }
 }

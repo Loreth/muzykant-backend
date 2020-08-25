@@ -2,6 +2,7 @@ package pl.kamilprzenioslo.muzykant.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -22,17 +23,29 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.util.UriComponentsBuilder;
 import pl.kamilprzenioslo.muzykant.dtos.Band;
+import pl.kamilprzenioslo.muzykant.dtos.Credentials;
 import pl.kamilprzenioslo.muzykant.dtos.Genre;
 import pl.kamilprzenioslo.muzykant.dtos.Voivodeship;
+import pl.kamilprzenioslo.muzykant.dtos.security.SignUpRequest;
+import pl.kamilprzenioslo.muzykant.persistance.enums.UserAuthority;
+import pl.kamilprzenioslo.muzykant.service.CredentialsService;
 
 @FlywayTestExtension
 @FlywayTest
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class BandControllerIntegrationTest {
-  @Autowired private TestRestTemplate restTemplate;
-  @Autowired private ObjectMapper objectMapper;
+
+  @Autowired
+  private TestRestTemplate restTemplate;
+  @Autowired
+  private ObjectMapper objectMapper;
+  @Autowired
+  private CredentialsService credentialsService;
+  @Autowired
+  private PasswordEncoder passwordEncoder;
   private final String RESOURCE_LINK;
 
   public BandControllerIntegrationTest(@LocalServerPort int port) {
@@ -209,5 +222,41 @@ class BandControllerIntegrationTest {
     assertEquals("Wrocław", responseDto.getCity());
     assertEquals(7, responseDto.getId());
     assertEquals((short) 2020, responseDto.getFormationYear());
+  }
+
+  @FlywayTest
+  @Test
+  void shouldSignUpCorrectlyAndSaveCredentialsAndBandToRepository() {
+    Voivodeship voivodeship = new Voivodeship();
+    voivodeship.setId(10);
+
+    Band newBand = new Band();
+    newBand.setName("Cool band");
+    newBand.setCity("city");
+    newBand.setVoivodeship(voivodeship);
+    newBand.setLinkName("superuser333");
+    newBand.setPhone("123123123");
+
+    SignUpRequest<Band> signUpRequest =
+        new SignUpRequest<>("email@gmail.com", "mocnehaslo123", newBand);
+
+    ResponseEntity<String> responseEntity =
+        restTemplate.postForEntity(RESOURCE_LINK + "/sign-up", signUpRequest, String.class);
+
+    ResponseEntity<Band> createdBandResponse =
+        restTemplate.getForEntity(RESOURCE_LINK + "/9", Band.class);
+    Band createdBand = createdBandResponse.getBody();
+    Credentials createdCredentials = credentialsService.findById(9).orElseThrow();
+
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    assertEquals("Cool band", createdBand.getName());
+    assertEquals("city", createdBand.getCity());
+    assertEquals(10, createdBand.getVoivodeship().getId());
+    assertEquals("superuser333", newBand.getLinkName());
+    assertEquals("123123123", newBand.getPhone());
+    assertEquals("email@gmail.com", createdCredentials.getEmail());
+    assertTrue(passwordEncoder.matches("mocnehaslo123", createdCredentials.getPassword()));
+    assertEquals(UserAuthority.ROLE_BAND, createdCredentials.getAuthority().getUserAuthority());
+    assertEquals(9, createdCredentials.getUserId());
   }
 }

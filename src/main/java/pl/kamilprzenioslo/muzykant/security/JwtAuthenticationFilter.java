@@ -1,62 +1,70 @@
 package pl.kamilprzenioslo.muzykant.security;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
-import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import pl.kamilprzenioslo.muzykant.dtos.Credentials;
+import pl.kamilprzenioslo.muzykant.dtos.security.LoginRequest;
+import pl.kamilprzenioslo.muzykant.service.CredentialsService;
 
 @Slf4j
 @RequiredArgsConstructor
-@Component
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
-  public static final String JWT_PREFIX = "Bearer ";
   private final JwtUtils jwtUtils;
-  private final UserDetailsService userDetailsService;
+  private final ObjectMapper objectMapper;
+  private final CredentialsService credentialsService;
+  private final AuthenticationManager authenticationManager;
+  private Credentials credentials;
 
   @Override
-  protected void doFilterInternal(
-      HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
-      throws ServletException, IOException {
+  public Authentication attemptAuthentication(
+      HttpServletRequest request, HttpServletResponse response) {
     try {
-      String jwt = parseJwt(request);
-      if (jwt != null && jwtUtils.validateToken(jwt)) {
-        String username = jwtUtils.getUsernameFromToken(jwt);
+      LoginRequest loginRequest =
+          objectMapper.readValue(request.getInputStream(), LoginRequest.class);
+      credentials = credentialsService.findByEmail(loginRequest.getUsername());
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        UsernamePasswordAuthenticationToken authentication =
-            new UsernamePasswordAuthenticationToken(
-                userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
-        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-      }
-    } catch (Exception e) {
-      log.error("Cannot set user authentication.", e);
+      return authenticationManager.authenticate(
+          new UsernamePasswordAuthenticationToken(
+              loginRequest.getUsername(),
+              loginRequest.getPassword(),
+              List.of(credentials.getAuthority())));
+    } catch (IOException e) {
+      throw new InternalAuthenticationServiceException(e.getMessage());
     }
-
-    filterChain.doFilter(request, response);
   }
 
-  private String parseJwt(HttpServletRequest request) {
-    String headerAuth = request.getHeader(HttpHeaders.AUTHORIZATION);
-
-    if (StringUtils.hasText(headerAuth) && headerAuth.startsWith(JWT_PREFIX)) {
-      return headerAuth.substring(7);
-    }
-
-    return null;
+  @Override
+  protected void successfulAuthentication(
+      HttpServletRequest request,
+      HttpServletResponse response,
+      FilterChain chain,
+      Authentication authResult)
+      throws IOException {
+    Claims claims =
+        Jwts.claims(
+            Map.of(
+                "authority",
+                credentials.getAuthority().getAuthority(),
+                "userId",
+                credentials.getUserId()));
+    String token = jwtUtils.generateToken(authResult, claims);
+    response.setContentType(MediaType.APPLICATION_JSON.toString());
+    response.getWriter().print("{\"token\": \"" + token + "\"}");
   }
 }
