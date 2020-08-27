@@ -130,6 +130,17 @@ VALUES (1, 'ROLE_MUSICIAN'),
        (2, 'ROLE_BAND'),
        (3, 'ROLE_REGULAR_USER');
 
+INSERT INTO Email_confirmation(email, password, token_uuid, token_expiration, confirmed)
+VALUES ('email@gmail.com',
+        '$2a$10$zifVLlf8WvlHvfeLLiqvKe44GxtATH2uo2TPjl6VSuRmHC/9rkFJC', -- mocnehaslo123
+        'c614e388-6bc3-4abc-87cb-e4d8dbd73b3c', '9999-12-31 23:59:59', true),
+       ('unconfirmedmail@unconfirmed.com',
+        '$2a$10$G7uY1WEgk44cmLV8X1b/M.zyHJOGtUcGf70LEmpcR098Izd/krFD2', -- passpass56
+        '6d8e6ea9-8af9-4716-96bc-6f910ef61b76', '2100-12-31 23:59:59', false),
+       ('expired_token@expired.pl',
+        '$2a$10$G7uY1WEgk44cmLV8X1b/M.zyHJOGtUcGf70LEmpcR098Izd/krFD2', -- passpass56
+        'a163ca90-5e57-4861-9e21-119d26923c63', '2020-08-08 12:00:12', false);
+
 INSERT INTO `User`(id, user_type, link_name, description, phone, city, voivodeship_id)
 VALUES (1, 'REGULAR', 'adi', 'Coś o mnie', '837473123', 'Wrocław', 1),
        (2, 'MUSICIAN', 'dani', 'Coś o mnie', '125373123', 'Wrocław', 1),

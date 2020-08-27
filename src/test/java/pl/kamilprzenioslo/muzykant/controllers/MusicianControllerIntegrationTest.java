@@ -33,7 +33,7 @@ import pl.kamilprzenioslo.muzykant.dtos.Instrument;
 import pl.kamilprzenioslo.muzykant.dtos.Musician;
 import pl.kamilprzenioslo.muzykant.dtos.Person;
 import pl.kamilprzenioslo.muzykant.dtos.Voivodeship;
-import pl.kamilprzenioslo.muzykant.dtos.security.SignUpRequest;
+import pl.kamilprzenioslo.muzykant.dtos.security.VerifiedEmailSignUpRequest;
 import pl.kamilprzenioslo.muzykant.persistance.enums.UserAuthority;
 import pl.kamilprzenioslo.muzykant.service.CredentialsService;
 
@@ -251,11 +251,12 @@ class MusicianControllerIntegrationTest {
     newMusician.setLinkName("superuser333");
     newMusician.setPhone("123123123");
 
-    SignUpRequest<Musician> signUpRequest =
-        new SignUpRequest<>("email@gmail.com", "mocnehaslo123", newMusician);
+    VerifiedEmailSignUpRequest<Musician> verifiedEmailSignUpRequest =
+        new VerifiedEmailSignUpRequest<>("email@gmail.com", newMusician);
 
     ResponseEntity<String> responseEntity =
-        restTemplate.postForEntity(RESOURCE_LINK + "/sign-up", signUpRequest, String.class);
+        restTemplate.postForEntity(
+            RESOURCE_LINK + "/sign-up", verifiedEmailSignUpRequest, String.class);
 
     ResponseEntity<Musician> createdMusicianResponse =
         restTemplate.getForEntity(RESOURCE_LINK + "/9", Musician.class);

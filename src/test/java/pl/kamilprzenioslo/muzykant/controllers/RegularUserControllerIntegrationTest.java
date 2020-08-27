@@ -30,7 +30,7 @@ import pl.kamilprzenioslo.muzykant.dtos.Credentials;
 import pl.kamilprzenioslo.muzykant.dtos.Person;
 import pl.kamilprzenioslo.muzykant.dtos.RegularUser;
 import pl.kamilprzenioslo.muzykant.dtos.Voivodeship;
-import pl.kamilprzenioslo.muzykant.dtos.security.SignUpRequest;
+import pl.kamilprzenioslo.muzykant.dtos.security.VerifiedEmailSignUpRequest;
 import pl.kamilprzenioslo.muzykant.persistance.enums.UserAuthority;
 import pl.kamilprzenioslo.muzykant.service.CredentialsService;
 
@@ -200,11 +200,12 @@ class RegularUserControllerIntegrationTest {
     newRegularUser.setLinkName("superuser333");
     newRegularUser.setPhone("123123123");
 
-    SignUpRequest<RegularUser> signUpRequest =
-        new SignUpRequest<>("email@gmail.com", "mocnehaslo123", newRegularUser);
+    VerifiedEmailSignUpRequest<RegularUser> verifiedEmailSignUpRequest =
+        new VerifiedEmailSignUpRequest<>("email@gmail.com", newRegularUser);
 
     ResponseEntity<String> responseEntity =
-        restTemplate.postForEntity(RESOURCE_LINK + "/sign-up", signUpRequest, String.class);
+        restTemplate.postForEntity(
+            RESOURCE_LINK + "/sign-up", verifiedEmailSignUpRequest, String.class);
 
     ResponseEntity<RegularUser> createdRegularUserResponse =
         restTemplate.getForEntity(RESOURCE_LINK + "/9", RegularUser.class);

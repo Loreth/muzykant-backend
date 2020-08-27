@@ -46,6 +46,16 @@ CREATE TABLE Authority
     name varchar(30) NOT NULL UNIQUE,
     PRIMARY KEY (id)
 );
+CREATE TABLE Email_confirmation
+(
+    id               int          NOT NULL AUTO_INCREMENT,
+    email            varchar(255) NOT NULL UNIQUE,
+    password         varchar(60)  NOT NULL,
+    token_uuid       varchar(36)  NOT NULL,
+    token_expiration datetime     NOT NULL,
+    confirmed        bool         NOT NULL DEFAULT FALSE,
+    PRIMARY KEY (id)
+);
 
 -- weak entities
 CREATE TABLE `User`

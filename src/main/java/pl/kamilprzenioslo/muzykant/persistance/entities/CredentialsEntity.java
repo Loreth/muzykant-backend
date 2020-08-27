@@ -18,6 +18,7 @@ import lombok.ToString;
 public class CredentialsEntity extends AbstractPersistable<Integer> {
 
   private String email;
+  @ToString.Exclude
   private String password;
 
   @OneToOne

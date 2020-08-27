@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.kamilprzenioslo.muzykant.dtos.Musician;
-import pl.kamilprzenioslo.muzykant.dtos.security.SignUpRequest;
+import pl.kamilprzenioslo.muzykant.dtos.security.VerifiedEmailSignUpRequest;
 import pl.kamilprzenioslo.muzykant.persistance.entities.MusicianEntity;
 import pl.kamilprzenioslo.muzykant.persistance.enums.UserAuthority;
 import pl.kamilprzenioslo.muzykant.service.CredentialsService;
@@ -51,8 +51,9 @@ public class MusicianController extends BaseRestController<Musician, Integer> {
   }
 
   @PostMapping(RestMappings.SIGN_UP)
-  public void signUp(@RequestBody SignUpRequest<Musician> signUpRequest) {
-    Musician savedMusician = service.save(signUpRequest.getUser());
-    credentialsService.signUp(signUpRequest, UserAuthority.ROLE_MUSICIAN, savedMusician.getId());
+  public void signUp(@RequestBody VerifiedEmailSignUpRequest<Musician> verifiedEmailSignUpRequest) {
+    Musician savedMusician = service.save(verifiedEmailSignUpRequest.getUser());
+    credentialsService.createAccount(
+        verifiedEmailSignUpRequest, UserAuthority.ROLE_MUSICIAN, savedMusician.getId());
   }
 }
