@@ -14,15 +14,22 @@ import pl.kamilprzenioslo.muzykant.dtos.Musician;
 import pl.kamilprzenioslo.muzykant.dtos.security.SignUpRequest;
 import pl.kamilprzenioslo.muzykant.persistance.entities.AuthorityEntity;
 import pl.kamilprzenioslo.muzykant.persistance.entities.CredentialsEntity;
+import pl.kamilprzenioslo.muzykant.persistance.entities.RegularUserEntity;
+import pl.kamilprzenioslo.muzykant.persistance.entities.UserEntity;
 import pl.kamilprzenioslo.muzykant.persistance.enums.UserAuthority;
 import pl.kamilprzenioslo.muzykant.persistance.repositories.AuthorityRepository;
 import pl.kamilprzenioslo.muzykant.persistance.repositories.CredentialsRepository;
+import pl.kamilprzenioslo.muzykant.persistance.repositories.UserRepository;
 
 @ExtendWith(MockitoExtension.class)
 class CredentialsServiceImplTest {
   @Mock CredentialsRepository credentialsRepository;
-  @Mock AuthorityRepository authorityRepository;
-  @Mock PasswordEncoder passwordEncoder;
+  @Mock
+  AuthorityRepository authorityRepository;
+  @Mock
+  UserRepository userRepository;
+  @Mock
+  PasswordEncoder passwordEncoder;
   @InjectMocks CredentialsServiceImpl credentialsService;
 
   @Test
@@ -32,10 +39,13 @@ class CredentialsServiceImplTest {
     AuthorityEntity authorityEntity = new AuthorityEntity();
     authorityEntity.setUserAuthority(UserAuthority.ROLE_MUSICIAN);
     authorityEntity.setId(1);
+    UserEntity userEntity = new RegularUserEntity();
+    userEntity.setId(1);
     given(authorityRepository.findByUserAuthority(UserAuthority.ROLE_MUSICIAN))
         .willReturn(authorityEntity);
     given(passwordEncoder.encode("mocnehaslo123"))
         .willReturn(new BCryptPasswordEncoder().encode("mocnehaslo123"));
+    given(userRepository.getOne(1)).willReturn(userEntity);
 
     credentialsService.signUp(signUpRequest, UserAuthority.ROLE_MUSICIAN, 1);
 
@@ -44,7 +54,7 @@ class CredentialsServiceImplTest {
     expectedCredentialsEntity.setPassword(
         "$2a$10$zifVLlf8WvlHvfeLLiqvKe44GxtATH2uo2TPjl6VSuRmHC/9rkFJC");
     expectedCredentialsEntity.setAuthority(authorityEntity);
-    expectedCredentialsEntity.setUserId(1);
+    expectedCredentialsEntity.setUser(userEntity);
     verify(credentialsRepository).save(expectedCredentialsEntity);
   }
 }

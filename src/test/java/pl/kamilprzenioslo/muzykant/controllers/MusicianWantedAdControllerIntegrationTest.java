@@ -259,7 +259,7 @@ class MusicianWantedAdControllerIntegrationTest {
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     assertEquals((byte) 20, responseDto.getMinAge());
     assertEquals((byte) 30, responseDto.getMaxAge());
-    assertEquals("K", responseDto.getPreferredGender());
+    assertEquals("F", responseDto.getPreferredGender());
     assertEquals("Opis opis", responseDto.getDescription());
     assertEquals("Warszawa", responseDto.getLocation());
     assertEquals(LocalDate.parse("2020-08-13"), responseDto.getPublishedDate());

@@ -62,7 +62,9 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 "authority",
                 credentials.getAuthority().getAuthority(),
                 "userId",
-                credentials.getUserId()));
+                credentials.getUserId(),
+                "linkName",
+                credentials.getLinkName()));
     String token = jwtUtils.generateToken(authResult, claims);
     response.setContentType(MediaType.APPLICATION_JSON.toString());
     response.getWriter().print("{\"token\": \"" + token + "\"}");

@@ -20,8 +20,8 @@ INSERT INTO Person(id, first_name, last_name, pseudo, gender, birthdate)
 VALUES (1, 'Adam', 'Dąbek', 'Adi', 'M', '1997-02-03'),
        (2, 'Daniel', 'Wójcikowski', 'Dan', 'M', '1994-04-07'),
        (3, 'Andrzej', 'Zalewski', 'Grajek', 'M', '1985-11-12'),
-       (4, 'Joanna', 'Wieczorowska', null, 'K', '1990-08-15'),
-       (5, 'Wiktoria', 'Dobrzyńska', 'Wiki', 'K', '2000-01-02');
+       (4, 'Joanna', 'Wieczorowska', null, 'F', '1990-08-15'),
+       (5, 'Wiktoria', 'Dobrzyńska', 'Wiki', 'F', '2000-01-02');
 
 INSERT INTO Genre(id, name)
 VALUES (1, 'Pop'),
@@ -193,8 +193,8 @@ VALUES (1),
 
 INSERT INTO Musician_wanted_ad(ad_id, preferred_gender, min_age, max_age, vocal_range_id)
 VALUES (3, null, null, null, null),
-       (4, 'K', 20, 30, null),
-       (5, 'K', 45, 60, null),
+       (4, 'F', 20, 30, null),
+       (5, 'F', 45, 60, null),
        (6, 'M', 30, 60, null),
        (7, 'M', null, null, null);
 

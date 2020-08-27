@@ -13,4 +13,5 @@ public class Credentials extends BaseDto<Integer> {
   private String password;
   private Authority authority;
   private Integer userId;
+  private String linkName;
 }

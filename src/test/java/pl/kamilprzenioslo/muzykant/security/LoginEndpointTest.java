@@ -55,6 +55,7 @@ class LoginEndpointTest {
         .requireSubject("adam@gmail.com")
         .require("authority", UserAuthority.ROLE_REGULAR_USER.name())
         .require("userId", 1)
+        .require("linkName", "adi")
         .setSigningKey(Keys.hmacShaKeyFor(jwtSecret.getBytes()))
         .build()
         .parse(responseBody.get("token"));

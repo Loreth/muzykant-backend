@@ -96,7 +96,7 @@ class RegularUserControllerIntegrationTest {
     Person person = new Person();
     person.setFirstName("Janina");
     person.setLastName("Kowalska");
-    person.setGender("K");
+    person.setGender("F");
     person.setBirthdate(LocalDate.of(1980, 2, 3));
 
     requestDto.setPerson(person);
@@ -113,7 +113,7 @@ class RegularUserControllerIntegrationTest {
     assertEquals("Kowalska", responseDto.getPerson().getLastName());
     assertEquals(LocalDate.of(1980, 2, 3), responseDto.getPerson().getBirthdate());
     assertNotNull(responseDto.getPerson().getId());
-    assertEquals("K", responseDto.getPerson().getGender());
+    assertEquals("F", responseDto.getPerson().getGender());
     assertEquals("city", responseDto.getCity());
     assertEquals(5, responseDto.getVoivodeship().getId());
     assertEquals("zwyczajny", requestDto.getLinkName());

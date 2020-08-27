@@ -12,6 +12,7 @@ import pl.kamilprzenioslo.muzykant.persistance.entities.CredentialsEntity;
 import pl.kamilprzenioslo.muzykant.persistance.enums.UserAuthority;
 import pl.kamilprzenioslo.muzykant.persistance.repositories.AuthorityRepository;
 import pl.kamilprzenioslo.muzykant.persistance.repositories.CredentialsRepository;
+import pl.kamilprzenioslo.muzykant.persistance.repositories.UserRepository;
 import pl.kamilprzenioslo.muzykant.service.CredentialsService;
 import pl.kamilprzenioslo.muzykant.service.mapper.CredentialsMapper;
 
@@ -21,15 +22,18 @@ public class CredentialsServiceImpl
     implements CredentialsService {
   private final PasswordEncoder passwordEncoder;
   private final AuthorityRepository authorityRepository;
+  private final UserRepository userRepository;
 
   public CredentialsServiceImpl(
       CredentialsRepository repository,
       CredentialsMapper mapper,
       PasswordEncoder passwordEncoder,
-      AuthorityRepository authorityRepository) {
+      AuthorityRepository authorityRepository,
+      UserRepository userRepository) {
     super(repository, mapper);
     this.passwordEncoder = passwordEncoder;
     this.authorityRepository = authorityRepository;
+    this.userRepository = userRepository;
   }
 
   @Override
@@ -56,7 +60,7 @@ public class CredentialsServiceImpl
     credentialsEntity.setEmail(signUpRequest.getEmail());
     credentialsEntity.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
     credentialsEntity.setAuthority(authorityEntity);
-    credentialsEntity.setUserId(userId);
+    credentialsEntity.setUser(userRepository.getOne(userId));
 
     repository.save(credentialsEntity);
   }
