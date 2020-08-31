@@ -22,18 +22,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
+import pl.kamilprzenioslo.muzykant.config.TestSecurityConfiguration;
 import pl.kamilprzenioslo.muzykant.dtos.Credentials;
 import pl.kamilprzenioslo.muzykant.dtos.Person;
 import pl.kamilprzenioslo.muzykant.dtos.RegularUser;
 import pl.kamilprzenioslo.muzykant.dtos.Voivodeship;
-import pl.kamilprzenioslo.muzykant.dtos.security.VerifiedEmailSignUpRequest;
 import pl.kamilprzenioslo.muzykant.persistance.enums.UserAuthority;
 import pl.kamilprzenioslo.muzykant.service.CredentialsService;
 
+@Import(TestSecurityConfiguration.class)
 @FlywayTestExtension
 @FlywayTest
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -47,6 +51,10 @@ class RegularUserControllerIntegrationTest {
   private CredentialsService credentialsService;
   @Autowired
   private PasswordEncoder passwordEncoder;
+
+  @Autowired
+  private MultiValueMap<String, String> jwtHeaderForConfirmedCredentialsWithoutCreatedUser;
+
   private final String RESOURCE_LINK;
 
   public RegularUserControllerIntegrationTest(@LocalServerPort int port) {
@@ -85,38 +93,6 @@ class RegularUserControllerIntegrationTest {
     List<RegularUser> responseAdList = listReader.readValue(jsonResponseBody.get("content"));
 
     assertThat(responseAdList).hasSize(1);
-  }
-
-  @FlywayTest
-  @Test
-  void shouldCreateEntityAndReturnDtoWithId() {
-    RegularUser requestDto = new RegularUser();
-    Voivodeship voivodeship = new Voivodeship();
-    voivodeship.setId(5);
-    Person person = new Person();
-    person.setFirstName("Janina");
-    person.setLastName("Kowalska");
-    person.setGender("F");
-    person.setBirthdate(LocalDate.of(1980, 2, 3));
-
-    requestDto.setPerson(person);
-    requestDto.setCity("city");
-    requestDto.setVoivodeship(voivodeship);
-    requestDto.setLinkName("zwyczajny");
-
-    ResponseEntity<RegularUser> responseEntity =
-        restTemplate.postForEntity(RESOURCE_LINK, requestDto, RegularUser.class);
-    RegularUser responseDto = responseEntity.getBody();
-
-    assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
-    assertEquals("Janina", responseDto.getPerson().getFirstName());
-    assertEquals("Kowalska", responseDto.getPerson().getLastName());
-    assertEquals(LocalDate.of(1980, 2, 3), responseDto.getPerson().getBirthdate());
-    assertNotNull(responseDto.getPerson().getId());
-    assertEquals("F", responseDto.getPerson().getGender());
-    assertEquals("city", responseDto.getCity());
-    assertEquals(5, responseDto.getVoivodeship().getId());
-    assertEquals("zwyczajny", requestDto.getLinkName());
   }
 
   @FlywayTest
@@ -184,7 +160,7 @@ class RegularUserControllerIntegrationTest {
 
   @FlywayTest
   @Test
-  void shouldSignUpCorrectlyAndSaveCredentialsAndRegularUserToRepository() {
+  void shouldCreateRegularUserAndAssignItToCredentialsForCorrectCredentialsWithoutCreatedUser() {
     Voivodeship voivodeship = new Voivodeship();
     voivodeship.setId(10);
     Person person = new Person();
@@ -200,19 +176,18 @@ class RegularUserControllerIntegrationTest {
     newRegularUser.setLinkName("superuser333");
     newRegularUser.setPhone("123123123");
 
-    VerifiedEmailSignUpRequest<RegularUser> verifiedEmailSignUpRequest =
-        new VerifiedEmailSignUpRequest<>("email@gmail.com", newRegularUser);
+    HttpEntity<RegularUser> regularUserRequest =
+        new HttpEntity<>(newRegularUser, jwtHeaderForConfirmedCredentialsWithoutCreatedUser);
 
-    ResponseEntity<String> responseEntity =
-        restTemplate.postForEntity(
-            RESOURCE_LINK + "/sign-up", verifiedEmailSignUpRequest, String.class);
+    ResponseEntity<RegularUser> responseEntity =
+        restTemplate.postForEntity(RESOURCE_LINK, regularUserRequest, RegularUser.class);
 
-    ResponseEntity<RegularUser> createdRegularUserResponse =
-        restTemplate.getForEntity(RESOURCE_LINK + "/9", RegularUser.class);
-    RegularUser createdRegularUser = createdRegularUserResponse.getBody();
-    Credentials createdCredentials = credentialsService.findById(9).orElseThrow();
+    RegularUser createdRegularUser = responseEntity.getBody();
+    Credentials updatedCredentials = credentialsService.findById(12).orElseThrow();
 
-    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+    assertNotNull(createdRegularUser);
+    assertNotNull(createdRegularUser.getId());
     assertEquals("Jan", createdRegularUser.getPerson().getFirstName());
     assertEquals("Kowalski", createdRegularUser.getPerson().getLastName());
     assertEquals(LocalDate.of(1987, 2, 3), createdRegularUser.getPerson().getBirthdate());
@@ -221,11 +196,10 @@ class RegularUserControllerIntegrationTest {
     assertEquals(10, createdRegularUser.getVoivodeship().getId());
     assertEquals("superuser333", newRegularUser.getLinkName());
     assertEquals("123123123", newRegularUser.getPhone());
-
-    assertEquals("email@gmail.com", createdCredentials.getEmail());
-    assertTrue(passwordEncoder.matches("mocnehaslo123", createdCredentials.getPassword()));
+    assertEquals("confirmed@nouser.com", updatedCredentials.getEmail());
+    assertTrue(passwordEncoder.matches("passpass56", updatedCredentials.getPassword()));
     assertEquals(
-        UserAuthority.ROLE_REGULAR_USER, createdCredentials.getAuthority().getUserAuthority());
-    assertEquals(9, createdCredentials.getUserId());
+        UserAuthority.ROLE_REGULAR_USER, updatedCredentials.getAuthority().getUserAuthority());
+    assertEquals(createdRegularUser.getId(), updatedCredentials.getUserId());
   }
 }

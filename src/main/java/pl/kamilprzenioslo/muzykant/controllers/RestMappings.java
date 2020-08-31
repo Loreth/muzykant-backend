@@ -8,6 +8,7 @@ public final class RestMappings {
   public static final String SIGN_UP = "/sign-up";
   public static final String CONFIRM_EMAIL = "/confirm-email";
 
+  public static final String USER = "/users";
   public static final String BAND = "/bands";
   public static final String MUSICIAN = "/musicians";
   public static final String REGULAR_USER = "/regular-users";

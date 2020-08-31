@@ -1,23 +1,21 @@
 package pl.kamilprzenioslo.muzykant.service.implementations;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 import javax.mail.MessagingException;
-import javax.persistence.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.kamilprzenioslo.muzykant.dtos.Credentials;
 import pl.kamilprzenioslo.muzykant.dtos.security.SignUpRequest;
-import pl.kamilprzenioslo.muzykant.dtos.security.VerifiedEmailSignUpRequest;
 import pl.kamilprzenioslo.muzykant.exception.exceptions.EmailAlreadyTakenException;
 import pl.kamilprzenioslo.muzykant.exception.exceptions.EmailConfirmationTokenExpiredException;
 import pl.kamilprzenioslo.muzykant.exception.exceptions.EmailConfirmationTokenNotFound;
 import pl.kamilprzenioslo.muzykant.exception.exceptions.EmailNotConfirmedException;
+import pl.kamilprzenioslo.muzykant.exception.exceptions.UserAlreadyAssignedException;
 import pl.kamilprzenioslo.muzykant.persistance.entities.AuthorityEntity;
 import pl.kamilprzenioslo.muzykant.persistance.entities.CredentialsEntity;
 import pl.kamilprzenioslo.muzykant.persistance.entities.EmailConfirmationEntity;
@@ -62,20 +60,27 @@ public class CredentialsServiceImpl
   }
 
   @Override
-  public UserDetails loadUserByUsername(String username) {
-    CredentialsEntity credentials =
-        repository.findByEmail(username).orElseThrow(() -> new UsernameNotFoundException(username));
+  public Credentials loadUserByUsername(String username) {
+    CredentialsEntity credentialsEntity = repository.findByEmailIgnoreCase(username).orElse(null);
 
-    return new org.springframework.security.core.userdetails.User(
-        credentials.getEmail(), credentials.getPassword(), List.of(credentials.getAuthority()));
+    if (credentialsEntity == null) {
+      if (!isEmailConfirmed(username)) {
+        throw new EmailNotConfirmedException(
+            "Email has to be confirmed before logging in (EmailNotConfirmedException)");
+      } else {
+        throw new UsernameNotFoundException(username);
+      }
+    }
+
+    return mapper.mapToDto(credentialsEntity);
   }
 
   @Override
-  public Credentials findByEmail(String username) {
-    return mapper.mapToDto(
-        repository
-            .findByEmail(username)
-            .orElseThrow(() -> new UsernameNotFoundException(username)));
+  public boolean isEmailConfirmed(String email) {
+    return repository
+        .findByEmailIgnoreCase(email)
+        .map(CredentialsEntity::isEmailConfirmed)
+        .orElse(false);
   }
 
   @Override
@@ -84,21 +89,24 @@ public class CredentialsServiceImpl
     log.debug("signing up " + email);
     verifyEmailNotAlreadyTaken(email);
 
-    var emailConfirmation = new EmailConfirmationEntity();
+    CredentialsEntity credentialsEntity = new CredentialsEntity();
+    credentialsEntity.setEmail(email);
+    credentialsEntity.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+
     UUID confirmationToken = UUID.randomUUID();
-    emailConfirmation.setEmail(email);
-    emailConfirmation.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
+    var emailConfirmation = new EmailConfirmationEntity();
     emailConfirmation.setToken(confirmationToken);
     emailConfirmation.setTokenExpiration(
         LocalDateTime.now().plusHours(emailConfirmationTokenExpirationH));
 
+    credentialsEntity.setEmailConfirmation(emailConfirmation);
+
+    repository.save(credentialsEntity);
     mailService.sendConfirmationMail(email, confirmationToken);
-    emailConfirmationRepository.save(emailConfirmation);
   }
 
   private void verifyEmailNotAlreadyTaken(String email) {
-    if (emailConfirmationRepository.existsByEmailIgnoreCase(email)
-        || repository.existsByEmailIgnoreCase(email)) {
+    if (repository.existsByEmailIgnoreCase(email)) {
       throw new EmailAlreadyTakenException();
     }
   }
@@ -111,45 +119,44 @@ public class CredentialsServiceImpl
             .orElseThrow(EmailConfirmationTokenNotFound::new);
 
     verifyTokenExpiration(emailConfirmation);
-    emailConfirmation.setConfirmed(true);
-    emailConfirmationRepository.save(emailConfirmation);
+    CredentialsEntity credentials = emailConfirmation.getCredentials();
+    credentials.setEmailConfirmation(null);
+    repository.save(credentials);
   }
 
   @Override
-  public void createAccount(
-      VerifiedEmailSignUpRequest<?> verifiedEmailSignUpRequest,
-      UserAuthority userAuthority,
-      Integer userId) {
-    var emailConfirmation = findAndVerifyEmailConfirmation(verifiedEmailSignUpRequest.getEmail());
+  public void assignUserProfileToCurrentlyAuthenticatedUser(
+      UserAuthority userAuthority, Integer userId) {
+    Credentials principal =
+        (Credentials) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+    CredentialsEntity credentialsEntity =
+        repository.findByEmailIgnoreCase(principal.getEmail()).orElseThrow();
+
+    verifyUserNotAlreadyAssigned(credentialsEntity);
+    verifyEmailConfirmation(credentialsEntity);
 
     AuthorityEntity authorityEntity = authorityRepository.findByUserAuthority(userAuthority);
-    CredentialsEntity credentialsEntity = new CredentialsEntity();
-    credentialsEntity.setEmail(verifiedEmailSignUpRequest.getEmail());
-    credentialsEntity.setPassword(emailConfirmation.getPassword());
     credentialsEntity.setAuthority(authorityEntity);
     credentialsEntity.setUser(userRepository.getOne(userId));
 
     repository.save(credentialsEntity);
-    emailConfirmationRepository.delete(emailConfirmation);
   }
 
-  private EmailConfirmationEntity findAndVerifyEmailConfirmation(String email) {
-    EmailConfirmationEntity emailConfirmation =
-        emailConfirmationRepository
-            .findByEmailIgnoreCase(email)
-            .orElseThrow(EntityNotFoundException::new);
+  private void verifyUserNotAlreadyAssigned(CredentialsEntity credentialsEntity) {
+    if (credentialsEntity.getUser() != null) {
+      throw new UserAlreadyAssignedException();
+    }
+  }
 
-    if (!emailConfirmation.isConfirmed()) {
+  private void verifyEmailConfirmation(CredentialsEntity credentialsEntity) {
+    if (!credentialsEntity.isEmailConfirmed()) {
       throw new EmailNotConfirmedException();
     }
-    verifyTokenExpiration(emailConfirmation);
-
-    return emailConfirmation;
   }
 
   private void verifyTokenExpiration(EmailConfirmationEntity emailConfirmationEntity) {
     if (emailConfirmationEntity.isTokenExpired()) {
-      emailConfirmationRepository.delete(emailConfirmationEntity);
       throw new EmailConfirmationTokenExpiredException();
     }
   }

@@ -6,7 +6,7 @@ import pl.kamilprzenioslo.muzykant.persistance.entities.CredentialsEntity;
 
 public interface CredentialsRepository extends JpaRepository<CredentialsEntity, Integer> {
 
-  Optional<CredentialsEntity> findByEmail(String email);
+  Optional<CredentialsEntity> findByEmailIgnoreCase(String email);
 
   boolean existsByEmailIgnoreCase(String email);
 }

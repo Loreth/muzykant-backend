@@ -8,4 +8,11 @@ import org.springframework.web.bind.annotation.ResponseStatus;
     reason = "Email has not been confirmed. User must confirm his email in order to continue.")
 public class EmailNotConfirmedException extends RuntimeException {
 
+  public EmailNotConfirmedException() {
+    super();
+  }
+
+  public EmailNotConfirmedException(String message) {
+    super(message);
+  }
 }

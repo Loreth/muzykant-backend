@@ -11,13 +11,14 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import pl.kamilprzenioslo.muzykant.security.CustomAuthenticationFailureHandler;
 import pl.kamilprzenioslo.muzykant.security.JwtAuthenticationFilter;
 import pl.kamilprzenioslo.muzykant.security.JwtAuthorizationFilter;
 import pl.kamilprzenioslo.muzykant.security.JwtUtils;
-import pl.kamilprzenioslo.muzykant.security.UnauthorizedAuthenticationEntryPoint;
 import pl.kamilprzenioslo.muzykant.service.CredentialsService;
 
 @RequiredArgsConstructor
@@ -34,19 +35,22 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   protected void configure(HttpSecurity http) throws Exception {
     http.addFilter(
         new JwtAuthenticationFilter(
-            jwtUtils, objectMapper, credentialsService, authenticationManager()))
+            jwtUtils,
+            objectMapper,
+            authenticationManager(),
+            credentialsService,
+            authenticationFailureHandler()))
         .addFilter(
             new JwtAuthorizationFilter(authenticationManager(), jwtUtils, credentialsService))
         .cors()
         .and()
         .csrf()
         .disable()
-        .exceptionHandling()
-        .authenticationEntryPoint(new UnauthorizedAuthenticationEntryPoint())
-        .and()
         .sessionManagement()
         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()
+        .httpBasic()
+        .disable()
         .formLogin()
         .loginPage("/login")
         .permitAll()
@@ -67,15 +71,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     corsConfiguration.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
     corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
     corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
-    //    corsConfiguration.setExposedHeaders(
-    //        Arrays.asList(
-    //            HEADER_STRING_AUTH,
-    //            HEADER_STRING_ID,
-    //            HEADER_STRING_REFRESH,
-    //            HEADER_STRING_TYPE,
-    //            HEADER_STRING_PERSON));
+
     var source = new UrlBasedCorsConfigurationSource();
     source.registerCorsConfiguration("/**", corsConfiguration);
     return source;
+  }
+
+  @Bean
+  AuthenticationFailureHandler authenticationFailureHandler() {
+    return new CustomAuthenticationFailureHandler();
   }
 }

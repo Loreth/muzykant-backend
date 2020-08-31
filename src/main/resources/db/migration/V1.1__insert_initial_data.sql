@@ -130,17 +130,6 @@ VALUES (1, 'ROLE_MUSICIAN'),
        (2, 'ROLE_BAND'),
        (3, 'ROLE_REGULAR_USER');
 
-INSERT INTO Email_confirmation(email, password, token_uuid, token_expiration, confirmed)
-VALUES ('email@gmail.com',
-        '$2a$10$zifVLlf8WvlHvfeLLiqvKe44GxtATH2uo2TPjl6VSuRmHC/9rkFJC', -- mocnehaslo123
-        'c614e388-6bc3-4abc-87cb-e4d8dbd73b3c', '9999-12-31 23:59:59', true),
-       ('unconfirmedmail@unconfirmed.com',
-        '$2a$10$G7uY1WEgk44cmLV8X1b/M.zyHJOGtUcGf70LEmpcR098Izd/krFD2', -- passpass56
-        '6d8e6ea9-8af9-4716-96bc-6f910ef61b76', '2100-12-31 23:59:59', false),
-       ('expired_token@expired.pl',
-        '$2a$10$G7uY1WEgk44cmLV8X1b/M.zyHJOGtUcGf70LEmpcR098Izd/krFD2', -- passpass56
-        'a163ca90-5e57-4861-9e21-119d26923c63', '2020-08-08 12:00:12', false);
-
 INSERT INTO `User`(id, user_type, link_name, description, phone, city, voivodeship_id)
 VALUES (1, 'REGULAR', 'adi', 'Coś o mnie', '837473123', 'Wrocław', 1),
        (2, 'MUSICIAN', 'dani', 'Coś o mnie', '125373123', 'Wrocław', 1),
@@ -157,14 +146,27 @@ WHERE id = 3;
 
 INSERT INTO Credentials(id, email, password, authority_id, user_id)
 VALUES (1, 'adam@gmail.com', '$2a$10$zifVLlf8WvlHvfeLLiqvKe44GxtATH2uo2TPjl6VSuRmHC/9rkFJC', 3,
-        1), -- mocnehaslo123
+        1),                                                                          -- mocnehaslo123
        (2, 'daniel@gmail.com', 'TEMPORARY', 1, 2),
        (3, 'grajek@gmail.com', 'TEMPORARY', 1, 3),
        (4, 'muzyk@yahoo.com', 'TEMPORARY', 1, 4),
        (5, 'ciekawska@yahoo.com', 'TEMPORARY', 1, 5),
        (6, 'superzespol@yahoo.com', 'TEMPORARY', 2, 6),
        (7, 'anna.kowalska@onet.pl', 'TEMPORARY', 2, 7),
-       (8, 'jan.kowalski@onet.pl', 'TEMPORARY', 2, 8);
+       (8, 'jan.kowalski@onet.pl', 'TEMPORARY', 2, 8),
+       (9, 'email@gmail.com', '$2a$10$zifVLlf8WvlHvfeLLiqvKe44GxtATH2uo2TPjl6VSuRmHC/9rkFJC', null,
+        null),                                                                       -- mocnehaslo123
+       (10, 'unconfirmedmail@unconfirmed.com',
+        '$2a$10$54JRdhDbH4Y9uqgDvKVeb.6sCpdDhATx2UjJ8BLowy2RkDEkvU/1O', null, null), -- passpass56
+       (11, 'expired_token@expired.pl',
+        '$2a$10$OMOjLn0RC73SO6wc3EV8L.GmuLNGoObipuEwFu6r8iW5uU4WKWmqq', null, null), -- passpass56
+       (12, 'confirmed@nouser.com',
+        '$2a$10$qmz6rxBdiAtcuLLK.lPAcubIiSCYexVjZfEBH.66/.A982dCfLiya', null, null); -- passpass56
+
+INSERT INTO Email_confirmation(credentials_id, token_uuid, token_expiration)
+VALUES (9, 'c614e388-6bc3-4abc-87cb-e4d8dbd73b3c', '9999-12-31 23:59:59'),
+       (10, '6d8e6ea9-8af9-4716-96bc-6f910ef61b76', '2100-12-31 23:59:59'),
+       (11, 'a163ca90-5e57-4861-9e21-119d26923c63', '2020-08-08 12:00:12');
 
 INSERT INTO Band(user_id, name, formation_year)
 VALUES (6, 'Turbo akcja', 2016),

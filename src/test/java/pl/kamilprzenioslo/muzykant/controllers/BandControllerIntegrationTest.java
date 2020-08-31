@@ -2,6 +2,7 @@ package pl.kamilprzenioslo.muzykant.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -12,7 +13,6 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import org.flywaydb.test.annotation.FlywayTest;
 import org.flywaydb.test.junit5.annotation.FlywayTestExtension;
 import org.junit.jupiter.api.Test;
@@ -21,18 +21,22 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
+import pl.kamilprzenioslo.muzykant.config.TestSecurityConfiguration;
 import pl.kamilprzenioslo.muzykant.dtos.Band;
 import pl.kamilprzenioslo.muzykant.dtos.Credentials;
 import pl.kamilprzenioslo.muzykant.dtos.Genre;
 import pl.kamilprzenioslo.muzykant.dtos.Voivodeship;
-import pl.kamilprzenioslo.muzykant.dtos.security.VerifiedEmailSignUpRequest;
 import pl.kamilprzenioslo.muzykant.persistance.enums.UserAuthority;
 import pl.kamilprzenioslo.muzykant.service.CredentialsService;
 
+@Import(TestSecurityConfiguration.class)
 @FlywayTestExtension
 @FlywayTest
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -46,6 +50,10 @@ class BandControllerIntegrationTest {
   private CredentialsService credentialsService;
   @Autowired
   private PasswordEncoder passwordEncoder;
+
+  @Autowired
+  private MultiValueMap<String, String> jwtHeaderForConfirmedCredentialsWithoutCreatedUser;
+
   private final String RESOURCE_LINK;
 
   public BandControllerIntegrationTest(@LocalServerPort int port) {
@@ -128,38 +136,6 @@ class BandControllerIntegrationTest {
 
   @FlywayTest
   @Test
-  void shouldCreateEntityAndReturnDtoWithId() {
-    Band requestDto = new Band();
-    Genre genre1 = new Genre();
-    genre1.setId(1);
-    Genre genre2 = new Genre();
-    genre2.setId(2);
-    Voivodeship voivodeship = new Voivodeship();
-    voivodeship.setId(1);
-    requestDto.setName("bandname");
-    requestDto.setCity("city");
-    requestDto.setVoivodeship(voivodeship);
-    requestDto.setLinkName("linkname");
-    requestDto.setPhone("123123123");
-    requestDto.setGenres(Set.of(genre1, genre2));
-    requestDto.setDescription("desc desc desc");
-
-    ResponseEntity<Band> responseEntity =
-        restTemplate.postForEntity(RESOURCE_LINK, requestDto, Band.class);
-    Band responseDto = responseEntity.getBody();
-
-    assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
-    assertEquals("bandname", responseDto.getName());
-    assertEquals("city", responseDto.getCity());
-    assertEquals(1, responseDto.getVoivodeship().getId());
-    assertEquals("linkname", requestDto.getLinkName());
-    assertEquals("123123123", requestDto.getPhone());
-    assertEquals(Set.of(genre1, genre2), responseDto.getGenres());
-    assertEquals("desc desc desc", responseDto.getDescription());
-  }
-
-  @FlywayTest
-  @Test
   void shouldDeleteEntityUnderGivenId() {
     restTemplate.delete(RESOURCE_LINK + "/8");
 
@@ -226,7 +202,7 @@ class BandControllerIntegrationTest {
 
   @FlywayTest
   @Test
-  void shouldSignUpCorrectlyAndSaveCredentialsAndBandToRepository() {
+  void shouldCreateBandAndAssignItToCredentialsForCorrectCredentialsWithoutCreatedUser() {
     Voivodeship voivodeship = new Voivodeship();
     voivodeship.setId(10);
 
@@ -237,27 +213,25 @@ class BandControllerIntegrationTest {
     newBand.setLinkName("superuser333");
     newBand.setPhone("123123123");
 
-    VerifiedEmailSignUpRequest<Band> verifiedEmailSignUpRequest =
-        new VerifiedEmailSignUpRequest<>("email@gmail.com", newBand);
+    HttpEntity<Band> bandRequest =
+        new HttpEntity<>(newBand, jwtHeaderForConfirmedCredentialsWithoutCreatedUser);
+    ResponseEntity<Band> responseEntity =
+        restTemplate.postForEntity(RESOURCE_LINK, bandRequest, Band.class);
 
-    ResponseEntity<String> responseEntity =
-        restTemplate.postForEntity(
-            RESOURCE_LINK + "/sign-up", verifiedEmailSignUpRequest, String.class);
+    Band createdBand = responseEntity.getBody();
+    Credentials updatedCredentials = credentialsService.findById(12).orElseThrow();
 
-    ResponseEntity<Band> createdBandResponse =
-        restTemplate.getForEntity(RESOURCE_LINK + "/9", Band.class);
-    Band createdBand = createdBandResponse.getBody();
-    Credentials createdCredentials = credentialsService.findById(9).orElseThrow();
-
-    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
+    assertNotNull(createdBand);
+    assertNotNull(createdBand.getId());
     assertEquals("Cool band", createdBand.getName());
     assertEquals("city", createdBand.getCity());
     assertEquals(10, createdBand.getVoivodeship().getId());
     assertEquals("superuser333", newBand.getLinkName());
     assertEquals("123123123", newBand.getPhone());
-    assertEquals("email@gmail.com", createdCredentials.getEmail());
-    assertTrue(passwordEncoder.matches("mocnehaslo123", createdCredentials.getPassword()));
-    assertEquals(UserAuthority.ROLE_BAND, createdCredentials.getAuthority().getUserAuthority());
-    assertEquals(9, createdCredentials.getUserId());
+    assertEquals("confirmed@nouser.com", updatedCredentials.getEmail());
+    assertTrue(passwordEncoder.matches("passpass56", updatedCredentials.getPassword()));
+    assertEquals(UserAuthority.ROLE_BAND, updatedCredentials.getAuthority().getUserAuthority());
+    assertEquals(createdBand.getId(), updatedCredentials.getUserId());
   }
 }

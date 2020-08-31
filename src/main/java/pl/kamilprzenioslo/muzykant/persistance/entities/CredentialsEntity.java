@@ -1,7 +1,9 @@
 package pl.kamilprzenioslo.muzykant.persistance.entities;
 
 import java.util.Objects;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
@@ -28,6 +30,28 @@ public class CredentialsEntity extends AbstractPersistable<Integer> {
   @ManyToOne
   @JoinColumn(name = "authority_id")
   private AuthorityEntity authority;
+
+  @OneToOne(
+      mappedBy = "credentials",
+      orphanRemoval = true,
+      cascade = CascadeType.ALL,
+      fetch = FetchType.LAZY)
+  private EmailConfirmationEntity emailConfirmation;
+
+  public void setEmailConfirmation(EmailConfirmationEntity emailConfirmation) {
+    if (emailConfirmation == null) {
+      if (this.emailConfirmation != null) {
+        this.emailConfirmation.setCredentials(null);
+      }
+    } else {
+      emailConfirmation.setCredentials(this);
+    }
+    this.emailConfirmation = emailConfirmation;
+  }
+
+  public boolean isEmailConfirmed() {
+    return emailConfirmation == null;
+  }
 
   @Override
   public boolean equals(Object o) {

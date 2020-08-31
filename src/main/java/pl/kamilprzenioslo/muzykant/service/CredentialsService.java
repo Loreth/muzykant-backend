@@ -5,7 +5,6 @@ import javax.mail.MessagingException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import pl.kamilprzenioslo.muzykant.dtos.Credentials;
 import pl.kamilprzenioslo.muzykant.dtos.security.SignUpRequest;
-import pl.kamilprzenioslo.muzykant.dtos.security.VerifiedEmailSignUpRequest;
 import pl.kamilprzenioslo.muzykant.persistance.enums.UserAuthority;
 
 public interface CredentialsService extends ReadService<Credentials, Integer>, UserDetailsService {
@@ -14,10 +13,7 @@ public interface CredentialsService extends ReadService<Credentials, Integer>, U
 
   void confirmEmail(UUID confirmationToken);
 
-  void createAccount(
-      VerifiedEmailSignUpRequest<?> verifiedEmailSignUpRequest,
-      UserAuthority userAuthority,
-      Integer userId);
+  void assignUserProfileToCurrentlyAuthenticatedUser(UserAuthority userAuthority, Integer userId);
 
-  Credentials findByEmail(String username);
+  boolean isEmailConfirmed(String email);
 }

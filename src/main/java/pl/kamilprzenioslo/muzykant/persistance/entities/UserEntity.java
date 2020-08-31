@@ -29,7 +29,7 @@ import pl.kamilprzenioslo.muzykant.persistance.enums.UserType;
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "user_type")
 @Table(name = "user")
-public abstract class UserEntity extends AbstractPersistable<Integer> {
+public class UserEntity extends AbstractPersistable<Integer> {
 
   @Enumerated(EnumType.STRING)
   @Column(name = "user_type", nullable = false, insertable = false, updatable = false)
@@ -97,5 +97,7 @@ public abstract class UserEntity extends AbstractPersistable<Integer> {
     return Objects.hash(super.hashCode(), linkName);
   }
 
-  public abstract String getDisplayName();
+  public String getDisplayName() {
+    return linkName;
+  }
 }

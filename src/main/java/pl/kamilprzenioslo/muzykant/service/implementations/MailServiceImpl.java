@@ -8,6 +8,7 @@ import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import pl.kamilprzenioslo.muzykant.service.MailService;
 
@@ -37,6 +38,7 @@ public class MailServiceImpl implements MailService {
             + "Po upływie tego czasu konieczna będzie ponowna rejestracja. <br><br>";
   }
 
+  @Async
   @Override
   public void sendMail(String to, String subject, String content, boolean isHtmlContent)
       throws MessagingException {
@@ -53,6 +55,7 @@ public class MailServiceImpl implements MailService {
     mailSender.send(mimeMessage);
   }
 
+  @Async
   @Override
   public void sendConfirmationMail(String to, UUID confirmationToken) throws MessagingException {
     sendMail(

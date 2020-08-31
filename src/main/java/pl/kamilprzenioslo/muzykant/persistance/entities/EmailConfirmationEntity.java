@@ -5,22 +5,26 @@ import java.util.Objects;
 import java.util.UUID;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.hibernate.annotations.Type;
+import org.springframework.data.domain.Persistable;
 
 @Getter
 @Setter
 @ToString
 @Entity
 @Table(name = "email_confirmation")
-public class EmailConfirmationEntity extends AbstractPersistable<Integer> {
+public class EmailConfirmationEntity implements Persistable<Integer> {
 
-  private String email;
-  @ToString.Exclude
-  private String password;
+  @Id
+  private Integer id;
 
   @Type(type = "uuid-char")
   @Column(name = "token_uuid")
@@ -29,7 +33,9 @@ public class EmailConfirmationEntity extends AbstractPersistable<Integer> {
   @Column(name = "token_expiration")
   private LocalDateTime tokenExpiration;
 
-  private boolean confirmed;
+  @OneToOne(fetch = FetchType.LAZY)
+  @MapsId
+  private CredentialsEntity credentials;
 
   public boolean isTokenExpired() {
     return tokenExpiration.isBefore(LocalDateTime.now());
@@ -44,11 +50,16 @@ public class EmailConfirmationEntity extends AbstractPersistable<Integer> {
       return false;
     }
     EmailConfirmationEntity that = (EmailConfirmationEntity) o;
-    return Objects.equals(email, that.email);
+    return Objects.equals(token, that.token);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(email);
+    return Objects.hash(token);
+  }
+
+  @Override
+  public boolean isNew() {
+    return getId() == null;
   }
 }

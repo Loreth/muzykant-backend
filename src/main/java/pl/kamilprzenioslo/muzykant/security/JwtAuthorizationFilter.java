@@ -49,7 +49,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
       String username = jwtUtils.getUsernameFromToken(token);
       UserDetails userDetails = userDetailsService.loadUserByUsername(username);
       return new UsernamePasswordAuthenticationToken(
-          username, userDetails.getPassword(), userDetails.getAuthorities());
+          userDetails, userDetails.getPassword(), userDetails.getAuthorities());
     }
 
     return null;

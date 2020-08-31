@@ -14,7 +14,6 @@ import java.net.URI;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import org.flywaydb.test.annotation.FlywayTest;
 import org.flywaydb.test.junit5.annotation.FlywayTestExtension;
 import org.junit.jupiter.api.Test;
@@ -23,28 +22,40 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
+import pl.kamilprzenioslo.muzykant.config.TestSecurityConfiguration;
 import pl.kamilprzenioslo.muzykant.dtos.Credentials;
-import pl.kamilprzenioslo.muzykant.dtos.Genre;
 import pl.kamilprzenioslo.muzykant.dtos.Instrument;
 import pl.kamilprzenioslo.muzykant.dtos.Musician;
 import pl.kamilprzenioslo.muzykant.dtos.Person;
 import pl.kamilprzenioslo.muzykant.dtos.Voivodeship;
-import pl.kamilprzenioslo.muzykant.dtos.security.VerifiedEmailSignUpRequest;
 import pl.kamilprzenioslo.muzykant.persistance.enums.UserAuthority;
 import pl.kamilprzenioslo.muzykant.service.CredentialsService;
 
+@Import(TestSecurityConfiguration.class)
 @FlywayTestExtension
 @FlywayTest
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class MusicianControllerIntegrationTest {
-  @Autowired private TestRestTemplate restTemplate;
-  @Autowired private ObjectMapper objectMapper;
-  @Autowired private CredentialsService credentialsService;
-  @Autowired private PasswordEncoder passwordEncoder;
+
+  @Autowired
+  private TestRestTemplate restTemplate;
+  @Autowired
+  private ObjectMapper objectMapper;
+  @Autowired
+  private CredentialsService credentialsService;
+  @Autowired
+  private PasswordEncoder passwordEncoder;
+
+  @Autowired
+  private MultiValueMap<String, String> jwtHeaderForConfirmedCredentialsWithoutCreatedUser;
+
   private final String RESOURCE_LINK;
 
   public MusicianControllerIntegrationTest(@LocalServerPort int port) {
@@ -127,49 +138,6 @@ class MusicianControllerIntegrationTest {
 
   @FlywayTest
   @Test
-  void shouldCreateEntityAndReturnDtoWithId() {
-    Musician requestDto = new Musician();
-    Instrument instrument = new Instrument();
-    instrument.setId(1);
-    Genre genre = new Genre();
-    genre.setId(10);
-    Voivodeship voivodeship = new Voivodeship();
-    voivodeship.setId(10);
-    Person person = new Person();
-    person.setFirstName("Jan");
-    person.setLastName("Kowalski");
-    person.setGender("M");
-    person.setBirthdate(LocalDate.of(1987, 2, 3));
-
-    requestDto.setPerson(person);
-    requestDto.setCity("city");
-    requestDto.setVoivodeship(voivodeship);
-    requestDto.setLinkName("wow");
-    requestDto.setPhone("987654321");
-    requestDto.setGenres(Set.of(genre));
-    requestDto.setInstruments(Set.of(instrument));
-    requestDto.setDescription("asd");
-
-    ResponseEntity<Musician> responseEntity =
-        restTemplate.postForEntity(RESOURCE_LINK, requestDto, Musician.class);
-    Musician responseDto = responseEntity.getBody();
-
-    assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
-    assertEquals("Jan", responseDto.getPerson().getFirstName());
-    assertEquals("Kowalski", responseDto.getPerson().getLastName());
-    assertEquals(LocalDate.of(1987, 2, 3), responseDto.getPerson().getBirthdate());
-    assertNotNull(responseDto.getPerson().getId());
-    assertEquals("city", responseDto.getCity());
-    assertEquals(10, responseDto.getVoivodeship().getId());
-    assertEquals("wow", requestDto.getLinkName());
-    assertEquals("987654321", requestDto.getPhone());
-    assertEquals(Set.of(genre), responseDto.getGenres());
-    assertEquals(Set.of(instrument), responseDto.getInstruments());
-    assertEquals("asd", responseDto.getDescription());
-  }
-
-  @FlywayTest
-  @Test
   void shouldDeleteEntityUnderGivenId() {
     restTemplate.delete(RESOURCE_LINK + "/2");
 
@@ -235,7 +203,7 @@ class MusicianControllerIntegrationTest {
 
   @FlywayTest
   @Test
-  void shouldSignUpCorrectlyAndSaveCredentialsAndMusicianToRepository() {
+  void shouldCreateMusicianAndAssignItToCredentialsForCorrectCredentialsWithoutCreatedUser() {
     Voivodeship voivodeship = new Voivodeship();
     voivodeship.setId(10);
     Person person = new Person();
@@ -251,19 +219,15 @@ class MusicianControllerIntegrationTest {
     newMusician.setLinkName("superuser333");
     newMusician.setPhone("123123123");
 
-    VerifiedEmailSignUpRequest<Musician> verifiedEmailSignUpRequest =
-        new VerifiedEmailSignUpRequest<>("email@gmail.com", newMusician);
+    HttpEntity<Musician> bandRequest =
+        new HttpEntity<>(newMusician, jwtHeaderForConfirmedCredentialsWithoutCreatedUser);
+    ResponseEntity<Musician> responseEntity =
+        restTemplate.postForEntity(RESOURCE_LINK, bandRequest, Musician.class);
 
-    ResponseEntity<String> responseEntity =
-        restTemplate.postForEntity(
-            RESOURCE_LINK + "/sign-up", verifiedEmailSignUpRequest, String.class);
+    Musician createdMusician = responseEntity.getBody();
+    Credentials updatedCredentials = credentialsService.findById(12).orElseThrow();
 
-    ResponseEntity<Musician> createdMusicianResponse =
-        restTemplate.getForEntity(RESOURCE_LINK + "/9", Musician.class);
-    Musician createdMusician = createdMusicianResponse.getBody();
-    Credentials createdCredentials = credentialsService.findById(9).orElseThrow();
-
-    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
     assertEquals("Jan", createdMusician.getPerson().getFirstName());
     assertEquals("Kowalski", createdMusician.getPerson().getLastName());
     assertEquals(LocalDate.of(1987, 2, 3), createdMusician.getPerson().getBirthdate());
@@ -272,10 +236,9 @@ class MusicianControllerIntegrationTest {
     assertEquals(10, createdMusician.getVoivodeship().getId());
     assertEquals("superuser333", newMusician.getLinkName());
     assertEquals("123123123", newMusician.getPhone());
-
-    assertEquals("email@gmail.com", createdCredentials.getEmail());
-    assertTrue(passwordEncoder.matches("mocnehaslo123", createdCredentials.getPassword()));
-    assertEquals(UserAuthority.ROLE_MUSICIAN, createdCredentials.getAuthority().getUserAuthority());
-    assertEquals(9, createdCredentials.getUserId());
+    assertEquals("confirmed@nouser.com", updatedCredentials.getEmail());
+    assertTrue(passwordEncoder.matches("passpass56", updatedCredentials.getPassword()));
+    assertEquals(UserAuthority.ROLE_MUSICIAN, updatedCredentials.getAuthority().getUserAuthority());
+    assertEquals(createdMusician.getId(), updatedCredentials.getUserId());
   }
 }

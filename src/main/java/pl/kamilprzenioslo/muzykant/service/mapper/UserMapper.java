@@ -1,8 +1,8 @@
 package pl.kamilprzenioslo.muzykant.service.mapper;
 
-import org.mapstruct.MapperConfig;
+import org.mapstruct.Mapper;
 import pl.kamilprzenioslo.muzykant.dtos.User;
 import pl.kamilprzenioslo.muzykant.persistance.entities.UserEntity;
 
-@MapperConfig(uses = UserImageMapper.class)
+@Mapper(uses = UserImageMapper.class)
 public interface UserMapper extends BaseMapper<User, UserEntity> {}

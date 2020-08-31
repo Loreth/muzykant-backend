@@ -46,16 +46,6 @@ CREATE TABLE Authority
     name varchar(30) NOT NULL UNIQUE,
     PRIMARY KEY (id)
 );
-CREATE TABLE Email_confirmation
-(
-    id               int          NOT NULL AUTO_INCREMENT,
-    email            varchar(255) NOT NULL UNIQUE,
-    password         varchar(60)  NOT NULL,
-    token_uuid       varchar(36)  NOT NULL,
-    token_expiration datetime     NOT NULL,
-    confirmed        bool         NOT NULL DEFAULT FALSE,
-    PRIMARY KEY (id)
-);
 
 -- weak entities
 CREATE TABLE `User`
@@ -76,11 +66,19 @@ CREATE TABLE Credentials
     id           int          NOT NULL AUTO_INCREMENT,
     email        varchar(255) NOT NULL UNIQUE,
     password     varchar(60)  NOT NULL,
-    authority_id int          NOT NULL,
-    user_id      int          NOT NULL,
+    authority_id int,
+    user_id      int,
     PRIMARY KEY (id),
     CONSTRAINT FK_Credentials_Authority FOREIGN KEY (authority_id) REFERENCES Authority (id),
     CONSTRAINT FK_Credentials_User FOREIGN KEY (user_id) REFERENCES User (id) ON DELETE CASCADE
+);
+CREATE TABLE Email_confirmation
+(
+    credentials_id   int         NOT NULL AUTO_INCREMENT,
+    token_uuid       varchar(36) NOT NULL,
+    token_expiration datetime    NOT NULL,
+    PRIMARY KEY (credentials_id),
+    CONSTRAINT FK_Email_confirmation_Credentials FOREIGN KEY (credentials_id) REFERENCES Credentials (id)
 );
 CREATE TABLE Band
 (
