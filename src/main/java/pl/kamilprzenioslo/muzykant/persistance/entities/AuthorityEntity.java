@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.security.core.GrantedAuthority;
-import pl.kamilprzenioslo.muzykant.persistance.enums.UserAuthority;
+import pl.kamilprzenioslo.muzykant.security.UserAuthority;
 
 @Getter
 @Setter

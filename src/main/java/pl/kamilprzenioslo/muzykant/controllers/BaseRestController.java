@@ -5,6 +5,7 @@ import java.net.URI;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -50,7 +51,9 @@ public abstract class BaseRestController<T extends IdentifiableDto<ID>, ID exten
     final URI entityMapping =
         new UriTemplate(request.getRequestURI() + RestMappings.ID).expand(savedEntity.getId());
 
-    return ResponseEntity.created(entityMapping).body(savedEntity);
+    return ResponseEntity.created(entityMapping)
+        .contentType(MediaType.APPLICATION_JSON)
+        .body(savedEntity);
   }
 
   @DeleteMapping(RestMappings.ID)
@@ -64,11 +67,10 @@ public abstract class BaseRestController<T extends IdentifiableDto<ID>, ID exten
 
   @Validated(OnPut.class)
   @PutMapping(RestMappings.ID)
-  public ResponseEntity<T> updateById(@Valid @RequestBody T dto, @PathVariable ID id) {
+  public T updateById(@Valid @RequestBody T dto, @PathVariable ID id) {
     verifyPutRequest(dto, id);
-    T responseDto = service.save(dto);
 
-    return ResponseEntity.ok(responseDto);
+    return service.save(dto);
   }
 
   private void verifyPutRequest(T dto, ID pathId) {

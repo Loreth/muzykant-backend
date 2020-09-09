@@ -24,10 +24,11 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 import pl.kamilprzenioslo.muzykant.config.TestSecurityConfiguration;
 import pl.kamilprzenioslo.muzykant.dtos.Credentials;
@@ -35,7 +36,7 @@ import pl.kamilprzenioslo.muzykant.dtos.Instrument;
 import pl.kamilprzenioslo.muzykant.dtos.Musician;
 import pl.kamilprzenioslo.muzykant.dtos.Person;
 import pl.kamilprzenioslo.muzykant.dtos.Voivodeship;
-import pl.kamilprzenioslo.muzykant.persistance.enums.UserAuthority;
+import pl.kamilprzenioslo.muzykant.security.UserAuthority;
 import pl.kamilprzenioslo.muzykant.service.CredentialsService;
 
 @Import(TestSecurityConfiguration.class)
@@ -52,9 +53,10 @@ class MusicianControllerIntegrationTest {
   private CredentialsService credentialsService;
   @Autowired
   private PasswordEncoder passwordEncoder;
-
   @Autowired
-  private MultiValueMap<String, String> jwtHeaderForConfirmedCredentialsWithoutCreatedUser;
+  private HttpHeaders jwtHeaderForConfirmedCredentialsWithoutCreatedUser;
+  @Autowired
+  private HttpHeaders jwtHeaderForMusicianWithImages;
 
   private final String RESOURCE_LINK;
 
@@ -138,20 +140,20 @@ class MusicianControllerIntegrationTest {
 
   @FlywayTest
   @Test
-  void shouldDeleteEntityUnderGivenId() {
-    restTemplate.delete(RESOURCE_LINK + "/2");
+  void shouldDeleteEntityUnderGivenIdWithProperAuthentication() {
+    HttpEntity<String> requestEntity = new HttpEntity<>(jwtHeaderForMusicianWithImages);
 
     ResponseEntity<String> responseEntity =
-        restTemplate.getForEntity(RESOURCE_LINK + "/2", String.class);
+        restTemplate.exchange(RESOURCE_LINK + "/2", HttpMethod.DELETE, requestEntity, String.class);
 
-    assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
   }
 
   @FlywayTest
   @Test
-  void shouldUpdateExistingEntityCorrectly() {
+  void shouldUpdateExistingEntityCorrectlyWithProperAuthentication() {
     ResponseEntity<Musician> initialResponse =
-        restTemplate.getForEntity(RESOURCE_LINK + "/3", Musician.class);
+        restTemplate.getForEntity(RESOURCE_LINK + "/2", Musician.class);
 
     Musician existingResourceDto = initialResponse.getBody();
     existingResourceDto.setCity("new city");
@@ -160,10 +162,13 @@ class MusicianControllerIntegrationTest {
     newInstrument.setId(24);
     existingResourceDto.getInstruments().add(newInstrument);
 
-    restTemplate.put(RESOURCE_LINK + "/3", existingResourceDto);
+    HttpEntity<Musician> requestEntity =
+        new HttpEntity<>(existingResourceDto, jwtHeaderForMusicianWithImages);
+
+    restTemplate.put(RESOURCE_LINK + "/2", requestEntity);
 
     ResponseEntity<Musician> afterUpdateResponse =
-        restTemplate.getForEntity(RESOURCE_LINK + "/3", Musician.class);
+        restTemplate.getForEntity(RESOURCE_LINK + "/2", Musician.class);
 
     Musician updatedResourceDto = afterUpdateResponse.getBody();
 

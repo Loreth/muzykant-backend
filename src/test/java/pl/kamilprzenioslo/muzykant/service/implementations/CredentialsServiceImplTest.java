@@ -19,10 +19,10 @@ import pl.kamilprzenioslo.muzykant.persistance.entities.AuthorityEntity;
 import pl.kamilprzenioslo.muzykant.persistance.entities.CredentialsEntity;
 import pl.kamilprzenioslo.muzykant.persistance.entities.RegularUserEntity;
 import pl.kamilprzenioslo.muzykant.persistance.entities.UserEntity;
-import pl.kamilprzenioslo.muzykant.persistance.enums.UserAuthority;
 import pl.kamilprzenioslo.muzykant.persistance.repositories.AuthorityRepository;
 import pl.kamilprzenioslo.muzykant.persistance.repositories.CredentialsRepository;
 import pl.kamilprzenioslo.muzykant.persistance.repositories.UserRepository;
+import pl.kamilprzenioslo.muzykant.security.UserAuthority;
 
 @ExtendWith(MockitoExtension.class)
 class CredentialsServiceImplTest {

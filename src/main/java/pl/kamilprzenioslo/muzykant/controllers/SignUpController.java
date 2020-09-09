@@ -3,7 +3,6 @@ package pl.kamilprzenioslo.muzykant.controllers;
 import java.util.Map;
 import java.util.UUID;
 import javax.mail.MessagingException;
-import javax.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,12 +24,17 @@ public class SignUpController {
   }
 
   @PostMapping(RestMappings.CONFIRM_EMAIL)
-  public void confirmEmail(@RequestBody @NotNull Map<String, String> confirmationToken) {
+  public void confirmEmail(@RequestBody Map<String, String> confirmationToken) {
     try {
       credentialsService.confirmEmail(UUID.fromString(confirmationToken.get("token")));
     } catch (IllegalArgumentException ex) {
       throw new ResponseStatusException(
           HttpStatus.UNPROCESSABLE_ENTITY, "Given token is not a valid UUID", ex);
     }
+  }
+
+  @PostMapping(RestMappings.RESEND_MAIL)
+  public void resendMail(@RequestBody Map<String, String> email) throws MessagingException {
+    credentialsService.resendConfirmationMail(email.get("email"));
   }
 }

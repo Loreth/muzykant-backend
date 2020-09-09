@@ -1,7 +1,5 @@
 package pl.kamilprzenioslo.muzykant.security;
 
-import static pl.kamilprzenioslo.muzykant.security.JwtConstants.JWT_PREFIX;
-
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -31,18 +29,16 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
   protected void doFilterInternal(
       HttpServletRequest request, HttpServletResponse response, FilterChain chain)
       throws IOException, ServletException {
-    String header = request.getHeader(HttpHeaders.AUTHORIZATION);
+    String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-    if (header != null && header.startsWith(JWT_PREFIX)) {
-      UsernamePasswordAuthenticationToken authentication = getAuthentication(request);
-      SecurityContextHolder.getContext().setAuthentication(authentication);
-    }
+    UsernamePasswordAuthenticationToken authentication = getAuthentication(authorizationHeader);
+    SecurityContextHolder.getContext().setAuthentication(authentication);
 
     chain.doFilter(request, response);
   }
 
-  private UsernamePasswordAuthenticationToken getAuthentication(HttpServletRequest request) {
-    String token = jwtUtils.parseJwtHeader(request.getHeader(HttpHeaders.AUTHORIZATION));
+  private UsernamePasswordAuthenticationToken getAuthentication(String authorizationHeader) {
+    String token = jwtUtils.parseJwtHeader(authorizationHeader);
 
     if (token != null) {
       jwtUtils.validateToken(token);

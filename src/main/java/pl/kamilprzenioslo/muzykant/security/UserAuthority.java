@@ -1,4 +1,4 @@
-package pl.kamilprzenioslo.muzykant.persistance.enums;
+package pl.kamilprzenioslo.muzykant.security;
 
 public enum UserAuthority {
   ROLE_MUSICIAN,

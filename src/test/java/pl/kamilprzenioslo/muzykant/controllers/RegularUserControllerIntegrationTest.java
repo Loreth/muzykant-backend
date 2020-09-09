@@ -24,17 +24,18 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 import pl.kamilprzenioslo.muzykant.config.TestSecurityConfiguration;
 import pl.kamilprzenioslo.muzykant.dtos.Credentials;
 import pl.kamilprzenioslo.muzykant.dtos.Person;
 import pl.kamilprzenioslo.muzykant.dtos.RegularUser;
 import pl.kamilprzenioslo.muzykant.dtos.Voivodeship;
-import pl.kamilprzenioslo.muzykant.persistance.enums.UserAuthority;
+import pl.kamilprzenioslo.muzykant.security.UserAuthority;
 import pl.kamilprzenioslo.muzykant.service.CredentialsService;
 
 @Import(TestSecurityConfiguration.class)
@@ -51,9 +52,10 @@ class RegularUserControllerIntegrationTest {
   private CredentialsService credentialsService;
   @Autowired
   private PasswordEncoder passwordEncoder;
-
   @Autowired
-  private MultiValueMap<String, String> jwtHeaderForConfirmedCredentialsWithoutCreatedUser;
+  private HttpHeaders jwtHeaderForConfirmedCredentialsWithoutCreatedUser;
+  @Autowired
+  private HttpHeaders jwtHeaderForRegularUser;
 
   private final String RESOURCE_LINK;
 
@@ -97,18 +99,18 @@ class RegularUserControllerIntegrationTest {
 
   @FlywayTest
   @Test
-  void shouldDeleteEntityUnderGivenId() {
-    restTemplate.delete(RESOURCE_LINK + "/1");
+  void shouldDeleteEntityUnderGivenIdWithProperAuthentication() {
+    HttpEntity<String> requestEntity = new HttpEntity<>(jwtHeaderForRegularUser);
 
     ResponseEntity<String> responseEntity =
-        restTemplate.getForEntity(RESOURCE_LINK + "/1", String.class);
+        restTemplate.exchange(RESOURCE_LINK + "/1", HttpMethod.DELETE, requestEntity, String.class);
 
-    assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
   }
 
   @FlywayTest
   @Test
-  void shouldUpdateExistingEntityCorrectly() {
+  void shouldUpdateExistingEntityCorrectlyWithProperAuthentication() {
     ResponseEntity<RegularUser> initialResponse =
         restTemplate.getForEntity(RESOURCE_LINK + "/1", RegularUser.class);
 
@@ -117,7 +119,10 @@ class RegularUserControllerIntegrationTest {
     existingResourceDto.setPhone("123456789");
     existingResourceDto.getPerson().setFirstName("Jan Janowicz");
 
-    restTemplate.put(RESOURCE_LINK + "/1", existingResourceDto);
+    HttpEntity<RegularUser> requestEntity =
+        new HttpEntity<>(existingResourceDto, jwtHeaderForRegularUser);
+
+    restTemplate.put(RESOURCE_LINK + "/1", requestEntity);
 
     ResponseEntity<RegularUser> afterUpdateResponse =
         restTemplate.getForEntity(RESOURCE_LINK + "/1", RegularUser.class);

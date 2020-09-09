@@ -19,17 +19,26 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
+import pl.kamilprzenioslo.muzykant.config.TestSecurityConfiguration;
 import pl.kamilprzenioslo.muzykant.dtos.Equipment;
 
+@Import(TestSecurityConfiguration.class)
 @FlywayTestExtension
 @FlywayTest
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class EquipmentControllerIntegrationTest {
+
   @Autowired private TestRestTemplate restTemplate;
-  @Autowired private ObjectMapper objectMapper;
+  @Autowired
+  private ObjectMapper objectMapper;
+  @Autowired
+  private HttpHeaders jwtHeaderForMusicianWithImages;
   private final String RESOURCE_LINK;
 
   public EquipmentControllerIntegrationTest(@LocalServerPort int port) {
@@ -76,13 +85,16 @@ class EquipmentControllerIntegrationTest {
 
   @FlywayTest
   @Test
-  void shouldCreateEntityAndReturnDtoWithId() {
+  void shouldCreateEntityAndReturnDtoWithIdWithProperAuthorization() {
     Equipment requestDto = new Equipment();
     requestDto.setName("Equipment");
     requestDto.setMusicianId(2);
 
+    HttpEntity<Equipment> requestEntity =
+        new HttpEntity<>(requestDto, jwtHeaderForMusicianWithImages);
+
     ResponseEntity<Equipment> responseEntity =
-        restTemplate.postForEntity(RESOURCE_LINK, requestDto, Equipment.class);
+        restTemplate.postForEntity(RESOURCE_LINK, requestEntity, Equipment.class);
     Equipment responseDto = responseEntity.getBody();
 
     assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
@@ -91,26 +103,32 @@ class EquipmentControllerIntegrationTest {
 
   @FlywayTest
   @Test
-  void shouldNotCreateEntityWithoutMusicianIdInRequest() {
+  void shouldNotCreateEntityWithoutMusicianIdInRequestWithProperAuthorization() {
     Equipment requestDto = new Equipment();
     requestDto.setName("Equipment");
 
+    HttpEntity<Equipment> requestEntity =
+        new HttpEntity<>(requestDto, jwtHeaderForMusicianWithImages);
+
     ResponseEntity<Equipment> responseEntity =
-        restTemplate.postForEntity(RESOURCE_LINK, requestDto, Equipment.class);
+        restTemplate.postForEntity(RESOURCE_LINK, requestEntity, Equipment.class);
 
     assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
   }
 
   @FlywayTest
   @Test
-  void shouldUpdateExistingEntityCorrectly() {
+  void shouldUpdateExistingEntityCorrectlyWithProperAuthentication() {
     ResponseEntity<Equipment> initialResponse =
         restTemplate.getForEntity(RESOURCE_LINK + "/3", Equipment.class);
 
     Equipment existingResourceDto = initialResponse.getBody();
     existingResourceDto.setName("new Equipment name");
 
-    restTemplate.put(RESOURCE_LINK + "/3", existingResourceDto);
+    HttpEntity<Equipment> requestEntity =
+        new HttpEntity<>(existingResourceDto, jwtHeaderForMusicianWithImages);
+
+    restTemplate.put(RESOURCE_LINK + "/3", requestEntity);
 
     ResponseEntity<Equipment> afterUpdateResponse =
         restTemplate.getForEntity(RESOURCE_LINK + "/3", Equipment.class);

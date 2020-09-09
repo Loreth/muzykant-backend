@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.kamilprzenioslo.muzykant.dtos.Credentials;
 import pl.kamilprzenioslo.muzykant.dtos.security.SignUpRequest;
+import pl.kamilprzenioslo.muzykant.exception.exceptions.ConfirmationMailException;
 import pl.kamilprzenioslo.muzykant.exception.exceptions.EmailAlreadyTakenException;
 import pl.kamilprzenioslo.muzykant.exception.exceptions.EmailConfirmationTokenExpiredException;
 import pl.kamilprzenioslo.muzykant.exception.exceptions.EmailConfirmationTokenNotFound;
@@ -19,11 +20,11 @@ import pl.kamilprzenioslo.muzykant.exception.exceptions.UserAlreadyAssignedExcep
 import pl.kamilprzenioslo.muzykant.persistance.entities.AuthorityEntity;
 import pl.kamilprzenioslo.muzykant.persistance.entities.CredentialsEntity;
 import pl.kamilprzenioslo.muzykant.persistance.entities.EmailConfirmationEntity;
-import pl.kamilprzenioslo.muzykant.persistance.enums.UserAuthority;
 import pl.kamilprzenioslo.muzykant.persistance.repositories.AuthorityRepository;
 import pl.kamilprzenioslo.muzykant.persistance.repositories.CredentialsRepository;
 import pl.kamilprzenioslo.muzykant.persistance.repositories.EmailConfirmationRepository;
 import pl.kamilprzenioslo.muzykant.persistance.repositories.UserRepository;
+import pl.kamilprzenioslo.muzykant.security.UserAuthority;
 import pl.kamilprzenioslo.muzykant.service.CredentialsService;
 import pl.kamilprzenioslo.muzykant.service.MailService;
 import pl.kamilprzenioslo.muzykant.service.mapper.CredentialsMapper;
@@ -64,23 +65,10 @@ public class CredentialsServiceImpl
     CredentialsEntity credentialsEntity = repository.findByEmailIgnoreCase(username).orElse(null);
 
     if (credentialsEntity == null) {
-      if (!isEmailConfirmed(username)) {
-        throw new EmailNotConfirmedException(
-            "Email has to be confirmed before logging in (EmailNotConfirmedException)");
-      } else {
-        throw new UsernameNotFoundException(username);
-      }
+      throw new UsernameNotFoundException(username);
     }
 
     return mapper.mapToDto(credentialsEntity);
-  }
-
-  @Override
-  public boolean isEmailConfirmed(String email) {
-    return repository
-        .findByEmailIgnoreCase(email)
-        .map(CredentialsEntity::isEmailConfirmed)
-        .orElse(false);
   }
 
   @Override
@@ -93,22 +81,33 @@ public class CredentialsServiceImpl
     credentialsEntity.setEmail(email);
     credentialsEntity.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
 
-    UUID confirmationToken = UUID.randomUUID();
-    var emailConfirmation = new EmailConfirmationEntity();
-    emailConfirmation.setToken(confirmationToken);
-    emailConfirmation.setTokenExpiration(
-        LocalDateTime.now().plusHours(emailConfirmationTokenExpirationH));
-
-    credentialsEntity.setEmailConfirmation(emailConfirmation);
-
     repository.save(credentialsEntity);
-    mailService.sendConfirmationMail(email, confirmationToken);
+    sendConfirmationMail(email);
   }
 
   private void verifyEmailNotAlreadyTaken(String email) {
     if (repository.existsByEmailIgnoreCase(email)) {
       throw new EmailAlreadyTakenException();
     }
+  }
+
+  private void sendConfirmationMail(String email) throws MessagingException {
+    UUID confirmationToken = UUID.randomUUID();
+
+    CredentialsEntity credentialsEntity =
+        repository.findByEmailIgnoreCase(email).orElseThrow(ConfirmationMailException::new);
+
+    EmailConfirmationEntity emailConfirmation = credentialsEntity.getEmailConfirmation();
+    if (emailConfirmation == null) {
+      emailConfirmation = new EmailConfirmationEntity();
+    }
+    emailConfirmation.setToken(confirmationToken);
+    emailConfirmation.setTokenExpiration(
+        LocalDateTime.now().plusHours(emailConfirmationTokenExpirationH));
+    credentialsEntity.setEmailConfirmation(emailConfirmation);
+    repository.save(credentialsEntity);
+
+    mailService.sendConfirmationMail(email, confirmationToken);
   }
 
   @Override
@@ -122,6 +121,24 @@ public class CredentialsServiceImpl
     CredentialsEntity credentials = emailConfirmation.getCredentials();
     credentials.setEmailConfirmation(null);
     repository.save(credentials);
+  }
+
+  private void verifyTokenExpiration(EmailConfirmationEntity emailConfirmationEntity) {
+    if (emailConfirmationEntity.isTokenExpired()) {
+      throw new EmailConfirmationTokenExpiredException();
+    }
+  }
+
+  @Override
+  public void resendConfirmationMail(String email) throws MessagingException {
+    CredentialsEntity credentialsEntity =
+        repository.findByEmailIgnoreCase(email).orElseThrow(ConfirmationMailException::new);
+
+    if (credentialsEntity.isEmailConfirmed()) {
+      throw new ConfirmationMailException();
+    }
+
+    sendConfirmationMail(email);
   }
 
   @Override
@@ -152,12 +169,6 @@ public class CredentialsServiceImpl
   private void verifyEmailConfirmation(CredentialsEntity credentialsEntity) {
     if (!credentialsEntity.isEmailConfirmed()) {
       throw new EmailNotConfirmedException();
-    }
-  }
-
-  private void verifyTokenExpiration(EmailConfirmationEntity emailConfirmationEntity) {
-    if (emailConfirmationEntity.isTokenExpired()) {
-      throw new EmailConfirmationTokenExpiredException();
     }
   }
 }

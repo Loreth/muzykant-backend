@@ -22,19 +22,32 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
+import pl.kamilprzenioslo.muzykant.config.TestSecurityConfiguration;
 import pl.kamilprzenioslo.muzykant.dtos.BandWantedAd;
 import pl.kamilprzenioslo.muzykant.dtos.Genre;
 import pl.kamilprzenioslo.muzykant.dtos.Instrument;
 
+@Import(TestSecurityConfiguration.class)
 @FlywayTestExtension
 @FlywayTest
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class BandWantedAdControllerIntegrationTest {
-  @Autowired private TestRestTemplate restTemplate;
-  @Autowired private ObjectMapper objectMapper;
+
+  @Autowired
+  private TestRestTemplate restTemplate;
+  @Autowired
+  private ObjectMapper objectMapper;
+  @Autowired
+  private HttpHeaders jwtHeaderForBand;
+  @Autowired
+  private HttpHeaders jwtHeaderForUserWithBandWantedAd;
   private final String RESOURCE_LINK;
 
   public BandWantedAdControllerIntegrationTest(@LocalServerPort int port) {
@@ -118,7 +131,7 @@ class BandWantedAdControllerIntegrationTest {
 
   @FlywayTest
   @Test
-  void shouldCreateEntityAndReturnDtoWithId() {
+  void shouldCreateEntityAndReturnDtoWithIdWithProperAuthentication() {
     BandWantedAd requestDto = new BandWantedAd();
     Genre preferredGenre1 = new Genre();
     preferredGenre1.setId(10);
@@ -132,8 +145,10 @@ class BandWantedAdControllerIntegrationTest {
     requestDto.setPreferredInstruments(Set.of(preferredInstrument));
     requestDto.setUserId(2);
 
+    HttpEntity<BandWantedAd> requestEntity = new HttpEntity<>(requestDto, jwtHeaderForBand);
+
     ResponseEntity<BandWantedAd> responseEntity =
-        restTemplate.postForEntity(RESOURCE_LINK, requestDto, BandWantedAd.class);
+        restTemplate.postForEntity(RESOURCE_LINK, requestEntity, BandWantedAd.class);
     BandWantedAd responseDto = responseEntity.getBody();
 
     assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
@@ -146,18 +161,17 @@ class BandWantedAdControllerIntegrationTest {
 
   @FlywayTest
   @Test
-  void shouldDeleteEntityUnderGivenId() {
-    restTemplate.delete(RESOURCE_LINK + "/1");
-
+  void shouldDeleteEntityUnderGivenIdWithProperAuthorization() {
+    HttpEntity<String> requestEntity = new HttpEntity<>(jwtHeaderForUserWithBandWantedAd);
     ResponseEntity<String> responseEntity =
-        restTemplate.getForEntity(RESOURCE_LINK + "/1", String.class);
+        restTemplate.exchange(RESOURCE_LINK + "/1", HttpMethod.DELETE, requestEntity, String.class);
 
-    assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
   }
 
   @FlywayTest
   @Test
-  void shouldUpdateExistingEntityCorrectly() {
+  void shouldUpdateExistingEntityCorrectlyWithProperAuthorization() {
     ResponseEntity<BandWantedAd> initialResponse =
         restTemplate.getForEntity(RESOURCE_LINK + "/1", BandWantedAd.class);
 
@@ -171,7 +185,10 @@ class BandWantedAdControllerIntegrationTest {
     existingResourceDto.getPreferredGenres().add(newPreferredGenre1);
     existingResourceDto.getPreferredGenres().add(newPreferredGenre2);
 
-    restTemplate.put(RESOURCE_LINK + "/1", existingResourceDto);
+    HttpEntity<BandWantedAd> requestEntity = new HttpEntity<>(existingResourceDto,
+        jwtHeaderForUserWithBandWantedAd);
+
+    restTemplate.put(RESOURCE_LINK + "/1", requestEntity);
 
     ResponseEntity<BandWantedAd> afterUpdateResponse =
         restTemplate.getForEntity(RESOURCE_LINK + "/1", BandWantedAd.class);

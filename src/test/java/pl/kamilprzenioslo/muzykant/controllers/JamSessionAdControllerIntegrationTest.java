@@ -24,19 +24,29 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
+import pl.kamilprzenioslo.muzykant.config.TestSecurityConfiguration;
 import pl.kamilprzenioslo.muzykant.dtos.Genre;
 import pl.kamilprzenioslo.muzykant.dtos.Instrument;
 import pl.kamilprzenioslo.muzykant.dtos.JamSessionAd;
 
+@Import(TestSecurityConfiguration.class)
 @FlywayTestExtension
 @FlywayTest
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class JamSessionAdControllerIntegrationTest {
+
   @Autowired private TestRestTemplate restTemplate;
-  @Autowired private ObjectMapper objectMapper;
+  @Autowired
+  private ObjectMapper objectMapper;
+  @Autowired
+  private HttpHeaders jwtHeaderForUserWithJamSessionAd;
   private final String RESOURCE_LINK;
 
   public JamSessionAdControllerIntegrationTest(@LocalServerPort int port) {
@@ -120,7 +130,7 @@ class JamSessionAdControllerIntegrationTest {
 
   @FlywayTest
   @Test
-  void shouldCreateEntityAndReturnDtoWithId() {
+  void shouldCreateEntityAndReturnDtoWithIdWithProperAuthorization() {
     JamSessionAd requestDto = new JamSessionAd();
     Genre preferredGenre1 = new Genre();
     preferredGenre1.setId(10);
@@ -136,8 +146,11 @@ class JamSessionAdControllerIntegrationTest {
     requestDto.setPreferredInstruments(Set.of(preferredInstrument1, preferredInstrument2));
     requestDto.setUserId(6);
 
+    HttpEntity<JamSessionAd> requestEntity =
+        new HttpEntity<>(requestDto, jwtHeaderForUserWithJamSessionAd);
+
     ResponseEntity<JamSessionAd> responseEntity =
-        restTemplate.postForEntity(RESOURCE_LINK, requestDto, JamSessionAd.class);
+        restTemplate.postForEntity(RESOURCE_LINK, requestEntity, JamSessionAd.class);
     JamSessionAd responseDto = responseEntity.getBody();
 
     assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
@@ -151,13 +164,13 @@ class JamSessionAdControllerIntegrationTest {
 
   @FlywayTest
   @Test
-  void shouldDeleteEntityUnderGivenId() {
-    restTemplate.delete(RESOURCE_LINK + "/9");
+  void shouldDeleteEntityUnderGivenIdWithProperAuthorization() {
+    HttpEntity<String> requestEntity = new HttpEntity<>(jwtHeaderForUserWithJamSessionAd);
 
     ResponseEntity<String> responseEntity =
-        restTemplate.getForEntity(RESOURCE_LINK + "/9", String.class);
+        restTemplate.exchange(RESOURCE_LINK + "/8", HttpMethod.DELETE, requestEntity, String.class);
 
-    assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
   }
 
   @FlywayTest
@@ -170,7 +183,10 @@ class JamSessionAdControllerIntegrationTest {
     existingResourceDto.setLocation("new location");
     existingResourceDto.setCommercial(true);
 
-    restTemplate.put(RESOURCE_LINK + "/8", existingResourceDto);
+    HttpEntity<JamSessionAd> requestEntity =
+        new HttpEntity<>(existingResourceDto, jwtHeaderForUserWithJamSessionAd);
+
+    restTemplate.put(RESOURCE_LINK + "/8", requestEntity);
 
     ResponseEntity<JamSessionAd> afterUpdateResponse =
         restTemplate.getForEntity(RESOURCE_LINK + "/8", JamSessionAd.class);

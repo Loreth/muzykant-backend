@@ -17,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import pl.kamilprzenioslo.muzykant.dtos.security.LoginRequest;
-import pl.kamilprzenioslo.muzykant.persistance.enums.UserAuthority;
 
 @SpringBootTest
 @AutoConfigureMockMvc

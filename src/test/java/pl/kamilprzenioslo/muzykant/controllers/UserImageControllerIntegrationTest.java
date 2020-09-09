@@ -21,9 +21,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -32,17 +34,24 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriComponentsBuilder;
+import pl.kamilprzenioslo.muzykant.config.TestSecurityConfiguration;
 import pl.kamilprzenioslo.muzykant.dtos.UserImage;
 
+@Import(TestSecurityConfiguration.class)
 @FlywayTestExtension
 @FlywayTest
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class UserUserImageControllerIntegrationTest {
-  @Autowired private TestRestTemplate restTemplate;
-  @Autowired private ObjectMapper objectMapper;
+class UserImageControllerIntegrationTest {
+
+  @Autowired
+  private TestRestTemplate restTemplate;
+  @Autowired
+  private ObjectMapper objectMapper;
+  @Autowired
+  private HttpHeaders jwtHeaderForMusicianWithImages;
   private final String RESOURCE_LINK;
 
-  public UserUserImageControllerIntegrationTest(@LocalServerPort int port) {
+  public UserImageControllerIntegrationTest(@LocalServerPort int port) {
     RESOURCE_LINK = "http://localhost:" + port + "/user-images";
   }
 
@@ -86,13 +95,16 @@ class UserUserImageControllerIntegrationTest {
 
   @FlywayTest
   @Test
-  void shouldCreateEntityAndReturnDtoWithId() {
+  void shouldCreateEntityAndReturnDtoWithIdWithAuthorization() {
     UserImage requestDto = new UserImage();
     requestDto.setLink("link");
     requestDto.setUserId(6);
 
+    HttpEntity<UserImage> requestEntity =
+        new HttpEntity<>(requestDto, jwtHeaderForMusicianWithImages);
+
     ResponseEntity<UserImage> responseEntity =
-        restTemplate.postForEntity(RESOURCE_LINK, requestDto, UserImage.class);
+        restTemplate.postForEntity(RESOURCE_LINK, requestEntity, UserImage.class);
     UserImage responseDto = responseEntity.getBody();
 
     assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
@@ -101,33 +113,54 @@ class UserUserImageControllerIntegrationTest {
 
   @FlywayTest
   @Test
-  void shouldNotCreateEntityWithoutMusicianIdInRequest() {
+  void shouldNotCreateEntityWithoutMusicianIdInRequestWithAuthorization() {
     UserImage requestDto = new UserImage();
     requestDto.setLink("link");
 
+    HttpEntity<UserImage> requestEntity =
+        new HttpEntity<>(requestDto, jwtHeaderForMusicianWithImages);
+
     ResponseEntity<UserImage> responseEntity =
-        restTemplate.postForEntity(RESOURCE_LINK, requestDto, UserImage.class);
+        restTemplate.exchange(RESOURCE_LINK, HttpMethod.POST, requestEntity, UserImage.class);
 
     assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
   }
 
   @FlywayTest
   @Test
-  void shouldUpdateExistingEntityCorrectly() {
+  void shouldUpdateExistingEntityCorrectlyAuthenticatedWithOwningUser() {
+    ResponseEntity<UserImage> initialResponse =
+        restTemplate.getForEntity(RESOURCE_LINK + "/1", UserImage.class);
+    UserImage existingResourceDto = initialResponse.getBody();
+    existingResourceDto.setOrderIndex(3);
+    HttpEntity<UserImage> requestEntity =
+        new HttpEntity<>(existingResourceDto, jwtHeaderForMusicianWithImages);
+
+    ResponseEntity<UserImage> responseEntity =
+        restTemplate.exchange(RESOURCE_LINK + "/1", HttpMethod.PUT, requestEntity, UserImage.class);
+    UserImage updatedResourceDto = responseEntity.getBody();
+
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    assertEquals(3, updatedResourceDto.getOrderIndex());
+  }
+
+  @FlywayTest
+  @Test
+  void shouldReturnUnauthorizedForUpdateWithoutAuthorization() {
     ResponseEntity<UserImage> initialResponse =
         restTemplate.getForEntity(RESOURCE_LINK + "/1", UserImage.class);
 
     UserImage existingResourceDto = initialResponse.getBody();
     existingResourceDto.setLink("new Image link");
 
-    restTemplate.put(RESOURCE_LINK + "/1", existingResourceDto);
+    ResponseEntity<UserImage> responseEntity =
+        restTemplate.exchange(
+            RESOURCE_LINK + "/1",
+            HttpMethod.PUT,
+            new HttpEntity<>(existingResourceDto),
+            UserImage.class);
 
-    ResponseEntity<UserImage> afterUpdateResponse =
-        restTemplate.getForEntity(RESOURCE_LINK + "/1", UserImage.class);
-
-    UserImage updatedResourceDto = afterUpdateResponse.getBody();
-
-    assertEquals("new Image link", updatedResourceDto.getLink());
+    assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
   }
 
   @FlywayTest
@@ -170,14 +203,15 @@ class UserUserImageControllerIntegrationTest {
 
   @FlywayTest
   @Test
-  void shouldSaveUploadedImageInUploadDirectoryAndCreateUserImageEntity() throws IOException {
+  void shouldSaveUploadedImageInUploadDirectoryAndCreateUserImageEntityForAuthenticatedUser()
+      throws IOException {
     MultipartFile imageFile =
         new MockMultipartFile("img123321", "filename.jpg", "image/jpeg", "mock img".getBytes());
-    HttpHeaders headers = new HttpHeaders();
+    HttpHeaders headers = jwtHeaderForMusicianWithImages;
     headers.setContentType(MediaType.MULTIPART_FORM_DATA);
     MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
     body.add("file", imageFile.getResource());
-    body.add("userId", 3);
+    body.add("userId", 2);
     body.add("orderIndex", 1);
 
     HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
@@ -188,10 +222,10 @@ class UserUserImageControllerIntegrationTest {
     String createdImageLink = responseEntity.getBody();
 
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-    assertEquals(createdImageLink, RESOURCE_LINK + "/image-uploads/3_2.jpg");
+    assertEquals(createdImageLink, RESOURCE_LINK + "/image-uploads/2_3.jpg");
 
     // cleanup
-    Files.deleteIfExists(Path.of("./test-uploads/3_2.jpg"));
+    Files.deleteIfExists(Path.of("./test-uploads/2_3.jpg"));
   }
 
   @FlywayTest

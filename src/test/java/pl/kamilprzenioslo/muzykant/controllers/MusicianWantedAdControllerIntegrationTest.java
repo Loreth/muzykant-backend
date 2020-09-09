@@ -24,21 +24,31 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
+import pl.kamilprzenioslo.muzykant.config.TestSecurityConfiguration;
 import pl.kamilprzenioslo.muzykant.dtos.Ad;
 import pl.kamilprzenioslo.muzykant.dtos.Genre;
 import pl.kamilprzenioslo.muzykant.dtos.MusicianWantedAd;
 import pl.kamilprzenioslo.muzykant.dtos.VocalRange;
 import pl.kamilprzenioslo.muzykant.persistance.enums.UserType;
 
+@Import(TestSecurityConfiguration.class)
 @FlywayTestExtension
 @FlywayTest
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class MusicianWantedAdControllerIntegrationTest {
+
   @Autowired private TestRestTemplate restTemplate;
-  @Autowired private ObjectMapper objectMapper;
+  @Autowired
+  private ObjectMapper objectMapper;
+  @Autowired
+  private HttpHeaders jwtHeaderForUserWithMusicianWantedAd;
   private final String RESOURCE_LINK;
 
   public MusicianWantedAdControllerIntegrationTest(@LocalServerPort int port) {
@@ -168,7 +178,7 @@ class MusicianWantedAdControllerIntegrationTest {
 
   @FlywayTest
   @Test
-  void shouldCreateEntityAndReturnDtoWithId() {
+  void shouldCreateEntityAndReturnDtoWithIdWithProperAuthorization() {
     MusicianWantedAd requestDto = new MusicianWantedAd();
     Genre preferredGenre1 = new Genre();
     preferredGenre1.setId(1);
@@ -179,8 +189,11 @@ class MusicianWantedAdControllerIntegrationTest {
     requestDto.setPreferredGenres(Set.of(preferredGenre1, preferredGenre2));
     requestDto.setUserId(1);
 
+    HttpEntity<MusicianWantedAd> requestEntity =
+        new HttpEntity<>(requestDto, jwtHeaderForUserWithMusicianWantedAd);
+
     ResponseEntity<MusicianWantedAd> responseEntity =
-        restTemplate.postForEntity(RESOURCE_LINK, requestDto, MusicianWantedAd.class);
+        restTemplate.postForEntity(RESOURCE_LINK, requestEntity, MusicianWantedAd.class);
     MusicianWantedAd responseDto = responseEntity.getBody();
 
     assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
@@ -192,19 +205,19 @@ class MusicianWantedAdControllerIntegrationTest {
   @FlywayTest
   @Test
   void shouldDeleteEntityUnderGivenId() {
-    restTemplate.delete(RESOURCE_LINK + "/4");
+    HttpEntity<String> requestEntity = new HttpEntity<>(jwtHeaderForUserWithMusicianWantedAd);
 
     ResponseEntity<String> responseEntity =
-        restTemplate.getForEntity(RESOURCE_LINK + "/4", String.class);
+        restTemplate.exchange(RESOURCE_LINK + "/5", HttpMethod.DELETE, requestEntity, String.class);
 
-    assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
   }
 
   @FlywayTest
   @Test
   void shouldUpdateExistingEntityCorrectly() {
     ResponseEntity<MusicianWantedAd> initialResponse =
-        restTemplate.getForEntity(RESOURCE_LINK + "/4", MusicianWantedAd.class);
+        restTemplate.getForEntity(RESOURCE_LINK + "/5", MusicianWantedAd.class);
 
     MusicianWantedAd existingResourceDto = initialResponse.getBody();
     existingResourceDto.setLocation("new location");
@@ -214,10 +227,13 @@ class MusicianWantedAdControllerIntegrationTest {
     newPreferredGenre.setId(25);
     existingResourceDto.getPreferredGenres().add(newPreferredGenre);
 
-    restTemplate.put(RESOURCE_LINK + "/4", existingResourceDto);
+    HttpEntity<MusicianWantedAd> requestEntity =
+        new HttpEntity<>(existingResourceDto, jwtHeaderForUserWithMusicianWantedAd);
+
+    restTemplate.put(RESOURCE_LINK + "/5", requestEntity);
 
     ResponseEntity<MusicianWantedAd> afterUpdateResponse =
-        restTemplate.getForEntity(RESOURCE_LINK + "/4", MusicianWantedAd.class);
+        restTemplate.getForEntity(RESOURCE_LINK + "/5", MusicianWantedAd.class);
 
     MusicianWantedAd updatedResourceDto = afterUpdateResponse.getBody();
 
@@ -230,7 +246,7 @@ class MusicianWantedAdControllerIntegrationTest {
     assertEquals("E5", updatedResourceDto.getVocalRange().getHighestNote());
     assertTrue(updatedResourceDto.isCommercial());
     assertThat(updatedResourceDto.getPreferredGenres().stream().map(Genre::getId))
-        .hasSize(3)
+        .hasSize(6)
         .contains(newPreferredGenre.getId());
   }
 

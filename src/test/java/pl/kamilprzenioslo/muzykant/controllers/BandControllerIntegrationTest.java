@@ -23,17 +23,18 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.util.UriComponentsBuilder;
 import pl.kamilprzenioslo.muzykant.config.TestSecurityConfiguration;
 import pl.kamilprzenioslo.muzykant.dtos.Band;
 import pl.kamilprzenioslo.muzykant.dtos.Credentials;
 import pl.kamilprzenioslo.muzykant.dtos.Genre;
 import pl.kamilprzenioslo.muzykant.dtos.Voivodeship;
-import pl.kamilprzenioslo.muzykant.persistance.enums.UserAuthority;
+import pl.kamilprzenioslo.muzykant.security.UserAuthority;
 import pl.kamilprzenioslo.muzykant.service.CredentialsService;
 
 @Import(TestSecurityConfiguration.class)
@@ -52,7 +53,9 @@ class BandControllerIntegrationTest {
   private PasswordEncoder passwordEncoder;
 
   @Autowired
-  private MultiValueMap<String, String> jwtHeaderForConfirmedCredentialsWithoutCreatedUser;
+  private HttpHeaders jwtHeaderForConfirmedCredentialsWithoutCreatedUser;
+  @Autowired
+  private HttpHeaders jwtHeaderForBand;
 
   private final String RESOURCE_LINK;
 
@@ -136,20 +139,22 @@ class BandControllerIntegrationTest {
 
   @FlywayTest
   @Test
-  void shouldDeleteEntityUnderGivenId() {
-    restTemplate.delete(RESOURCE_LINK + "/8");
-
+  void shouldDeleteEntityUnderGivenIdWithProperAuthentication() {
     ResponseEntity<String> responseEntity =
-        restTemplate.getForEntity(RESOURCE_LINK + "/8", String.class);
+        restTemplate.exchange(
+            RESOURCE_LINK + "/8",
+            HttpMethod.DELETE,
+            new HttpEntity<>(jwtHeaderForBand),
+            String.class);
 
-    assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
   }
 
   @FlywayTest
   @Test
-  void shouldUpdateExistingEntityCorrectly() {
+  void shouldUpdateExistingEntityCorrectlyWithProperAuthentication() {
     ResponseEntity<Band> initialResponse =
-        restTemplate.getForEntity(RESOURCE_LINK + "/6", Band.class);
+        restTemplate.getForEntity(RESOURCE_LINK + "/8", Band.class);
 
     Band existingResourceDto = initialResponse.getBody();
     existingResourceDto.setCity("new city");
@@ -158,14 +163,14 @@ class BandControllerIntegrationTest {
     newGenre.setId(10);
     existingResourceDto.getGenres().add(newGenre);
 
-    restTemplate.put(RESOURCE_LINK + "/6", existingResourceDto);
+    HttpEntity<Band> requestEntity = new HttpEntity<>(existingResourceDto, jwtHeaderForBand);
 
-    ResponseEntity<Band> afterUpdateResponse =
-        restTemplate.getForEntity(RESOURCE_LINK + "/6", Band.class);
+    ResponseEntity<Band> responseEntity = restTemplate
+        .exchange(RESOURCE_LINK + "/8", HttpMethod.PUT, requestEntity, Band.class);
 
-    Band updatedResourceDto = afterUpdateResponse.getBody();
+    Band updatedResourceDto = responseEntity.getBody();
 
-    assertEquals(HttpStatus.OK, afterUpdateResponse.getStatusCode());
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     assertEquals(existingResourceDto.getId(), updatedResourceDto.getId());
     assertEquals("new city", updatedResourceDto.getCity());
 

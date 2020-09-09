@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.kamilprzenioslo.muzykant.dtos.Band;
 import pl.kamilprzenioslo.muzykant.persistance.entities.BandEntity;
-import pl.kamilprzenioslo.muzykant.persistance.enums.UserAuthority;
+import pl.kamilprzenioslo.muzykant.security.UserAuthority;
 import pl.kamilprzenioslo.muzykant.service.BandService;
 import pl.kamilprzenioslo.muzykant.service.CredentialsService;
 import pl.kamilprzenioslo.muzykant.specifications.BandSpecification;

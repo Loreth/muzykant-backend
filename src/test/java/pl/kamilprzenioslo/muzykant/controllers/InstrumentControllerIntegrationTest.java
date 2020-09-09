@@ -19,6 +19,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -76,35 +78,33 @@ class InstrumentControllerIntegrationTest {
 
   @FlywayTest
   @Test
-  void shouldCreateEntityAndReturnDtoWithId() {
+  void shouldReturnUnauthorizedForCreateWithoutAuthorization() {
     Instrument requestDto = new Instrument();
     requestDto.setName("Instrument");
 
     ResponseEntity<Instrument> responseEntity =
         restTemplate.postForEntity(RESOURCE_LINK, requestDto, Instrument.class);
-    Instrument responseDto = responseEntity.getBody();
 
-    assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
-    assertEquals("Instrument", responseDto.getName());
+    assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
   }
 
   @FlywayTest
   @Test
-  void shouldUpdateExistingEntityCorrectly() {
+  void shouldReturnUnauthorizedForUpdateWithoutAuthorization() {
     ResponseEntity<Instrument> initialResponse =
         restTemplate.getForEntity(RESOURCE_LINK + "/20", Instrument.class);
 
     Instrument existingResourceDto = initialResponse.getBody();
     existingResourceDto.setName("new Instrument name");
 
-    restTemplate.put(RESOURCE_LINK + "/20", existingResourceDto);
+    ResponseEntity<Instrument> responseEntity =
+        restTemplate.exchange(
+            RESOURCE_LINK + "/20",
+            HttpMethod.PUT,
+            new HttpEntity<>(existingResourceDto),
+            Instrument.class);
 
-    ResponseEntity<Instrument> afterUpdateResponse =
-        restTemplate.getForEntity(RESOURCE_LINK + "/20", Instrument.class);
-
-    Instrument updatedResourceDto = afterUpdateResponse.getBody();
-
-    assertEquals("new Instrument name", updatedResourceDto.getName());
+    assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
   }
 
   @FlywayTest

@@ -19,6 +19,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -76,35 +78,40 @@ class GenreControllerIntegrationTest {
 
   @FlywayTest
   @Test
-  void shouldCreateEntityAndReturnDtoWithId() {
+  void shouldNotCreateEntityWithoutAuthorization() {
     Genre requestDto = new Genre();
     requestDto.setName("genre");
 
     ResponseEntity<Genre> responseEntity =
         restTemplate.postForEntity(RESOURCE_LINK, requestDto, Genre.class);
-    Genre responseDto = responseEntity.getBody();
 
-    assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
-    assertEquals("genre", responseDto.getName());
+    assertEquals(HttpStatus.UNAUTHORIZED, responseEntity.getStatusCode());
   }
 
   @FlywayTest
   @Test
-  void shouldUpdateExistingEntityCorrectly() {
+  void shouldNotUpdateExistingEntityWithoutAuthorization() {
     ResponseEntity<Genre> initialResponse =
         restTemplate.getForEntity(RESOURCE_LINK + "/20", Genre.class);
 
     Genre existingResourceDto = initialResponse.getBody();
+    String originalName = existingResourceDto.getName();
     existingResourceDto.setName("new genre name");
 
-    restTemplate.put(RESOURCE_LINK + "/20", existingResourceDto);
+    ResponseEntity<Genre> putRequest =
+        restTemplate.exchange(
+            RESOURCE_LINK + "/20",
+            HttpMethod.PUT,
+            new HttpEntity<>(existingResourceDto),
+            Genre.class);
 
     ResponseEntity<Genre> afterUpdateResponse =
         restTemplate.getForEntity(RESOURCE_LINK + "/20", Genre.class);
 
     Genre updatedResourceDto = afterUpdateResponse.getBody();
 
-    assertEquals("new genre name", updatedResourceDto.getName());
+    assertEquals(HttpStatus.UNAUTHORIZED, putRequest.getStatusCode());
+    assertEquals(originalName, updatedResourceDto.getName());
   }
 
   @FlywayTest

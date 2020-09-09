@@ -1,5 +1,7 @@
 package pl.kamilprzenioslo.muzykant.persistance.enums;
 
+import pl.kamilprzenioslo.muzykant.security.UserAuthority;
+
 public enum UserType {
   BAND(Values.BAND, UserAuthority.ROLE_BAND),
   MUSICIAN(Values.MUSICIAN, UserAuthority.ROLE_MUSICIAN),

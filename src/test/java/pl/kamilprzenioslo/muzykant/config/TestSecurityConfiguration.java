@@ -4,9 +4,9 @@ import static pl.kamilprzenioslo.muzykant.security.JwtConstants.JWT_PREFIX;
 
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpHeaders;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
+import org.springframework.http.MediaType;
 import pl.kamilprzenioslo.muzykant.dtos.Credentials;
 import pl.kamilprzenioslo.muzykant.security.JwtUtils;
 import pl.kamilprzenioslo.muzykant.service.CredentialsService;
@@ -23,10 +23,52 @@ public class TestSecurityConfiguration {
   }
 
   @Bean
-  MultiValueMap<String, String> jwtHeaderForConfirmedCredentialsWithoutCreatedUser() {
-    Credentials credentials = credentialsService.findById(12).orElseThrow();
-    LinkedMultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+  @Scope("prototype")
+  HttpHeaders jwtHeaderForConfirmedCredentialsWithoutCreatedUser() {
+    return makeJwtHeader(12);
+  }
+
+  @Bean
+  @Scope("prototype")
+  HttpHeaders jwtHeaderForMusicianWithImages() {
+    return makeJwtHeader(2);
+  }
+
+  @Bean
+  @Scope("prototype")
+  HttpHeaders jwtHeaderForBand() {
+    return makeJwtHeader(8);
+  }
+
+  @Bean
+  @Scope("prototype")
+  HttpHeaders jwtHeaderForRegularUser() {
+    return makeJwtHeader(1);
+  }
+
+  @Bean
+  @Scope("prototype")
+  HttpHeaders jwtHeaderForUserWithBandWantedAd() {
+    return makeJwtHeader(1);
+  }
+
+  @Bean
+  @Scope("prototype")
+  HttpHeaders jwtHeaderForUserWithMusicianWantedAd() {
+    return makeJwtHeader(4);
+  }
+
+  @Bean
+  @Scope("prototype")
+  HttpHeaders jwtHeaderForUserWithJamSessionAd() {
+    return makeJwtHeader(3);
+  }
+
+  private HttpHeaders makeJwtHeader(int credentialsId) {
+    Credentials credentials = credentialsService.findById(credentialsId).orElseThrow();
+    HttpHeaders headers = new HttpHeaders();
     headers.add(HttpHeaders.AUTHORIZATION, JWT_PREFIX + jwtUtils.generateToken(credentials));
+    headers.setContentType(MediaType.APPLICATION_JSON);
 
     return headers;
   }
