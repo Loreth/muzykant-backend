@@ -32,6 +32,7 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import pl.kamilprzenioslo.muzykant.security.CustomAuthenticationFailureHandler;
 import pl.kamilprzenioslo.muzykant.security.JwtAuthenticationFilter;
 import pl.kamilprzenioslo.muzykant.security.JwtAuthorizationFilter;
@@ -47,6 +48,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   private final PasswordEncoder passwordEncoder;
   private final ObjectMapper objectMapper;
   private final JwtUtils jwtUtils;
+  private final HandlerExceptionResolver handlerExceptionResolver;
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
@@ -58,7 +60,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             credentialsService,
             authenticationFailureHandler()))
         .addFilter(
-            new JwtAuthorizationFilter(authenticationManager(), jwtUtils, credentialsService))
+            new JwtAuthorizationFilter(
+                authenticationManager(), jwtUtils, credentialsService, handlerExceptionResolver))
         .exceptionHandling()
         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
         .and()

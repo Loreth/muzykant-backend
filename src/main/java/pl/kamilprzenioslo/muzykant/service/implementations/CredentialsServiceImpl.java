@@ -62,11 +62,10 @@ public class CredentialsServiceImpl
 
   @Override
   public Credentials loadUserByUsername(String username) {
-    CredentialsEntity credentialsEntity = repository.findByEmailIgnoreCase(username).orElse(null);
-
-    if (credentialsEntity == null) {
-      throw new UsernameNotFoundException(username);
-    }
+    CredentialsEntity credentialsEntity =
+        repository
+            .findByEmailIgnoreCase(username)
+            .orElseThrow(() -> new UsernameNotFoundException("Username not found: " + username));
 
     return mapper.mapToDto(credentialsEntity);
   }

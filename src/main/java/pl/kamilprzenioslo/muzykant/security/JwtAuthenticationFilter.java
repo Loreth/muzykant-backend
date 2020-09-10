@@ -50,8 +50,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
       return authenticationManager.authenticate(
           new UsernamePasswordAuthenticationToken(credentials, loginRequest.getPassword()));
-    } catch (IOException e) {
-      throw new InternalAuthenticationServiceException(e.getMessage());
+    } catch (IOException ex) {
+      throw new InternalAuthenticationServiceException(ex.getMessage());
     }
   }
 

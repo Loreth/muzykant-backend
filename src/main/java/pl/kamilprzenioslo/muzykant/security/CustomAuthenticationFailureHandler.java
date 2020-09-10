@@ -24,14 +24,14 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
       HttpServletRequest request, HttpServletResponse response, AuthenticationException exception)
       throws IOException {
     log.debug("Authentication failure: {}", exception.getMessage());
-    Map<String, Object> data = new HashMap<>();
-    data.put("status", HttpStatus.UNAUTHORIZED.value());
-    data.put("error", HttpStatus.UNAUTHORIZED.getReasonPhrase());
-    data.put("timestamp", Calendar.getInstance().getTime());
-    data.put("exception", exception);
-    data.put("message", exception.getMessage());
+    Map<String, Object> body = new HashMap<>();
+    body.put("status", HttpStatus.UNAUTHORIZED.value());
+    body.put("error", HttpStatus.UNAUTHORIZED.getReasonPhrase());
+    body.put("timestamp", Calendar.getInstance().getTime());
+    body.put("exception", exception);
+    body.put("message", exception.getMessage());
     response.setStatus(HttpStatus.UNAUTHORIZED.value());
 
-    response.getOutputStream().println(objectMapper.writeValueAsString(data));
+    response.getOutputStream().println(objectMapper.writeValueAsString(body));
   }
 }
