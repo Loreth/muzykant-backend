@@ -82,7 +82,7 @@ public class CredentialsServiceImpl
     credentialsEntity.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
 
     repository.save(credentialsEntity);
-    sendConfirmationMail(email);
+    sendConfirmationMail(email, UUID.randomUUID());
   }
 
   private void verifyEmailNotAlreadyTaken(String email) {
@@ -91,9 +91,8 @@ public class CredentialsServiceImpl
     }
   }
 
-  private void sendConfirmationMail(String email) throws MessagingException {
-    UUID confirmationToken = UUID.randomUUID();
-
+  private void sendConfirmationMail(String email, UUID confirmationToken)
+      throws MessagingException {
     CredentialsEntity credentialsEntity =
         repository.findByEmailIgnoreCase(email).orElseThrow(ConfirmationMailException::new);
 
@@ -138,7 +137,7 @@ public class CredentialsServiceImpl
       throw new ConfirmationMailException();
     }
 
-    sendConfirmationMail(email);
+    sendConfirmationMail(email, credentialsEntity.getEmailConfirmation().getToken());
   }
 
   @Override

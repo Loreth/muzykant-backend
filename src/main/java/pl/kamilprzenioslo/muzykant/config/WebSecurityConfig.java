@@ -77,7 +77,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .permitAll()
         .and()
         .authorizeRequests()
-        .antMatchers(SIGN_UP, CONFIRM_EMAIL)
+        .antMatchers(SIGN_UP, CONFIRM_EMAIL, RESEND_MAIL)
         .permitAll()
         .antMatchers(HttpMethod.GET, "/**")
         .permitAll()
@@ -134,6 +134,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
   @Bean
   AuthenticationFailureHandler authenticationFailureHandler() {
-    return new CustomAuthenticationFailureHandler();
+    return new CustomAuthenticationFailureHandler(objectMapper);
   }
 }

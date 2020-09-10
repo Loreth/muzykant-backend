@@ -30,7 +30,7 @@ public class MailServiceImpl implements MailService {
     this.mailConfirmationUrl = mailConfirmationUrl;
 
     confirmMailContent =
-        "Witaj w naszym muzycznym gronie! <br><br>"
+        "Witaj w muzycznym gronie! <br><br>"
             + "Aby potwierdzić rejestrację w serwisie Muzykant, kliknij poniższy link. <br><br>"
             + "Link wygasa po "
             + emailConfirmationTokenExpirationH
