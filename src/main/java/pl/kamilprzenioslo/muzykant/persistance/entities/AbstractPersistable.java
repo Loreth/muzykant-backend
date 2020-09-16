@@ -55,7 +55,7 @@ public abstract class AbstractPersistable<ID extends Serializable> implements Pe
   @Override
   public int hashCode() {
     // necessary, because we can't simply use ID in hashCode, as object can't change its hashcode
-    // after being added to Set
+    // after being added to a Set
     return 1;
   }
 }

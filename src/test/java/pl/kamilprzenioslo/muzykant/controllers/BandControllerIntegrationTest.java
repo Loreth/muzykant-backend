@@ -165,8 +165,8 @@ class BandControllerIntegrationTest {
 
     HttpEntity<Band> requestEntity = new HttpEntity<>(existingResourceDto, jwtHeaderForBand);
 
-    ResponseEntity<Band> responseEntity = restTemplate
-        .exchange(RESOURCE_LINK + "/8", HttpMethod.PUT, requestEntity, Band.class);
+    ResponseEntity<Band> responseEntity =
+        restTemplate.exchange(RESOURCE_LINK + "/8", HttpMethod.PUT, requestEntity, Band.class);
 
     Band updatedResourceDto = responseEntity.getBody();
 

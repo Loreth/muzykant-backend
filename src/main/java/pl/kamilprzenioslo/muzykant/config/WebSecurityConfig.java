@@ -12,6 +12,7 @@ import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.MUSICIAN_WANT
 import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.REGULAR_USER;
 import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.RESEND_MAIL;
 import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.SIGN_UP;
+import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.USER;
 import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.USER_IMAGE;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -97,6 +98,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             EQUIPMENT,
             USER_IMAGE + "/**")
         .authenticated()
+        .antMatchers(USER + ID)
+        .access(
+            "isAuthenticated() and @accessSecurity.hasFullAccessToUserResource(authentication,#id)")
         .antMatchers(MUSICIAN + ID)
         .access(
             "hasRole('MUSICIAN') and @accessSecurity.hasFullAccessToUserResource(authentication,#id)")

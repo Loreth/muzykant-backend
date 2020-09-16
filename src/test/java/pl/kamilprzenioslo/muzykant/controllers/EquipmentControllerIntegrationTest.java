@@ -34,7 +34,8 @@ import pl.kamilprzenioslo.muzykant.dtos.Equipment;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class EquipmentControllerIntegrationTest {
 
-  @Autowired private TestRestTemplate restTemplate;
+  @Autowired
+  private TestRestTemplate restTemplate;
   @Autowired
   private ObjectMapper objectMapper;
   @Autowired

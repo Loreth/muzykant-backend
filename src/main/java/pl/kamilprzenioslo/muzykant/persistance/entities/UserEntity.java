@@ -77,6 +77,10 @@ public class UserEntity extends AbstractPersistable<Integer> {
       inverseJoinColumns = @JoinColumn(name = "vocal_technique_id"))
   private Set<VocalTechniqueEntity> vocalTechniques;
 
+  public String getDisplayName() {
+    return linkName;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -95,9 +99,5 @@ public class UserEntity extends AbstractPersistable<Integer> {
   @Override
   public int hashCode() {
     return Objects.hash(super.hashCode(), linkName);
-  }
-
-  public String getDisplayName() {
-    return linkName;
   }
 }

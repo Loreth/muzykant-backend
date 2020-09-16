@@ -185,8 +185,8 @@ class BandWantedAdControllerIntegrationTest {
     existingResourceDto.getPreferredGenres().add(newPreferredGenre1);
     existingResourceDto.getPreferredGenres().add(newPreferredGenre2);
 
-    HttpEntity<BandWantedAd> requestEntity = new HttpEntity<>(existingResourceDto,
-        jwtHeaderForUserWithBandWantedAd);
+    HttpEntity<BandWantedAd> requestEntity =
+        new HttpEntity<>(existingResourceDto, jwtHeaderForUserWithBandWantedAd);
 
     restTemplate.put(RESOURCE_LINK + "/1", requestEntity);
 

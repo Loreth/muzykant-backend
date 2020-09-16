@@ -44,7 +44,8 @@ import pl.kamilprzenioslo.muzykant.persistance.enums.UserType;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class MusicianWantedAdControllerIntegrationTest {
 
-  @Autowired private TestRestTemplate restTemplate;
+  @Autowired
+  private TestRestTemplate restTemplate;
   @Autowired
   private ObjectMapper objectMapper;
   @Autowired
