@@ -5,6 +5,4 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import pl.kamilprzenioslo.muzykant.persistance.entities.UserEntity;
 
 public interface UserRepository
-    extends JpaRepository<UserEntity, Integer>, JpaSpecificationExecutor<UserEntity> {
-
-}
+    extends JpaRepository<UserEntity, Integer>, JpaSpecificationExecutor<UserEntity> {}

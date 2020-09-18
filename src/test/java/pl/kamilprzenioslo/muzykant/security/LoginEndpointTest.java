@@ -22,10 +22,8 @@ import pl.kamilprzenioslo.muzykant.dtos.security.LoginRequest;
 @AutoConfigureMockMvc
 class LoginEndpointTest {
 
-  @Autowired
-  private MockMvc mockMvc;
-  @Autowired
-  ObjectMapper objectMapper;
+  @Autowired private MockMvc mockMvc;
+  @Autowired ObjectMapper objectMapper;
   private final String LOGIN_URL = "/login";
 
   @Value("${app.jwtSecret}")
@@ -47,8 +45,7 @@ class LoginEndpointTest {
 
     HashMap<String, String> responseBody =
         objectMapper.readValue(
-            mvcResult.getResponse().getContentAsString(), new TypeReference<>() {
-            });
+            mvcResult.getResponse().getContentAsString(), new TypeReference<>() {});
 
     Jwts.parserBuilder()
         .requireSubject("adam@gmail.com")

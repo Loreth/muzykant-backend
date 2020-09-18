@@ -4,8 +4,8 @@ import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class LoginRequest {
+public class PasswordChangeRequest {
 
-  @NotNull private String username;
-  @NotNull private String password;
+  @NotNull private String currentPassword;
+  @NotNull private String newPassword;
 }

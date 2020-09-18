@@ -45,18 +45,12 @@ import pl.kamilprzenioslo.muzykant.service.CredentialsService;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class MusicianControllerIntegrationTest {
 
-  @Autowired
-  private TestRestTemplate restTemplate;
-  @Autowired
-  private ObjectMapper objectMapper;
-  @Autowired
-  private CredentialsService credentialsService;
-  @Autowired
-  private PasswordEncoder passwordEncoder;
-  @Autowired
-  private HttpHeaders jwtHeaderForConfirmedCredentialsWithoutCreatedUser;
-  @Autowired
-  private HttpHeaders jwtHeaderForMusicianWithImages;
+  @Autowired private TestRestTemplate restTemplate;
+  @Autowired private ObjectMapper objectMapper;
+  @Autowired private CredentialsService credentialsService;
+  @Autowired private PasswordEncoder passwordEncoder;
+  @Autowired private HttpHeaders jwtHeaderForConfirmedCredentialsWithoutCreatedUser;
+  @Autowired private HttpHeaders jwtHeaderForMusicianWithImages;
 
   private final String RESOURCE_LINK;
 

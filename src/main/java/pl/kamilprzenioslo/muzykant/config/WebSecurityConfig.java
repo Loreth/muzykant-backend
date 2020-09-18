@@ -12,6 +12,7 @@ import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.MUSICIAN_WANT
 import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.REGULAR_USER;
 import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.RESEND_MAIL;
 import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.SIGN_UP;
+import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.SOCIAL_MEDIA_LINKS;
 import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.USER;
 import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.USER_IMAGE;
 
@@ -54,12 +55,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Override
   protected void configure(HttpSecurity http) throws Exception {
     http.addFilter(
-        new JwtAuthenticationFilter(
-            jwtUtils,
-            objectMapper,
-            authenticationManager(),
-            credentialsService,
-            authenticationFailureHandler()))
+            new JwtAuthenticationFilter(
+                jwtUtils,
+                objectMapper,
+                authenticationManager(),
+                credentialsService,
+                authenticationFailureHandler()))
         .addFilter(
             new JwtAuthorizationFilter(
                 authenticationManager(), jwtUtils, credentialsService, handlerExceptionResolver))
@@ -96,9 +97,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             RESEND_MAIL,
             IMAGE_UPLOAD,
             EQUIPMENT,
+            SOCIAL_MEDIA_LINKS,
             USER_IMAGE + "/**")
         .authenticated()
-        .antMatchers(USER + ID)
+        .antMatchers(USER + ID + "/**", SOCIAL_MEDIA_LINKS + ID)
         .access(
             "isAuthenticated() and @accessSecurity.hasFullAccessToUserResource(authentication,#id)")
         .antMatchers(MUSICIAN + ID)

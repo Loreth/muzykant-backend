@@ -27,16 +27,12 @@ import pl.kamilprzenioslo.muzykant.security.UserAuthority;
 @ExtendWith(MockitoExtension.class)
 class CredentialsServiceImplTest {
 
-  @Mock
-  CredentialsRepository credentialsRepository;
-  @Mock
-  AuthorityRepository authorityRepository;
-  @Mock
-  UserRepository userRepository;
+  @Mock CredentialsRepository credentialsRepository;
+  @Mock AuthorityRepository authorityRepository;
+  @Mock UserRepository userRepository;
   Authentication authentication = mock(Authentication.class);
   SecurityContext securityContext = mock(SecurityContext.class);
-  @InjectMocks
-  CredentialsServiceImpl credentialsService;
+  @InjectMocks CredentialsServiceImpl credentialsService;
 
   @Test
   void shouldAssignUserProfileCorrectlyForCredentialsWithConfirmedEmail() {

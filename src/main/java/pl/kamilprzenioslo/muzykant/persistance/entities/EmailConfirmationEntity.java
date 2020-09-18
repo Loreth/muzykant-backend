@@ -23,8 +23,7 @@ import org.springframework.data.domain.Persistable;
 @Table(name = "email_confirmation")
 public class EmailConfirmationEntity implements Persistable<Integer> {
 
-  @Id
-  private Integer id;
+  @Id private Integer id;
 
   @Type(type = "uuid-char")
   @Column(name = "token_uuid")

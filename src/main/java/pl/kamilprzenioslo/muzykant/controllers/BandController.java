@@ -47,9 +47,9 @@ public class BandController extends BaseRestController<Band, Integer> {
 
     return service.findAll(
         Stream.of(
-            specification,
-            new UserWithGenresSpecification<BandEntity>(genreIds),
-            new UserWithInstrumentsSpecification<BandEntity>(instrumentIds))
+                specification,
+                new UserWithGenresSpecification<BandEntity>(genreIds),
+                new UserWithInstrumentsSpecification<BandEntity>(instrumentIds))
             .collect(Collectors.toList()),
         pageable);
   }

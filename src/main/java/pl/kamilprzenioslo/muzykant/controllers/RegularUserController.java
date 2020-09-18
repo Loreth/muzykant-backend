@@ -20,7 +20,7 @@ import pl.kamilprzenioslo.muzykant.validation.OnPost;
 @RequestMapping(RestMappings.REGULAR_USER)
 public class RegularUserController
     extends SpecificationRestController<
-    RegularUser, RegularUserEntity, Integer, RegularUserSpecification, RegularUserService> {
+        RegularUser, RegularUserEntity, Integer, RegularUserSpecification, RegularUserService> {
 
   private final CredentialsService credentialsService;
 

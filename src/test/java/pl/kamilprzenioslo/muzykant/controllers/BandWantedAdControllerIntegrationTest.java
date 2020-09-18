@@ -40,14 +40,10 @@ import pl.kamilprzenioslo.muzykant.dtos.Instrument;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class BandWantedAdControllerIntegrationTest {
 
-  @Autowired
-  private TestRestTemplate restTemplate;
-  @Autowired
-  private ObjectMapper objectMapper;
-  @Autowired
-  private HttpHeaders jwtHeaderForBand;
-  @Autowired
-  private HttpHeaders jwtHeaderForUserWithBandWantedAd;
+  @Autowired private TestRestTemplate restTemplate;
+  @Autowired private ObjectMapper objectMapper;
+  @Autowired private HttpHeaders jwtHeaderForBand;
+  @Autowired private HttpHeaders jwtHeaderForUserWithBandWantedAd;
   private final String RESOURCE_LINK;
 
   public BandWantedAdControllerIntegrationTest(@LocalServerPort int port) {

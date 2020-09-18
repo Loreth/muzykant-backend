@@ -28,8 +28,6 @@ public abstract class BaseRestController<T extends IdentifiableDto<ID>, ID exten
 
   protected static final String ENTITY_EXISTS = "Entity already exists with id=";
   protected static final String ENTITY_NOT_FOUND = "Entity not found with id=";
-  protected static final String CREATE_USING_POST_INSTEAD =
-      "To create resource use POST under resource path (without id) instead";
   protected static final String ENTITY_ID_DIFFERENT_FROM_PATH_VARIABLE_ID =
       "Entity sent in body has a different id than id used in the request's path";
 
@@ -74,10 +72,7 @@ public abstract class BaseRestController<T extends IdentifiableDto<ID>, ID exten
   }
 
   private void verifyPutRequest(T dto, ID pathId) {
-    if (!service.existsById(pathId)) {
-      throw new ResponseStatusException(
-          HttpStatus.NOT_FOUND, ENTITY_NOT_FOUND + pathId + "." + CREATE_USING_POST_INSTEAD);
-    } else if (!dto.getId().equals(pathId)) {
+    if (!dto.getId().equals(pathId)) {
       throw new ResponseStatusException(
           HttpStatus.CONFLICT, ENTITY_ID_DIFFERENT_FROM_PATH_VARIABLE_ID);
     }

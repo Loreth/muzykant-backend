@@ -12,9 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class SignUpRequest {
 
-  @NotNull
-  @Email
-  private String email;
+  @NotNull @Email private String email;
 
   @NotNull
   @Size(min = 8)

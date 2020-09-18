@@ -11,8 +11,6 @@ import pl.kamilprzenioslo.muzykant.dtos.User;
 @AllArgsConstructor
 public class VerifiedEmailSignUpRequest<T extends User> {
 
-  @NotNull
-  private String email;
-  @NotNull
-  private T user;
+  @NotNull private String email;
+  @NotNull private T user;
 }

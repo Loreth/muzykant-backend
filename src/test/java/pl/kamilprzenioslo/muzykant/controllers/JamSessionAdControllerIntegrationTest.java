@@ -42,12 +42,9 @@ import pl.kamilprzenioslo.muzykant.dtos.JamSessionAd;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class JamSessionAdControllerIntegrationTest {
 
-  @Autowired
-  private TestRestTemplate restTemplate;
-  @Autowired
-  private ObjectMapper objectMapper;
-  @Autowired
-  private HttpHeaders jwtHeaderForUserWithJamSessionAd;
+  @Autowired private TestRestTemplate restTemplate;
+  @Autowired private ObjectMapper objectMapper;
+  @Autowired private HttpHeaders jwtHeaderForUserWithJamSessionAd;
   private final String RESOURCE_LINK;
 
   public JamSessionAdControllerIntegrationTest(@LocalServerPort int port) {

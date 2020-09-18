@@ -15,25 +15,30 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.web.server.LocalServerPort;
+import org.springframework.context.annotation.Import;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import pl.kamilprzenioslo.muzykant.config.TestSecurityConfiguration;
+import pl.kamilprzenioslo.muzykant.dtos.security.PasswordChangeRequest;
 import pl.kamilprzenioslo.muzykant.dtos.security.SignUpRequest;
 import pl.kamilprzenioslo.muzykant.persistance.entities.CredentialsEntity;
 import pl.kamilprzenioslo.muzykant.persistance.repositories.CredentialsRepository;
 
+@Import(TestSecurityConfiguration.class)
 @FlywayTestExtension
 @FlywayTest
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-class SignUpControllerTest {
+class CredentialsControllerTest {
 
-  @Autowired
-  private TestRestTemplate restTemplate;
-  @Autowired
-  private CredentialsRepository credentialsRepository;
+  @Autowired private TestRestTemplate restTemplate;
+  @Autowired private CredentialsRepository credentialsRepository;
+  @Autowired HttpHeaders jwtHeaderForBand;
   private final String SERVER_URL;
 
-  public SignUpControllerTest(@LocalServerPort int port) {
+  public CredentialsControllerTest(@LocalServerPort int port) {
     SERVER_URL = "http://localhost:" + port;
   }
 
@@ -98,5 +103,39 @@ class SignUpControllerTest {
         restTemplate.postForEntity(SERVER_URL + "/confirm-email", requestBody, String.class);
 
     assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
+  }
+
+  @FlywayTest
+  @Test
+  void shouldReturnConflictGivenWrongCurrentPasswordForChangePassword() {
+    PasswordChangeRequest passwordChangeRequest = new PasswordChangeRequest();
+    passwordChangeRequest.setCurrentPassword("wrongwrongwrong123");
+    passwordChangeRequest.setNewPassword("newPass644p");
+
+    HttpEntity<PasswordChangeRequest> requestEntity =
+        new HttpEntity<>(passwordChangeRequest, jwtHeaderForBand);
+
+    ResponseEntity<String> responseEntity =
+        restTemplate.postForEntity(
+            SERVER_URL + "/users/8/change-password", requestEntity, String.class);
+
+    assertEquals(HttpStatus.CONFLICT, responseEntity.getStatusCode());
+  }
+
+  @FlywayTest
+  @Test
+  void shouldReturnOkGivenCorrectCurrentPasswordForChangePassword() {
+    PasswordChangeRequest passwordChangeRequest = new PasswordChangeRequest();
+    passwordChangeRequest.setCurrentPassword("mocnehaslo123");
+    passwordChangeRequest.setNewPassword("newPass644p");
+
+    HttpEntity<PasswordChangeRequest> requestEntity =
+        new HttpEntity<>(passwordChangeRequest, jwtHeaderForBand);
+
+    ResponseEntity<String> responseEntity =
+        restTemplate.postForEntity(
+            SERVER_URL + "/users/8/change-password", requestEntity, String.class);
+
+    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
   }
 }

@@ -10,12 +10,14 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pl.kamilprzenioslo.muzykant.dtos.Credentials;
+import pl.kamilprzenioslo.muzykant.dtos.security.PasswordChangeRequest;
 import pl.kamilprzenioslo.muzykant.dtos.security.SignUpRequest;
 import pl.kamilprzenioslo.muzykant.exception.exceptions.ConfirmationMailException;
 import pl.kamilprzenioslo.muzykant.exception.exceptions.EmailAlreadyTakenException;
 import pl.kamilprzenioslo.muzykant.exception.exceptions.EmailConfirmationTokenExpiredException;
-import pl.kamilprzenioslo.muzykant.exception.exceptions.EmailConfirmationTokenNotFound;
+import pl.kamilprzenioslo.muzykant.exception.exceptions.EmailConfirmationTokenNotFoundException;
 import pl.kamilprzenioslo.muzykant.exception.exceptions.EmailNotConfirmedException;
+import pl.kamilprzenioslo.muzykant.exception.exceptions.PasswordMismatchException;
 import pl.kamilprzenioslo.muzykant.exception.exceptions.UserAlreadyAssignedException;
 import pl.kamilprzenioslo.muzykant.persistance.entities.AuthorityEntity;
 import pl.kamilprzenioslo.muzykant.persistance.entities.CredentialsEntity;
@@ -113,7 +115,7 @@ public class CredentialsServiceImpl
     EmailConfirmationEntity emailConfirmation =
         emailConfirmationRepository
             .findByToken(confirmationToken)
-            .orElseThrow(EmailConfirmationTokenNotFound::new);
+            .orElseThrow(EmailConfirmationTokenNotFoundException::new);
 
     verifyTokenExpiration(emailConfirmation);
     CredentialsEntity credentials = emailConfirmation.getCredentials();
@@ -156,6 +158,19 @@ public class CredentialsServiceImpl
     credentialsEntity.setUser(userRepository.getOne(userId));
 
     repository.save(credentialsEntity);
+  }
+
+  @Override
+  public void changePassword(Integer userId, PasswordChangeRequest passwordChangeRequest) {
+    Credentials credentials =
+        (Credentials) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    if (!passwordEncoder.matches(
+        passwordChangeRequest.getCurrentPassword(), credentials.getPassword())) {
+      throw new PasswordMismatchException();
+    }
+
+    credentials.setPassword(passwordEncoder.encode(passwordChangeRequest.getNewPassword()));
+    repository.save(mapper.mapToEntity(credentials));
   }
 
   private void verifyUserNotAlreadyAssigned(CredentialsEntity credentialsEntity) {

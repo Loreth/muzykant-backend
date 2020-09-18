@@ -11,7 +11,7 @@ import pl.kamilprzenioslo.muzykant.specifications.UserSpecification;
 @RequestMapping(RestMappings.USER)
 public class UserController
     extends SpecificationRestController<
-    User, UserEntity, Integer, UserSpecification<UserEntity>, UserService> {
+        User, UserEntity, Integer, UserSpecification<UserEntity>, UserService> {
 
   public UserController(UserService service) {
     super(service);

@@ -15,6 +15,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import lombok.EqualsAndHashCode.Exclude;
 import lombok.Getter;
@@ -76,6 +77,9 @@ public class UserEntity extends AbstractPersistable<Integer> {
       joinColumns = @JoinColumn(name = "user_id"),
       inverseJoinColumns = @JoinColumn(name = "vocal_technique_id"))
   private Set<VocalTechniqueEntity> vocalTechniques;
+
+  @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+  private SocialMediaLinksEntity socialMediaLinks;
 
   public String getDisplayName() {
     return linkName;

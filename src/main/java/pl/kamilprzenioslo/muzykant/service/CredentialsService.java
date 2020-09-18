@@ -4,6 +4,7 @@ import java.util.UUID;
 import javax.mail.MessagingException;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import pl.kamilprzenioslo.muzykant.dtos.Credentials;
+import pl.kamilprzenioslo.muzykant.dtos.security.PasswordChangeRequest;
 import pl.kamilprzenioslo.muzykant.dtos.security.SignUpRequest;
 import pl.kamilprzenioslo.muzykant.security.UserAuthority;
 
@@ -16,4 +17,6 @@ public interface CredentialsService extends ReadService<Credentials, Integer>, U
   void resendConfirmationMail(String email) throws MessagingException;
 
   void assignUserProfileToCurrentlyAuthenticatedUser(UserAuthority userAuthority, Integer userId);
+
+  void changePassword(Integer userId, PasswordChangeRequest passwordChangeRequest);
 }

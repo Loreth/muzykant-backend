@@ -20,8 +20,7 @@ import lombok.ToString;
 public class CredentialsEntity extends AbstractPersistable<Integer> {
 
   private String email;
-  @ToString.Exclude
-  private String password;
+  @ToString.Exclude private String password;
 
   @OneToOne
   @JoinColumn(name = "user_id")

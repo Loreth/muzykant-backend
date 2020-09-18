@@ -10,6 +10,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RegularUser extends User {
 
-  @NotNull
-  private Person person;
+  @NotNull private Person person;
 }

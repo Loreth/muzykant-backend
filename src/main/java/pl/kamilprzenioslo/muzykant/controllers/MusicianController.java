@@ -47,9 +47,9 @@ public class MusicianController extends BaseRestController<Musician, Integer> {
 
     return service.findAll(
         Stream.of(
-            specification,
-            new UserWithGenresSpecification<MusicianEntity>(genreIds),
-            new UserWithInstrumentsSpecification<MusicianEntity>(instrumentIds))
+                specification,
+                new UserWithGenresSpecification<MusicianEntity>(genreIds),
+                new UserWithInstrumentsSpecification<MusicianEntity>(instrumentIds))
             .collect(Collectors.toList()),
         pageable);
   }

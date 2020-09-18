@@ -43,19 +43,13 @@ import pl.kamilprzenioslo.muzykant.service.CredentialsService;
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 class BandControllerIntegrationTest {
 
-  @Autowired
-  private TestRestTemplate restTemplate;
-  @Autowired
-  private ObjectMapper objectMapper;
-  @Autowired
-  private CredentialsService credentialsService;
-  @Autowired
-  private PasswordEncoder passwordEncoder;
+  @Autowired private TestRestTemplate restTemplate;
+  @Autowired private ObjectMapper objectMapper;
+  @Autowired private CredentialsService credentialsService;
+  @Autowired private PasswordEncoder passwordEncoder;
 
-  @Autowired
-  private HttpHeaders jwtHeaderForConfirmedCredentialsWithoutCreatedUser;
-  @Autowired
-  private HttpHeaders jwtHeaderForBand;
+  @Autowired private HttpHeaders jwtHeaderForConfirmedCredentialsWithoutCreatedUser;
+  @Autowired private HttpHeaders jwtHeaderForBand;
 
   private final String RESOURCE_LINK;
 

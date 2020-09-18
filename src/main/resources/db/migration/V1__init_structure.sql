@@ -78,7 +78,7 @@ CREATE TABLE Email_confirmation
     token_uuid       varchar(36) NOT NULL,
     token_expiration datetime    NOT NULL,
     PRIMARY KEY (credentials_id),
-    CONSTRAINT FK_Email_confirmation_Credentials FOREIGN KEY (credentials_id) REFERENCES Credentials (id)
+    CONSTRAINT FK_Email_confirmation_Credentials FOREIGN KEY (credentials_id) REFERENCES Credentials (id) ON DELETE CASCADE
 );
 CREATE TABLE Band
 (
@@ -212,4 +212,13 @@ CREATE TABLE User_image
     order_index int           NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT FK_Image_User FOREIGN KEY (user_id) REFERENCES `User` (id) ON DELETE CASCADE
+);
+CREATE TABLE Social_media_links
+(
+    user_id    int NOT NULL,
+    youtube    varchar(1000),
+    soundcloud varchar(1000),
+    webpage    varchar(1000),
+    PRIMARY KEY (user_id),
+    CONSTRAINT FK_Social_media_links_User FOREIGN KEY (user_id) REFERENCES `User` (id) ON DELETE CASCADE
 );

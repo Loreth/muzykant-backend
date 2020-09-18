@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Band extends User {
 
-  @NotNull
-  private String name;
+  @NotNull private String name;
   private Short formationYear;
 }

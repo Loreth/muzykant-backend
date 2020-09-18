@@ -1,6 +1,8 @@
 package pl.kamilprzenioslo.muzykant.security;
 
+import java.io.IOException;
 import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.springframework.http.HttpHeaders;
@@ -9,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
@@ -31,14 +34,15 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
   @Override
   protected void doFilterInternal(
-      HttpServletRequest request, HttpServletResponse response, FilterChain chain) {
+      HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+      throws IOException, ServletException {
     String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
     try {
       UsernamePasswordAuthenticationToken authentication = getAuthentication(authorizationHeader);
       SecurityContextHolder.getContext().setAuthentication(authentication);
       chain.doFilter(request, response);
-    } catch (Exception ex) {
+    } catch (UsernameNotFoundException ex) {
       handlerExceptionResolver.resolveException(request, response, null, ex);
     }
   }

@@ -10,6 +10,7 @@ public final class RestMappings {
   public static final String RESEND_MAIL = "/resend-mail";
 
   public static final String USER = "/users";
+  public static final String CHANGE_USER_PASSWORD = USER + ID + "/change-password";
   public static final String BAND = "/bands";
   public static final String MUSICIAN = "/musicians";
   public static final String REGULAR_USER = "/regular-users";
@@ -23,6 +24,7 @@ public final class RestMappings {
   public static final String PREDEFINED_VOCAL_RANGE = "/predefined-vocal-ranges";
   public static final String VOCAL_TECHNIQUE = "/vocal-techniques";
   public static final String VOIVODESHIP = "/voivodeships";
+  public static final String SOCIAL_MEDIA_LINKS = "/social-media-links";
 
   public static final String IMAGE_UPLOAD = "/upload";
   public static final String IMAGE_UPLOADS = "/image-uploads";
