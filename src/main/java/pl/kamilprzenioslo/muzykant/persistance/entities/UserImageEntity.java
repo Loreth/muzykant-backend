@@ -18,6 +18,7 @@ import lombok.ToString;
 @Table(name = "user_image")
 public class UserImageEntity extends AbstractPersistable<Integer> {
 
+  private String filename;
   private String link;
 
   @ManyToOne(fetch = FetchType.LAZY)

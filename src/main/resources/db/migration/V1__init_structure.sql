@@ -207,6 +207,7 @@ CREATE TABLE Equipment
 CREATE TABLE User_image
 (
     id          int           NOT NULL AUTO_INCREMENT,
+    filename   varchar(255)  NOT NULL,
     link        varchar(1000) NOT NULL,
     user_id     int           NOT NULL,
     order_index int           NOT NULL,

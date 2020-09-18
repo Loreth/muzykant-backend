@@ -1,5 +1,8 @@
 package pl.kamilprzenioslo.muzykant.controllers;
 
+import java.net.URI;
+import java.util.UUID;
+import javax.servlet.http.HttpServletRequest;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -14,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriTemplate;
 import pl.kamilprzenioslo.muzykant.dtos.UserImage;
 import pl.kamilprzenioslo.muzykant.persistance.entities.UserImageEntity;
 import pl.kamilprzenioslo.muzykant.service.StorageService;
@@ -36,18 +40,18 @@ public class UserImageController
   }
 
   @PostMapping(RestMappings.IMAGE_UPLOAD)
-  public ResponseEntity<String> uploadUserImage(
+  public ResponseEntity<Object> uploadUserImage(
       @RequestParam("file") MultipartFile file,
       @RequestParam("userId") int userId,
       @RequestParam(value = "profileImage", required = false, defaultValue = "false")
           boolean profileImage,
-      @RequestParam("orderIndex") int orderIndex) {
-    int userImagesCount = userImageService.findByUserId(userId).size() + 1;
+      @RequestParam("orderIndex") int orderIndex,
+      HttpServletRequest request) {
     String filename = userId + "_";
     if (profileImage) {
       filename += "profile-image";
     } else {
-      filename += userImagesCount;
+      filename += UUID.randomUUID().toString();
     }
     filename += file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
 
@@ -61,11 +65,14 @@ public class UserImageController
 
     if (profileImage) {
       userImageService.saveProfileImage(fileUri, userId);
+      return ResponseEntity.ok().build();
     } else {
-      userImageService.save(new UserImage(fileUri, userId, orderIndex));
-    }
+      UserImage savedUserImage = userImageService.save(new UserImage(filename, fileUri, userId, orderIndex));
+      URI entityMapping =
+          new UriTemplate(request.getRequestURI() + RestMappings.ID).expand(savedUserImage.getId());
 
-    return ResponseEntity.ok(fileUri);
+      return ResponseEntity.created(entityMapping).contentType(MediaType.APPLICATION_JSON).body(savedUserImage);
+    }
   }
 
   @GetMapping(RestMappings.IMAGE_UPLOADS + "/{filename:.+}")

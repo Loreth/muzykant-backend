@@ -329,8 +329,3 @@ VALUES (1, 'Marshall DSL40', 2),
        (2, 'Vox AC30', 2),
        (3, 'Shure SM47 x2', 2),
        (4, 'Yamaha PSR-EW410 (keyboard)', 4);
-
-INSERT INTO User_image(id, link, user_id, order_index)
-VALUES (1, 'placeholder', 2, 0),
-       (2, 'placeholder', 2, 1),
-       (3, 'placeholder', 3, 0);

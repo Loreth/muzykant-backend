@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 import org.flywaydb.test.annotation.FlywayTest;
 import org.flywaydb.test.junit5.annotation.FlywayTestExtension;
 import org.junit.jupiter.api.Test;
@@ -219,10 +220,18 @@ class UserImageControllerIntegrationTest {
     String createdImageLink = responseEntity.getBody();
 
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-    assertEquals(createdImageLink, RESOURCE_LINK + "/image-uploads/2_3.jpg");
+    assertEquals(createdImageLink.substring(0, createdImageLink.indexOf("_")), RESOURCE_LINK + "/image-uploads/2");
+    Stream<Path> pathStream = Files
+        .find(Path.of("./test-uploads"), 1, (path, file) -> path.getFileName().toString().startsWith("2_"));
 
     // cleanup
-    Files.deleteIfExists(Path.of("./test-uploads/2_3.jpg"));
+    pathStream.forEach(path -> {
+      try {
+        Files.deleteIfExists(path);
+      } catch (IOException e) {
+        throw new RuntimeException(e);
+      }
+    });
   }
 
   @FlywayTest

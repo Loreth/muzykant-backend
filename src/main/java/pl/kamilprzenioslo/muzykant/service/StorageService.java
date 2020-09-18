@@ -1,5 +1,6 @@
 package pl.kamilprzenioslo.muzykant.service;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 import org.springframework.core.io.Resource;
