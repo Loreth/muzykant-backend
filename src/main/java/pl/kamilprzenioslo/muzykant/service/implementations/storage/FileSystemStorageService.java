@@ -90,6 +90,16 @@ public class FileSystemStorageService implements StorageService {
   }
 
   @Override
+  public void deleteWithAnyExtension(String filenameWithoutExtension) {
+    String[] foundFiles =
+        rootLocation.toFile().list((dir, name) -> name.startsWith(filenameWithoutExtension));
+
+    for (String filename : foundFiles) {
+      delete(filename);
+    }
+  }
+
+  @Override
   public void deleteAll() {
     FileSystemUtils.deleteRecursively(rootLocation.toFile());
   }

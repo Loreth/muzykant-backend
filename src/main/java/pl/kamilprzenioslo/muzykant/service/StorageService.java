@@ -1,6 +1,5 @@
 package pl.kamilprzenioslo.muzykant.service;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.stream.Stream;
 import org.springframework.core.io.Resource;
@@ -19,6 +18,8 @@ public interface StorageService {
   Resource loadAsResource(String filename);
 
   void delete(String filename);
+
+  void deleteWithAnyExtension(String filenameWithoutExtension);
 
   void deleteAll();
 }

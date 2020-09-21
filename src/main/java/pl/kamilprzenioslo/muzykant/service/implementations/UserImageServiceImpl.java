@@ -2,7 +2,9 @@ package pl.kamilprzenioslo.muzykant.service.implementations;
 
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 import pl.kamilprzenioslo.muzykant.dtos.UserImage;
+import pl.kamilprzenioslo.muzykant.persistance.entities.UserEntity;
 import pl.kamilprzenioslo.muzykant.persistance.entities.UserImageEntity;
 import pl.kamilprzenioslo.muzykant.persistance.repositories.UserImageRepository;
 import pl.kamilprzenioslo.muzykant.persistance.repositories.UserRepository;
@@ -14,6 +16,7 @@ import pl.kamilprzenioslo.muzykant.service.mapper.BaseMapper;
 public class UserImageServiceImpl
     extends BaseSpecificationCrudService<UserImage, UserImageEntity, Integer, UserImageRepository>
     implements UserImageService {
+  private static final String PROFILE_IMAGE_SUFFIX = "_profile-image";
 
   private final UserRepository userRepository;
   private final StorageService storageService;
@@ -34,8 +37,20 @@ public class UserImageServiceImpl
   }
 
   @Override
-  public void saveProfileImage(String fileUri, int userId) {
-    userRepository.findById(userId).orElseThrow().setProfileImageLink(fileUri);
+  public UserImage save(MultipartFile image, UserImage dto) {
+    storageService.store(image, dto.getFilename());
+    return super.save(dto);
+  }
+
+  @Override
+  public void saveNewProfileImage(
+      MultipartFile image, String filename, String fileUri, int userId) {
+    UserEntity userEntity = userRepository.findById(userId).orElseThrow();
+    storageService.deleteWithAnyExtension(userEntity.getId() + PROFILE_IMAGE_SUFFIX);
+    //    String imageName = userEntity.getId() + PROFILE_IMAGE_SUFFIX + ;
+    storageService.store(image, filename);
+    userEntity.setProfileImageLink(fileUri);
+    userRepository.save(userEntity);
   }
 
   @Override

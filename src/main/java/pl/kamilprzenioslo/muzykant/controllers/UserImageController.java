@@ -53,7 +53,13 @@ public class UserImageController
     } else {
       filename += UUID.randomUUID().toString();
     }
-    filename += file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf("."));
+
+    int indexOfExtension = file.getOriginalFilename().lastIndexOf(".");
+    if (indexOfExtension != -1) {
+      filename += file.getOriginalFilename().substring(indexOfExtension);
+    } else {
+      filename += "." + file.getContentType().substring(file.getContentType().lastIndexOf('/') + 1);
+    }
 
     String fileUri =
         ServletUriComponentsBuilder.fromCurrentContextPath()
@@ -61,17 +67,20 @@ public class UserImageController
             .path(filename)
             .toUriString();
 
-    storageService.store(file, filename);
-
     if (profileImage) {
-      userImageService.saveProfileImage(fileUri, userId);
-      return ResponseEntity.ok().build();
+      userImageService.saveNewProfileImage(file, filename, fileUri, userId);
+      return ResponseEntity.ok()
+          .contentType(MediaType.APPLICATION_JSON)
+          .body(new UserImage(filename, fileUri, userId, orderIndex));
     } else {
-      UserImage savedUserImage = userImageService.save(new UserImage(filename, fileUri, userId, orderIndex));
+      UserImage savedUserImage =
+          userImageService.save(file, new UserImage(filename, fileUri, userId, orderIndex));
       URI entityMapping =
           new UriTemplate(request.getRequestURI() + RestMappings.ID).expand(savedUserImage.getId());
 
-      return ResponseEntity.created(entityMapping).contentType(MediaType.APPLICATION_JSON).body(savedUserImage);
+      return ResponseEntity.created(entityMapping)
+          .contentType(MediaType.APPLICATION_JSON)
+          .body(savedUserImage);
     }
   }
 
