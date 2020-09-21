@@ -40,7 +40,7 @@ public class UserImageController
   }
 
   @PostMapping(RestMappings.IMAGE_UPLOAD)
-  public ResponseEntity<Object> uploadUserImage(
+  public ResponseEntity<UserImage> uploadUserImage(
       @RequestParam("file") MultipartFile file,
       @RequestParam("userId") int userId,
       @RequestParam(value = "profileImage", required = false, defaultValue = "false")

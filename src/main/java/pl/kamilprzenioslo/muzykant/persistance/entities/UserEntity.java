@@ -2,6 +2,7 @@ package pl.kamilprzenioslo.muzykant.persistance.entities;
 
 import java.util.Objects;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.Entity;
@@ -78,8 +79,23 @@ public class UserEntity extends AbstractPersistable<Integer> {
       inverseJoinColumns = @JoinColumn(name = "vocal_technique_id"))
   private Set<VocalTechniqueEntity> vocalTechniques;
 
-  @OneToOne(mappedBy = "user", fetch = FetchType.LAZY)
+  @OneToOne(
+      mappedBy = "user",
+      orphanRemoval = true,
+      cascade = CascadeType.ALL,
+      fetch = FetchType.LAZY)
   private SocialMediaLinksEntity socialMediaLinks;
+
+  public void setSocialMediaLinksEntity(SocialMediaLinksEntity socialMediaLinks) {
+    if (socialMediaLinks == null) {
+      if (this.socialMediaLinks != null) {
+        this.socialMediaLinks.setUser(null);
+      }
+    } else {
+      socialMediaLinks.setUser(this);
+    }
+    this.socialMediaLinks = socialMediaLinks;
+  }
 
   public String getDisplayName() {
     return linkName;

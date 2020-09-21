@@ -66,6 +66,7 @@ class MusicianControllerIntegrationTest {
             .queryParam("genreIds", "3,25,1")
             .queryParam("instrumentIds", "46,45,44,43,1,2,3,4")
             .queryParam("name", "an")
+            .queryParam("voivodeshipIds","1,2,12")
             .build()
             .encode()
             .toUri();
@@ -76,7 +77,7 @@ class MusicianControllerIntegrationTest {
     ObjectReader listReader = objectMapper.readerFor(new TypeReference<List<Musician>>() {});
     List<Musician> responseAdList = listReader.readValue(jsonResponseBody.get("content"));
 
-    assertThat(responseAdList.stream().map(Musician::getId)).hasSize(2);
+    assertThat(responseAdList.stream().map(Musician::getId)).hasSize(1);
   }
 
   @FlywayTest
@@ -129,7 +130,7 @@ class MusicianControllerIntegrationTest {
     ObjectReader listReader = objectMapper.readerFor(new TypeReference<List<Musician>>() {});
     List<Musician> responseAdList = listReader.readValue(jsonResponseBody.get("content"));
 
-    assertThat(responseAdList).hasSize(4);
+    assertThat(responseAdList).hasSize(6);
   }
 
   @FlywayTest
@@ -184,7 +185,7 @@ class MusicianControllerIntegrationTest {
     ObjectReader listReader = objectMapper.readerFor(new TypeReference<List<Musician>>() {});
     List<Musician> responseAdList = listReader.readValue(jsonResponseBody.get("content"));
 
-    assertThat(responseAdList.stream().map(Musician::getId)).hasSize(4).allMatch(Objects::nonNull);
+    assertThat(responseAdList.stream().map(Musician::getId)).hasSize(6).allMatch(Objects::nonNull);
   }
 
   @FlywayTest

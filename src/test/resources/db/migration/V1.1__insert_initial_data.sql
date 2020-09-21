@@ -52,7 +52,7 @@ VALUES (1, 'Pop'),
        (24, 'Hard Rock'),
        (25, 'Industrial'),
        (26, 'New Age'),
-       (27, 'New Wave'),
+       (27, 'New wave'),
        (28, 'Opera'),
        (29, 'Piosenka poetycka'),
        (30, 'Punk'),
@@ -61,8 +61,8 @@ VALUES (1, 'Pop'),
        (33, 'Trash Metal'),
        (34, 'Death Metal'),
        (35, 'Muzyka weselna'),
-       (36, 'Punk Rock'),
-       (37, 'Math Rock'),
+       (36, 'Punk rock'),
+       (37, 'Math rock'),
        (38, 'Jazz');
 
 INSERT INTO Vocal_range(id, lowest_note, highest_note)
@@ -342,3 +342,8 @@ VALUES (1, 'Marshall DSL40', 2),
 
 INSERT INTO Social_media_links(user_id, youtube, soundcloud, webpage)
 VALUES (3, null, 'https://soundcloud.com/muse', null);
+
+INSERT INTO User_image(id, filename, link, user_id, order_index)
+VALUES (1, 'placeholder1', 'placeholder1', 2, 0),
+       (2, 'placeholder2', 'placeholder2', 2, 1),
+       (3, 'placeholder3', 'placeholder3', 3, 0);

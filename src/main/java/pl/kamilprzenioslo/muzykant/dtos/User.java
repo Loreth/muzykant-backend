@@ -14,6 +14,7 @@ public class User extends BaseDto<Integer> {
 
   private UserType userType;
   @NotNull private String linkName;
+  private String displayName;
   private String description;
   private String phone;
   private String city;
@@ -23,4 +24,5 @@ public class User extends BaseDto<Integer> {
   private Set<Genre> genres;
   private Set<Instrument> instruments;
   private Set<VocalTechnique> vocalTechniques;
+  private SocialMediaLinks socialMediaLinks;
 }

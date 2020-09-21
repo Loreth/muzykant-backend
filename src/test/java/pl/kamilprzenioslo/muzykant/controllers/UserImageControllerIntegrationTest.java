@@ -96,6 +96,7 @@ class UserImageControllerIntegrationTest {
   void shouldCreateEntityAndReturnDtoWithIdWithAuthorization() {
     UserImage requestDto = new UserImage();
     requestDto.setLink("link");
+    requestDto.setFilename("filename");
     requestDto.setUserId(6);
 
     HttpEntity<UserImage> requestEntity =
@@ -185,7 +186,7 @@ class UserImageControllerIntegrationTest {
     UserImage responseDto = responseEntity.getBody();
 
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-    assertEquals("placeholder", responseDto.getLink());
+    assertEquals("placeholder2", responseDto.getLink());
     assertEquals(2, responseDto.getUserId());
     assertEquals(2, responseDto.getId());
   }
@@ -214,12 +215,12 @@ class UserImageControllerIntegrationTest {
 
     HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
 
-    ResponseEntity<String> responseEntity =
-        restTemplate.postForEntity(RESOURCE_LINK + "/upload", requestEntity, String.class);
+    ResponseEntity<UserImage> responseEntity =
+        restTemplate.postForEntity(RESOURCE_LINK + "/upload", requestEntity, UserImage.class);
 
-    String createdImageLink = responseEntity.getBody();
+    String createdImageLink = responseEntity.getBody().getLink();
 
-    assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
     assertEquals(createdImageLink.substring(0, createdImageLink.indexOf("_")), RESOURCE_LINK + "/image-uploads/2");
     Stream<Path> pathStream = Files
         .find(Path.of("./test-uploads"), 1, (path, file) -> path.getFileName().toString().startsWith("2_"));

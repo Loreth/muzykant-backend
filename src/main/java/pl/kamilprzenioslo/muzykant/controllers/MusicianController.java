@@ -23,6 +23,7 @@ import pl.kamilprzenioslo.muzykant.service.MusicianService;
 import pl.kamilprzenioslo.muzykant.specifications.MusicianSpecification;
 import pl.kamilprzenioslo.muzykant.specifications.UserWithGenresSpecification;
 import pl.kamilprzenioslo.muzykant.specifications.UserWithInstrumentsSpecification;
+import pl.kamilprzenioslo.muzykant.specifications.UserWithVoivodeshipsSpecification;
 import pl.kamilprzenioslo.muzykant.validation.OnPost;
 
 @RestController
@@ -41,6 +42,7 @@ public class MusicianController extends BaseRestController<Musician, Integer> {
   @GetMapping(RestMappings.SEARCH)
   public Page<Musician> getAllWithGivenParameters(
       MusicianSpecification specification,
+      @RequestParam(required = false) List<Integer> voivodeshipIds,
       @RequestParam(required = false) List<Integer> genreIds,
       @RequestParam(required = false) List<Integer> instrumentIds,
       Pageable pageable) {
@@ -48,6 +50,7 @@ public class MusicianController extends BaseRestController<Musician, Integer> {
     return service.findAll(
         Stream.of(
                 specification,
+                new UserWithVoivodeshipsSpecification<MusicianEntity>(voivodeshipIds),
                 new UserWithGenresSpecification<MusicianEntity>(genreIds),
                 new UserWithInstrumentsSpecification<MusicianEntity>(instrumentIds))
             .collect(Collectors.toList()),

@@ -9,7 +9,6 @@ import pl.kamilprzenioslo.muzykant.persistance.entities.UserEntity;
 
 @And({
   @Spec(path = "city", spec = LikeIgnoreCase.class),
-  @Spec(path = "voivodeship", spec = LikeIgnoreCase.class),
   @Spec(path = "linkName", spec = Equal.class)
 })
 public interface UserSpecification<T extends UserEntity> extends Specification<T> {}

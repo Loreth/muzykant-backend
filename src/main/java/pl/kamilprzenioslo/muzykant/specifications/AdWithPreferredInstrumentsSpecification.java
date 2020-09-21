@@ -22,8 +22,8 @@ public class AdWithPreferredInstrumentsSpecification<T extends AdEntity>
   @Override
   public Predicate toPredicate(Root<T> root, CriteriaQuery<?> cq, CriteriaBuilder cb) {
     if (preferredInstrumentIds != null) {
-      SetJoin<T, InstrumentEntity> genreJoin = root.join(AdEntity_.preferredInstruments);
-      cq.distinct(true).where(genreJoin.get(InstrumentEntity_.id).in(preferredInstrumentIds));
+      SetJoin<T, InstrumentEntity> join = root.join(AdEntity_.preferredInstruments);
+      cq.distinct(true).where(join.get(InstrumentEntity_.id).in(preferredInstrumentIds));
     }
 
     return cq.getRestriction();
