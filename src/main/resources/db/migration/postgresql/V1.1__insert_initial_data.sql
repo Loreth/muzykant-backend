@@ -154,10 +154,10 @@ Where the grass is green and the girls are pretty 😎🤘', '182543765', 'Katow
        (10, 'MUSICIAN', 'kingkong', null, null, 'Sosnowiec', 12),
        (11, 'REGULAR', 'klub_nietota', 'Klub Nietota', '876421423', 'Wrocław', 1);
 
-UPDATE User
+UPDATE "User"
 SET profile_image_link='http://localhost:8080/user-images/image-uploads/3_profile-image.jpg'
 WHERE id = 3;
-UPDATE User
+UPDATE "User"
 SET profile_image_link='http://localhost:8080/user-images/image-uploads/8_profile-image.jpg'
 WHERE id = 8;
 
