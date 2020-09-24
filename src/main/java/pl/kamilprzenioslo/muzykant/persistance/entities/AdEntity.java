@@ -26,7 +26,7 @@ import pl.kamilprzenioslo.muzykant.persistance.enums.AdType;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "ad_type")
-@Table(name = "Ad")
+@Table(name = "ad")
 public abstract class AdEntity extends AbstractPersistable<Integer> {
 
   @Enumerated(EnumType.STRING)
@@ -53,14 +53,14 @@ public abstract class AdEntity extends AbstractPersistable<Integer> {
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
-      name = "Ad_preferred_genre",
+      name = "ad_preferred_genre",
       joinColumns = @JoinColumn(name = "ad_id"),
       inverseJoinColumns = @JoinColumn(name = "genre_id"))
   private Set<GenreEntity> preferredGenres;
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
-      name = "Ad_preferred_instrument",
+      name = "ad_preferred_instrument",
       joinColumns = @JoinColumn(name = "ad_id"),
       inverseJoinColumns = @JoinColumn(name = "instrument_id"))
   private Set<InstrumentEntity> preferredInstruments;

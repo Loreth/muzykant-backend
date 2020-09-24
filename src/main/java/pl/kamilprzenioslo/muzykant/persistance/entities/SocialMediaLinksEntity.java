@@ -15,7 +15,7 @@ import org.springframework.data.domain.Persistable;
 @Setter
 @ToString
 @Entity
-@Table(name = "Social_media_links")
+@Table(name = "social_media_links")
 public class SocialMediaLinksEntity implements Persistable<Integer> {
 
   @Id private Integer id;
