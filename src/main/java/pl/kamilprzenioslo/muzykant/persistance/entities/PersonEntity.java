@@ -26,6 +26,8 @@ public class PersonEntity extends AbstractPersistable<Integer> {
   private LocalDate birthdate;
 
   public String getDisplayName() {
-    return getPseudo() == null ? getFirstName() + " " + getLastName() : getPseudo();
+    return getPseudo() == null || getPseudo().isBlank()
+        ? getFirstName() + " " + getLastName()
+        : getPseudo();
   }
 }

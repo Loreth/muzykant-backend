@@ -23,7 +23,8 @@ VALUES (1, 'Adam', 'Dąbek', 'Adi', 'M', '1997-02-03'),
        (4, 'Joanna', 'Wieczorowska', null, 'F', '1990-08-15'),
        (5, 'Wiktoria', 'Dobrzyńska', 'Wiki', 'F', '2000-01-02'),
        (6, 'Dorota', 'Kozera', null, 'F', '1950-02-16'),
-       (7, 'Adam', 'Kowalski', 'Adamowski', 'M', '1941-06-23');
+       (7, 'Adam', 'Kowalski', 'Adamkowski', 'M', '1941-06-23'),
+       (8, 'Damian', 'Niedzielski', 'Klub Nietota', 'M', '1980-12-05');
 
 INSERT INTO Genre(id, name)
 VALUES (1, 'Pop'),
@@ -133,20 +134,32 @@ VALUES (1, 'ROLE_MUSICIAN'),
        (3, 'ROLE_REGULAR_USER');
 
 INSERT INTO `User`(id, user_type, link_name, description, phone, city, voivodeship_id)
-VALUES (1, 'REGULAR', 'adi', 'Coś o mnie', '837473123', 'Wrocław', 1),
-       (2, 'MUSICIAN', 'dani', 'Coś o mnie', '125373123', 'Wrocław', 1),
-       (3, 'MUSICIAN', 'grajek', 'Coś o mnie', '923645183', 'Radwanice', 1),
-       (4, 'MUSICIAN', 'slash', 'Coś o mnie', '182543765', 'Katowice', 12),
-       (5, 'MUSICIAN', 'koko', 'Coś o mnie', null, 'Sosnowiec', 12),
-       (6, 'BAND', 'swietni', 'Coś o nas', '458342643', 'Wrocław', 1),
-       (7, 'BAND', 'muzykanci', 'Coś o nas', '123123123', 'Wrocław', 1),
-       (8, 'BAND', 'jk', 'Coś o nas', null, 'Warszawa', 7),
+VALUES (1, 'REGULAR', 'adi', 'Szukam zespołu na wesele, proszę o kontakt!', '837473123', 'Wrocław',
+        1),
+       (2, 'MUSICIAN', 'dani', null, '125373123', 'Wrocław', 1),
+       (3, 'MUSICIAN', 'grajek',
+        'Gram dużo i wszystko.
+Ale przede wszystkim cenię dobry rock i metal.
+Mam własne studio i dużo sprzętu, których mogę użyczyć.
+Z doświadczenia wiem, że gra z nieznajomymi to zawsze ciekawe doświadczenie, więc serdecznie zapraszam do kontaktu na portalu lub przez telefon i wspólnej gry :)',
+        '923645183',
+        'Radwanice', 1),
+       (4, 'MUSICIAN', 'slash', 'Take me down to the paradise city
+Where the grass is green and the girls are pretty 😎🤘', '182543765', 'Katowice', 12),
+       (5, 'MUSICIAN', 'koko', null, null, 'Sosnowiec', 12),
+       (6, 'BAND', 'swietni', null, '458342643', 'Wrocław', 1),
+       (7, 'BAND', 'muzykanci', null, '123123123', 'Wrocław', 1),
+       (8, 'BAND', 'zagubieni', 'Zagubieni w czasie. Zagubieni w muzyce.', null, 'Warszawa', 7),
        (9, 'MUSICIAN', 'cool', null, null, 'Wrocław', 1),
-       (10, 'MUSICIAN', 'dlugi-nick', null, null, 'Sosnowiec', 12);
+       (10, 'MUSICIAN', 'kingkong', null, null, 'Sosnowiec', 12),
+       (11, 'REGULAR', 'klub_nietota', 'Klub Nietota', '876421423', 'Wrocław', 1);
 
 UPDATE User
 SET profile_image_link='http://localhost:8080/user-images/image-uploads/3_profile-image.jpg'
 WHERE id = 3;
+UPDATE User
+SET profile_image_link='http://localhost:8080/user-images/image-uploads/8_profile-image.jpg'
+WHERE id = 8;
 
 INSERT INTO Credentials(id, email, password, authority_id, user_id)
 VALUES (1, 'adam@gmail.com', '$2a$10$zifVLlf8WvlHvfeLLiqvKe44GxtATH2uo2TPjl6VSuRmHC/9rkFJC', 3,
@@ -162,7 +175,7 @@ VALUES (1, 'adam@gmail.com', '$2a$10$zifVLlf8WvlHvfeLLiqvKe44GxtATH2uo2TPjl6VSuR
         2, 6),
        (7, 'anna.kowalska@onet.pl', '$2a$10$zifVLlf8WvlHvfeLLiqvKe44GxtATH2uo2TPjl6VSuRmHC/9rkFJC',
         2, 7),
-       (8, 'jan.kowalski@onet.pl', '$2a$10$zifVLlf8WvlHvfeLLiqvKe44GxtATH2uo2TPjl6VSuRmHC/9rkFJC',
+       (8, 'zagubieni@onet.pl', '$2a$10$zifVLlf8WvlHvfeLLiqvKe44GxtATH2uo2TPjl6VSuRmHC/9rkFJC',
         2, 8),
        (9, 'email@gmail.com', '$2a$10$zifVLlf8WvlHvfeLLiqvKe44GxtATH2uo2TPjl6VSuRmHC/9rkFJC', null,
         null),                                                                       -- mocnehaslo123
@@ -175,7 +188,10 @@ VALUES (1, 'adam@gmail.com', '$2a$10$zifVLlf8WvlHvfeLLiqvKe44GxtATH2uo2TPjl6VSuR
        (13, 'ktos@gmail.com', '$2a$10$zifVLlf8WvlHvfeLLiqvKe44GxtATH2uo2TPjl6VSuRmHC/9rkFJC',
         1, 9),-- mocnehaslo123
        (14, 'szybki@gazeta.pl', '$2a$10$zifVLlf8WvlHvfeLLiqvKe44GxtATH2uo2TPjl6VSuRmHC/9rkFJC',
-        1, 10); -- mocnehaslo123
+        1, 10),                                                                      -- mocnehaslo123
+       (15, 'klub_nietota@gmail.com',
+        '$2a$10$zifVLlf8WvlHvfeLLiqvKe44GxtATH2uo2TPjl6VSuRmHC/9rkFJC',
+        3, 11); -- mocnehaslo123
 
 INSERT INTO Email_confirmation(credentials_id, token_uuid, token_expiration)
 VALUES (9, 'c614e388-6bc3-4abc-87cb-e4d8dbd73b3c', '9999-12-31 23:59:59'),
@@ -185,7 +201,7 @@ VALUES (9, 'c614e388-6bc3-4abc-87cb-e4d8dbd73b3c', '9999-12-31 23:59:59'),
 INSERT INTO Band(user_id, name, formation_year)
 VALUES (6, 'Turbo akcja', 2016),
        (7, 'Szakalaka', 2020),
-       (8, 'Revolta', 2010);
+       (8, 'Zagubieni w czasie', 1999);
 
 INSERT INTO Musician(user_id, person_id, vocal_range_id)
 VALUES (2, 2, null),
@@ -196,25 +212,33 @@ VALUES (2, 2, null),
        (10, 7, null);
 
 INSERT INTO Regular_user(user_id, person_id)
-VALUES (1, 1);
+VALUES (1, 1),
+       (11, 8);
 
 INSERT INTO Ad(id, ad_type, published_date, location, description, commercial, user_id)
 VALUES (1, 'BAND_WANTED', '2020-07-19', 'Wrocław', null, false, 1),
        (2, 'BAND_WANTED', '2020-08-10', 'Radwanice', null, true, 1),
-       (3, 'MUSICIAN_WANTED', '2020-08-12', 'Wrocław', 'Zapraszam do wspólnej gry :)', false, 2),
-       (4, 'MUSICIAN_WANTED', '2020-08-13', 'Warszawa', 'Opis opis', false, 3),
-       (5, 'MUSICIAN_WANTED', '2020-07-14', 'Zamość', 'Tylko zawodowcy!', true, 4),
-       (6, 'MUSICIAN_WANTED', '2020-08-13', 'Katowice', null, false, 5),
-       (7, 'MUSICIAN_WANTED', '2020-08-23', 'Wrocław', null, false, 6),
-       (8, 'JAM_SESSION', '2020-06-10', 'Radwanice',
+       (3, 'MUSICIAN_WANTED', '2020-07-04', 'Wrocław', 'Zapraszam do wspólnej gry :)', false, 2),
+       (4, 'MUSICIAN_WANTED', '2020-08-15', 'Warszawa i okolice',
+        'Szukam perkusisty do małej serii klubowych koncertów w duecie.', true, 3),
+       (5, 'MUSICIAN_WANTED', '2020-07-14', 'Zamość',
+        'Życiowa szansa na zaistnienie u boku prawdziwej gwiazdy. Tylko zawodowcy! Szczegóły po wstępnej rozmowie.',
+        true, 4),
+       (6, 'MUSICIAN_WANTED', '2020-08-02', 'Katowice', null, false, 5),
+       (7, 'MUSICIAN_WANTED', '2020-08-23', 'Wrocław',
+        'Poszukiwany wokalista do nagrania okazjonalnych wstawek w naszych piosenkach', false, 6),
+       (8, 'JAM_SESSION', '2020-06-08', 'Radwanice',
         'Ostrzegam, nie jestem najlepszy (głównie pentatonika), ale szybko się uczę :). Ktoś chętny na wspólny jam?',
+        false, 5),
+       (9, 'JAM_SESSION', '2020-07-23', 'Radwanice/Wrocław',
+        'Mam studio (perkusja, bas, gitary, dużo ampów i wiele więcej - chętnie użyczę), można razem pobrzdąkać do woli',
         false, 3),
-       (9, 'JAM_SESSION', '2020-07-23', 'Katowice',
-        'Mam studio (perksuja, bas, gitary i dużo ampów - chętnie użyczę), można razem pobrzdąkać do woli',
-        false, 8),
-       (10, 'JAM_SESSION', '2020-07-23', 'Wrocław, klub Nietota',
+       (10, 'JAM_SESSION', '2020-07-24', 'Wrocław, klub Nietota',
         'Zapraszamy na jam session w naszym klubie każdego piątkowego wieczoru. Zainteresowanych prosimy o kontakt telefoniczny.',
-        false, 1);
+        false, 1),
+       (11, 'MUSICIAN_WANTED', '2020-08-12', 'Warszawa',
+        'Poszukujemy nowego członka zespołu. Jeśli chcesz się stać częścią czegoś prawdziwie wyjątkowego, to dobrze trafiłeś. Tworzymy muzykę z duszą, dając od siebie wszystko. Podróżujemy przez czas mieszając gatunki ze wszystkich dziesięcioleci. Nie interesuje nas Twój wiek ani staż muzyczny - ważna jest przede wszystkim kreatywność.',
+        true, 8);
 
 INSERT INTO Band_wanted_ad(ad_id)
 VALUES (1),
@@ -222,10 +246,11 @@ VALUES (1),
 
 INSERT INTO Musician_wanted_ad(ad_id, preferred_gender, min_age, max_age, vocal_range_id)
 VALUES (3, null, null, null, null),
-       (4, 'F', 20, 30, null),
-       (5, 'F', 45, 60, null),
-       (6, 'M', 30, 60, null),
-       (7, 'M', null, null, null);
+       (4, 'M', 20, 50, null),
+       (5, null, 35, 58, null),
+       (6, 'F', 30, 60, null),
+       (7, 'M', null, null, null),
+       (11, null, null, null, null);
 
 INSERT INTO Jam_session_ad(ad_id)
 VALUES (8),
@@ -248,35 +273,36 @@ VALUES (1, 12),
        (1, 23),
        (2, 5),
        (2, 8),
+       (4, 24),
        (4, 3),
-       (4, 4),
-       (5, 1),
-       (5, 7),
-       (5, 12),
-       (5, 22),
-       (5, 31),
+       (5, 3),
+       (5, 36),
+       (5, 24),
+       (5, 10),
        (8, 35),
        (8, 4),
        (8, 3),
-       (9, 35);
+       (9, 35),
+       (11, 13),
+       (11, 14);
 
 INSERT INTO Ad_preferred_instrument(ad_id, instrument_id)
 VALUES (1, 5),
        (1, 34),
        (1, 15),
-       (4, 1),
-       (4, 2),
-       (4, 3),
-       (5, 1),
-       (5, 4),
-       (5, 12),
-       (6, 43),
+       (4, 28),
+       (5, 45),
+       (5, 46),
        (6, 1),
        (6, 2),
-       (6, 3),
-       (7, 47),
-       (7, 46),
-       (8, 7);
+       (6, 33),
+       (7, 43),
+       (7, 44),
+       (8, 7),
+       (11, 31),
+       (11, 41),
+       (11, 17),
+       (11, 21);
 
 INSERT INTO Predefined_vocal_range(vocal_range_id, name)
 VALUES (1, 'sopran'),
@@ -290,44 +316,58 @@ INSERT INTO User_genre(user_id, genre_id)
 VALUES (2, 1),
        (2, 4),
        (3, 3),
-       (3, 11),
        (3, 8),
+       (3, 11),
+       (3, 24),
+       (3, 30),
+       (3, 33),
+       (3, 36),
        (4, 3),
-       (5, 15),
+       (4, 10),
+       (4, 11),
+       (4, 24),
+       (4, 30),
        (5, 3),
        (5, 13),
+       (5, 15),
        (6, 7),
-       (6, 22),
        (6, 21),
+       (6, 22),
        (6, 23),
        (7, 26),
        (7, 27),
-       (8, 3),
-       (8, 10),
-       (8, 24),
-       (8, 11),
-       (8, 30);
+       (8, 13),
+       (8, 22),
+       (8, 14),
+       (8, 25),
+       (8, 26),
+       (8, 27);
 
 INSERT INTO User_instrument(user_id, instrument_id)
-VALUES (2, 8),
-       (2, 7),
+VALUES (2, 7),
+       (2, 8),
        (2, 34),
+       (3, 4),
+       (3, 17),
+       (3, 28),
+       (3, 29),
+       (3, 34),
+       (3, 44),
        (3, 45),
        (3, 46),
-       (3, 43),
+       (4, 13),
        (4, 46),
        (4, 47),
-       (4, 13),
        (5, 29),
+       (5, 34),
        (5, 44),
        (5, 46),
-       (5, 34),
        (7, 5),
        (7, 15),
+       (8, 11),
        (8, 24),
        (8, 25),
        (8, 26),
-       (8, 11),
        (8, 36);
 
 -- TODO

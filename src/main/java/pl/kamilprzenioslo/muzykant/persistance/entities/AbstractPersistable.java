@@ -10,7 +10,7 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.lang.Nullable;
 
 /**
- * Based on Spring's AbstractPersistable, this implementation differs in setId() being public
+ * Based on Spring's AbstractPersistable, this implementation differs mainly in setId() being public
  * instead of protected (which allows for DTO to Entity mapping)
  */
 @MappedSuperclass
