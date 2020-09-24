@@ -52,7 +52,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   private final ObjectMapper objectMapper;
   private final JwtUtils jwtUtils;
   private final HandlerExceptionResolver handlerExceptionResolver;
-  private @Value("${app.client.url}") String clientUrl;
+  private @Value("${app.client.origin}") String clientOrigin;
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
@@ -138,7 +138,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
     var corsConfiguration = new CorsConfiguration();
-    corsConfiguration.setAllowedOrigins(Collections.singletonList(clientUrl));
+    corsConfiguration.setAllowedOrigins(Collections.singletonList(clientOrigin));
     corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
     corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
 
