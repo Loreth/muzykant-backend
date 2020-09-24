@@ -26,10 +26,10 @@ public class MusicianWantedAdEntity extends AdEntity {
   private String preferredGender;
 
   @Column(name = "min_age")
-  private Byte minAge;
+  private Short minAge;
 
   @Column(name = "max_age")
-  private Byte maxAge;
+  private Short maxAge;
 
   @ManyToOne(cascade = CascadeType.ALL)
   @JoinColumn(name = "vocal_range_id")

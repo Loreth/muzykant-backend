@@ -128,8 +128,8 @@ CREATE TABLE Musician_wanted_ad
 (
     ad_id            int NOT NULL,
     preferred_gender varchar(1),
-    min_age          tinyint,
-    max_age          tinyint,
+    min_age          smallint,
+    max_age          smallint,
     vocal_range_id   int,
     PRIMARY KEY (ad_id),
     CONSTRAINT FK_Musician_wanted_Ad FOREIGN KEY (ad_id) REFERENCES Ad (id) ON DELETE CASCADE,

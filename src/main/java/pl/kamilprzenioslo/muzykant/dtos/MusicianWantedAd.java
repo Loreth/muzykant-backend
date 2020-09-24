@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 public class MusicianWantedAd extends Ad {
 
   private String preferredGender;
-  private Byte minAge;
-  private Byte maxAge;
+  private Short minAge;
+  private Short maxAge;
   private VocalRange vocalRange;
 }

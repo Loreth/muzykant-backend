@@ -271,8 +271,8 @@ class MusicianWantedAdControllerIntegrationTest {
     MusicianWantedAd responseDto = responseEntity.getBody();
 
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-    assertEquals((byte) 20, responseDto.getMinAge());
-    assertEquals((byte) 30, responseDto.getMaxAge());
+    assertEquals((short) 20, responseDto.getMinAge());
+    assertEquals((short) 30, responseDto.getMaxAge());
     assertEquals("F", responseDto.getPreferredGender());
     assertEquals("Opis opis", responseDto.getDescription());
     assertEquals("Warszawa", responseDto.getLocation());
