@@ -15,6 +15,7 @@ VALUES (1, 'dolnośląskie'),
        (14, 'warmińsko-mazurskie'),
        (15, 'wielkopolskie'),
        (16, 'zachodniopomorskie');
+ALTER SEQUENCE voivodeship_id_seq restart with 17;
 
 INSERT INTO Person(id, first_name, last_name, pseudo, gender, birthdate)
 VALUES (1, 'Adam', 'Dąbek', 'Adi', 'M', '1997-02-03'),
@@ -25,6 +26,7 @@ VALUES (1, 'Adam', 'Dąbek', 'Adi', 'M', '1997-02-03'),
        (6, 'Dorota', 'Kozera', null, 'F', '1950-02-16'),
        (7, 'Adam', 'Kowalski', 'Adamkowski', 'M', '1941-06-23'),
        (8, 'Damian', 'Niedzielski', 'Klub Nietota', 'M', '1980-12-05');
+ALTER SEQUENCE person_id_seq restart with 9;
 
 INSERT INTO Genre(id, name)
 VALUES (1, 'Pop'),
@@ -65,6 +67,7 @@ VALUES (1, 'Pop'),
        (36, 'Punk Rock'),
        (37, 'Math Rock'),
        (38, 'Jazz');
+ALTER SEQUENCE genre_id_seq restart with 39;
 
 INSERT INTO Vocal_range(id, lowest_note, highest_note)
 VALUES (1, 'C4', 'C6'),
@@ -73,10 +76,12 @@ VALUES (1, 'C4', 'C6'),
        (4, 'H2', 'A4'),
        (5, 'G2', 'F4'),
        (6, 'E2', 'E4');
+ALTER SEQUENCE vocal_range_id_seq restart with 7;
 
 INSERT INTO Vocal_technique(id, name)
 VALUES (1, 'Growl'),
        (2, 'Vibrato');
+ALTER SEQUENCE vocal_technique_id_seq restart with 7;
 
 INSERT INTO Instrument(id, name)
 VALUES (1, 'Akordeon'),
@@ -127,11 +132,13 @@ VALUES (1, 'Akordeon'),
        (46, 'Gitara akustyczna'),
        (47, 'Gitara klasyczna'),
        (48, 'Flet poprzeczny');
+ALTER SEQUENCE instrument_id_seq restart with 49;
 
 INSERT INTO Authority(id, name)
 VALUES (1, 'ROLE_MUSICIAN'),
        (2, 'ROLE_BAND'),
        (3, 'ROLE_REGULAR_USER');
+ALTER SEQUENCE authority_id_seq restart with 4;
 
 INSERT INTO User_profile(id, user_type, link_name, description, phone, city, voivodeship_id)
 VALUES (1, 'REGULAR', 'adi', 'Szukam zespołu na wesele, proszę o kontakt!', '837473123', 'Wrocław',
@@ -153,6 +160,7 @@ Where the grass is green and the girls are pretty 😎🤘', '182543765', 'Katow
        (9, 'MUSICIAN', 'cool', null, null, 'Wrocław', 1),
        (10, 'MUSICIAN', 'kingkong', null, null, 'Sosnowiec', 12),
        (11, 'REGULAR', 'klub_nietota', 'Klub Nietota', '876421423', 'Wrocław', 1);
+ALTER SEQUENCE user_profile_id_seq restart with 12;
 
 UPDATE User_profile
 SET profile_image_link='http://localhost:8080/user-images/image-uploads/3_profile-image.jpg'
@@ -192,6 +200,7 @@ VALUES (1, 'adam@gmail.com', '$2a$10$zifVLlf8WvlHvfeLLiqvKe44GxtATH2uo2TPjl6VSuR
        (15, 'klub_nietota@gmail.com',
         '$2a$10$zifVLlf8WvlHvfeLLiqvKe44GxtATH2uo2TPjl6VSuRmHC/9rkFJC',
         3, 11); -- mocnehaslo123
+ALTER SEQUENCE credentials_id_seq restart with 12;
 
 INSERT INTO Email_confirmation(credentials_id, token_uuid, token_expiration)
 VALUES (9, 'c614e388-6bc3-4abc-87cb-e4d8dbd73b3c', '9999-12-31 23:59:59'),
@@ -239,6 +248,7 @@ VALUES (1, 'BAND_WANTED', '2020-07-19', 'Wrocław', null, false, 1),
        (11, 'MUSICIAN_WANTED', '2020-08-12', 'Warszawa',
         'Poszukujemy nowego członka zespołu. Jeśli chcesz się stać częścią czegoś prawdziwie wyjątkowego, to dobrze trafiłeś. Tworzymy muzykę z duszą, dając od siebie wszystko. Podróżujemy przez czas mieszając gatunki ze wszystkich dziesięcioleci. Nie interesuje nas Twój wiek ani staż muzyczny - ważna jest przede wszystkim kreatywność.',
         true, 8);
+ALTER SEQUENCE ad_id_seq restart with 12;
 
 INSERT INTO Band_wanted_ad(ad_id)
 VALUES (1),
@@ -379,6 +389,8 @@ VALUES (1, 'Marshall DSL40', 2),
        (2, 'Vox AC30', 2),
        (3, 'Shure SM47 x2', 2),
        (4, 'Yamaha PSR-EW410 (keyboard)', 4);
+ALTER SEQUENCE equipment_id_seq restart with 5;
 
 INSERT INTO Social_media_links(user_profile_id, youtube, soundcloud, webpage)
 VALUES (3, null, 'https://soundcloud.com/muse', null);
+

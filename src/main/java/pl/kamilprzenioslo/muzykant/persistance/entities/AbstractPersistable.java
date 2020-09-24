@@ -3,7 +3,6 @@ package pl.kamilprzenioslo.muzykant.persistance.entities;
 import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Transient;
@@ -17,10 +16,7 @@ import org.springframework.lang.Nullable;
 @MappedSuperclass
 public abstract class AbstractPersistable<ID extends Serializable> implements Persistable<ID> {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Nullable
-  private ID id;
+  @Id @GeneratedValue @Nullable private ID id;
 
   @Nullable
   @Override
