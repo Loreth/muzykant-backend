@@ -133,7 +133,7 @@ VALUES (1, 'ROLE_MUSICIAN'),
        (2, 'ROLE_BAND'),
        (3, 'ROLE_REGULAR_USER');
 
-INSERT INTO "User"(id, user_type, link_name, description, phone, city, voivodeship_id)
+INSERT INTO "user"(id, user_type, link_name, description, phone, city, voivodeship_id)
 VALUES (1, 'REGULAR', 'adi', 'Szukam zespołu na wesele, proszę o kontakt!', '837473123', 'Wrocław',
         1),
        (2, 'MUSICIAN', 'dani', null, '125373123', 'Wrocław', 1),
@@ -154,10 +154,10 @@ Where the grass is green and the girls are pretty 😎🤘', '182543765', 'Katow
        (10, 'MUSICIAN', 'kingkong', null, null, 'Sosnowiec', 12),
        (11, 'REGULAR', 'klub_nietota', 'Klub Nietota', '876421423', 'Wrocław', 1);
 
-UPDATE "User"
+UPDATE "user"
 SET profile_image_link='http://localhost:8080/user-images/image-uploads/3_profile-image.jpg'
 WHERE id = 3;
-UPDATE "User"
+UPDATE "user"
 SET profile_image_link='http://localhost:8080/user-images/image-uploads/8_profile-image.jpg'
 WHERE id = 8;
 
