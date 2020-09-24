@@ -19,6 +19,7 @@ import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.USER_IMAGE;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -51,10 +52,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   private final ObjectMapper objectMapper;
   private final JwtUtils jwtUtils;
   private final HandlerExceptionResolver handlerExceptionResolver;
+  private @Value("${app.client.url}") String clientUrl;
 
   @Override
   protected void configure(HttpSecurity http) throws Exception {
-    http.addFilter(
+    http.requiresChannel()
+        .requestMatchers(r -> r.getHeader("X-Forwarded-Proto") != null) // enables HTTPS for Heroku
+        .requiresSecure()
+        .and()
+        .addFilter(
             new JwtAuthenticationFilter(
                 jwtUtils,
                 objectMapper,
@@ -132,7 +138,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
   @Bean
   CorsConfigurationSource corsConfigurationSource() {
     var corsConfiguration = new CorsConfiguration();
-    corsConfiguration.setAllowedOrigins(Collections.singletonList("http://localhost:4200"));
+    corsConfiguration.setAllowedOrigins(Collections.singletonList(clientUrl));
     corsConfiguration.setAllowedMethods(Collections.singletonList("*"));
     corsConfiguration.setAllowedHeaders(Collections.singletonList("*"));
 
