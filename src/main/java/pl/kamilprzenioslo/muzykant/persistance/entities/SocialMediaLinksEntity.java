@@ -3,6 +3,7 @@ package pl.kamilprzenioslo.muzykant.persistance.entities;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -18,12 +19,15 @@ import org.springframework.data.domain.Persistable;
 @Table(name = "social_media_links")
 public class SocialMediaLinksEntity implements Persistable<Integer> {
 
-  @Id private Integer id;
+  @Id
+  private Integer id;
+
   private String youtube;
   private String soundcloud;
   private String webpage;
 
   @OneToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user_profile_id")
   @MapsId
   private UserEntity user;
 

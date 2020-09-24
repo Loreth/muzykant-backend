@@ -133,7 +133,7 @@ VALUES (1, 'ROLE_MUSICIAN'),
        (2, 'ROLE_BAND'),
        (3, 'ROLE_REGULAR_USER');
 
-INSERT INTO `User`(id, user_type, link_name, description, phone, city, voivodeship_id)
+INSERT INTO User_profile(id, user_type, link_name, description, phone, city, voivodeship_id)
 VALUES (1, 'REGULAR', 'adi', 'Szukam zespołu na wesele, proszę o kontakt!', '837473123', 'Wrocław',
         1),
        (2, 'MUSICIAN', 'dani', null, '125373123', 'Wrocław', 1),
@@ -154,14 +154,14 @@ Where the grass is green and the girls are pretty 😎🤘', '182543765', 'Katow
        (10, 'MUSICIAN', 'kingkong', null, null, 'Sosnowiec', 12),
        (11, 'REGULAR', 'klub_nietota', 'Klub Nietota', '876421423', 'Wrocław', 1);
 
-UPDATE User
+UPDATE User_profile
 SET profile_image_link='http://localhost:8080/user-images/image-uploads/3_profile-image.jpg'
 WHERE id = 3;
-UPDATE User
+UPDATE User_profile
 SET profile_image_link='http://localhost:8080/user-images/image-uploads/8_profile-image.jpg'
 WHERE id = 8;
 
-INSERT INTO Credentials(id, email, password, authority_id, user_id)
+INSERT INTO Credentials(id, email, password, authority_id, user_profile_id)
 VALUES (1, 'adam@gmail.com', '$2a$10$zifVLlf8WvlHvfeLLiqvKe44GxtATH2uo2TPjl6VSuRmHC/9rkFJC', 3,
         1),                                                                          -- mocnehaslo123
        (2, 'daniel@gmail.com', '$2a$10$zifVLlf8WvlHvfeLLiqvKe44GxtATH2uo2TPjl6VSuRmHC/9rkFJC', 1,
@@ -198,12 +198,12 @@ VALUES (9, 'c614e388-6bc3-4abc-87cb-e4d8dbd73b3c', '9999-12-31 23:59:59'),
        (10, '6d8e6ea9-8af9-4716-96bc-6f910ef61b76', '2100-12-31 23:59:59'),
        (11, 'a163ca90-5e57-4861-9e21-119d26923c63', '2020-08-08 12:00:12');
 
-INSERT INTO Band(user_id, name, formation_year)
+INSERT INTO Band(user_profile_id, name, formation_year)
 VALUES (6, 'Turbo akcja', 2016),
        (7, 'Szakalaka', 2020),
        (8, 'Zagubieni w czasie', 1999);
 
-INSERT INTO Musician(user_id, person_id, vocal_range_id)
+INSERT INTO Musician(user_profile_id, person_id, vocal_range_id)
 VALUES (2, 2, null),
        (3, 3, null),
        (4, 4, null),
@@ -211,11 +211,11 @@ VALUES (2, 2, null),
        (9, 6, null),
        (10, 7, null);
 
-INSERT INTO Regular_user(user_id, person_id)
+INSERT INTO Regular_user(user_profile_id, person_id)
 VALUES (1, 1),
        (11, 8);
 
-INSERT INTO Ad(id, ad_type, published_date, location, description, commercial, user_id)
+INSERT INTO Ad(id, ad_type, published_date, location, description, commercial, user_profile_id)
 VALUES (1, 'BAND_WANTED', '2020-07-19', 'Wrocław', null, false, 1),
        (2, 'BAND_WANTED', '2020-08-10', 'Radwanice', null, true, 1),
        (3, 'MUSICIAN_WANTED', '2020-07-04', 'Wrocław', 'Zapraszam do wspólnej gry :)', false, 2),
@@ -312,7 +312,7 @@ VALUES (1, 'sopran'),
        (5, 'baryton'),
        (6, 'bas');
 
-INSERT INTO User_genre(user_id, genre_id)
+INSERT INTO User_genre(user_profile_id, genre_id)
 VALUES (2, 1),
        (2, 4),
        (3, 3),
@@ -343,7 +343,7 @@ VALUES (2, 1),
        (8, 26),
        (8, 27);
 
-INSERT INTO User_instrument(user_id, instrument_id)
+INSERT INTO User_instrument(user_profile_id, instrument_id)
 VALUES (2, 7),
        (2, 8),
        (2, 34),
@@ -371,7 +371,7 @@ VALUES (2, 7),
        (8, 36);
 
 -- TODO
---  INSERT INTO User_vocal_technique(user_id, vocal_technique_id)
+--  INSERT INTO User_vocal_technique(user_profile_id, vocal_technique_id)
 --  VALUES ();
 
 INSERT INTO Equipment(id, name, musician_user_id)
@@ -380,5 +380,5 @@ VALUES (1, 'Marshall DSL40', 2),
        (3, 'Shure SM47 x2', 2),
        (4, 'Yamaha PSR-EW410 (keyboard)', 4);
 
-INSERT INTO Social_media_links(user_id, youtube, soundcloud, webpage)
+INSERT INTO Social_media_links(user_profile_id, youtube, soundcloud, webpage)
 VALUES (3, null, 'https://soundcloud.com/muse', null);

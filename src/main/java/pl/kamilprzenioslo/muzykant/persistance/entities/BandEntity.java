@@ -17,7 +17,7 @@ import pl.kamilprzenioslo.muzykant.persistance.enums.UserType.Values;
 @Entity
 @Table(name = "band")
 @DiscriminatorValue(Values.BAND)
-@PrimaryKeyJoinColumn(name = "user_id")
+@PrimaryKeyJoinColumn(name = "user_profile_id")
 public class BandEntity extends UserEntity {
 
   private String name;

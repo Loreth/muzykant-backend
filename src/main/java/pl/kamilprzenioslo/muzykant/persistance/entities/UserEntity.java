@@ -30,7 +30,7 @@ import pl.kamilprzenioslo.muzykant.persistance.enums.UserType;
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
 @DiscriminatorColumn(name = "user_type")
-@Table(name = "user")
+@Table(name = "user_profile")
 public class UserEntity extends AbstractPersistable<Integer> {
 
   @Enumerated(EnumType.STRING)
@@ -61,21 +61,21 @@ public class UserEntity extends AbstractPersistable<Integer> {
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
       name = "user_genre",
-      joinColumns = @JoinColumn(name = "user_id"),
+      joinColumns = @JoinColumn(name = "user_profile_id"),
       inverseJoinColumns = @JoinColumn(name = "genre_id"))
   private Set<GenreEntity> genres;
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
       name = "user_instrument",
-      joinColumns = @JoinColumn(name = "user_id"),
+      joinColumns = @JoinColumn(name = "user_profile_id"),
       inverseJoinColumns = @JoinColumn(name = "instrument_id"))
   private Set<InstrumentEntity> instruments;
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(
       name = "user_vocal_technique",
-      joinColumns = @JoinColumn(name = "user_id"),
+      joinColumns = @JoinColumn(name = "user_profile_id"),
       inverseJoinColumns = @JoinColumn(name = "vocal_technique_id"))
   private Set<VocalTechniqueEntity> vocalTechniques;
 

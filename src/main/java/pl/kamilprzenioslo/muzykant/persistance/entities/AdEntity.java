@@ -48,7 +48,7 @@ public abstract class AdEntity extends AbstractPersistable<Integer> {
   private Set<VoivodeshipEntity> voivodeships;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", nullable = false)
+  @JoinColumn(name = "user_profile_id", nullable = false)
   private UserEntity user;
 
   @ManyToMany(fetch = FetchType.LAZY)

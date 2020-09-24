@@ -23,7 +23,7 @@ public class CredentialsEntity extends AbstractPersistable<Integer> {
   @ToString.Exclude private String password;
 
   @OneToOne
-  @JoinColumn(name = "user_id")
+  @JoinColumn(name = "user_profile_id")
   private UserEntity user;
 
   @ManyToOne

@@ -21,7 +21,7 @@ import pl.kamilprzenioslo.muzykant.persistance.enums.UserType.Values;
 @Entity
 @Table(name = "musician")
 @DiscriminatorValue(Values.MUSICIAN)
-@PrimaryKeyJoinColumn(name = "user_id")
+@PrimaryKeyJoinColumn(name = "user_profile_id")
 public class MusicianEntity extends UserEntity {
 
   @OneToOne(cascade = CascadeType.ALL)

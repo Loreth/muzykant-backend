@@ -22,7 +22,7 @@ public class UserImageEntity extends AbstractPersistable<Integer> {
   private String link;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user_id", nullable = false)
+  @JoinColumn(name = "user_profile_id", nullable = false)
   private UserEntity user;
 
   @Column(name = "order_index")

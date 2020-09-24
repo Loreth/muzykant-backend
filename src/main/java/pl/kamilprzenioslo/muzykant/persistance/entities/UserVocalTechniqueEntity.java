@@ -13,7 +13,7 @@ import lombok.Data;
 public class UserVocalTechniqueEntity implements Serializable {
 
   @Id
-  @Column(name = "user_id")
+  @Column(name = "user_profile_id")
   private Integer userId;
 
   @Id
