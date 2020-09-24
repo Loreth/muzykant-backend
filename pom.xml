@@ -161,6 +161,9 @@
           <url>${db.jdbc.url}</url>
           <user>${db.user}</user>
           <password>${db.password}</password>
+          <locations>
+            <location>filesystem:src/main/resources/db/migration/mysql</location>
+          </locations>
         </configuration>
       </plugin>
       <plugin>
