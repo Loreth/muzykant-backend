@@ -6,6 +6,6 @@ ALTER SEQUENCE vocal_technique_id_seq restart with 7;
 ALTER SEQUENCE instrument_id_seq restart with 49;
 ALTER SEQUENCE authority_id_seq restart with 4;
 ALTER SEQUENCE user_profile_id_seq restart with 12;
-ALTER SEQUENCE credentials_id_seq restart with 12;
+ALTER SEQUENCE credentials_id_seq restart with 16;
 ALTER SEQUENCE ad_id_seq restart with 12;
 ALTER SEQUENCE equipment_id_seq restart with 5;
