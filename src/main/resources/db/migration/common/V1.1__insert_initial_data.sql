@@ -154,13 +154,6 @@ Where the grass is green and the girls are pretty 😎🤘', '182543765', 'Katow
        (10, 'MUSICIAN', 'kingkong', null, null, 'Sosnowiec', 12),
        (11, 'REGULAR', 'klub_nietota', 'Klub Nietota', '876421423', 'Wrocław', 1);
 
-UPDATE User_profile
-SET profile_image_link='http://localhost:8080/user-images/image-uploads/3_profile-image.jpg'
-WHERE id = 3;
-UPDATE User_profile
-SET profile_image_link='http://localhost:8080/user-images/image-uploads/8_profile-image.jpg'
-WHERE id = 8;
-
 INSERT INTO Credentials(id, email, password, authority_id, user_profile_id)
 VALUES (1, 'adam@gmail.com', '$2a$10$zifVLlf8WvlHvfeLLiqvKe44GxtATH2uo2TPjl6VSuRmHC/9rkFJC', 3,
         1),                                                                          -- mocnehaslo123
