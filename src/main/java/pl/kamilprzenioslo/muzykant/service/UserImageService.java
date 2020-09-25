@@ -10,7 +10,7 @@ public interface UserImageService
         SpecificationService<UserImage, UserImageEntity, Integer> {
   List<UserImage> findByUserId(int userId);
 
-  UserImage saveImage(MultipartFile image, String fileBaseUri, int userId, int orderIndex);
+  UserImage saveImage(MultipartFile image, int userId, int orderIndex);
 
-  UserImage saveNewProfileImage(MultipartFile image, String fileBaseUri, int userId);
+  UserImage saveNewProfileImage(MultipartFile image, int userId);
 }

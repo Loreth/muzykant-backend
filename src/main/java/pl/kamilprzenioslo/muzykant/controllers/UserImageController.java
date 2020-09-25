@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriTemplate;
 import pl.kamilprzenioslo.muzykant.dtos.UserImage;
 import pl.kamilprzenioslo.muzykant.persistance.entities.UserImageEntity;
@@ -47,16 +46,11 @@ public class UserImageController
           boolean profileImage,
       @RequestParam("orderIndex") int orderIndex,
       HttpServletRequest request) {
-    String fileBaseUri =
-        ServletUriComponentsBuilder.fromCurrentContextPath()
-            .path(RestMappings.USER_IMAGE + RestMappings.IMAGE_UPLOADS + "/")
-            .toUriString();
-
     if (profileImage) {
-      UserImage userImage = userImageService.saveNewProfileImage(file, fileBaseUri, userId);
+      UserImage userImage = userImageService.saveNewProfileImage(file, userId);
       return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(userImage);
     } else {
-      UserImage savedUserImage = userImageService.saveImage(file, fileBaseUri, userId, orderIndex);
+      UserImage savedUserImage = userImageService.saveImage(file, userId, orderIndex);
       URI entityMapping =
           new UriTemplate(request.getRequestURI() + RestMappings.ID).expand(savedUserImage.getId());
 

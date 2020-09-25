@@ -22,15 +22,18 @@ public class UserImageServiceImpl
 
   private final UserRepository userRepository;
   private final StorageService storageService;
+  private final String imageDownloadUri;
 
   public UserImageServiceImpl(
       UserImageRepository repository,
       UserRepository userRepository,
       BaseMapper<UserImage, UserImageEntity> mapper,
-      StorageService storageService) {
+      StorageService storageService,
+      String imageDownloadUri) {
     super(repository, mapper);
     this.userRepository = userRepository;
     this.storageService = storageService;
+    this.imageDownloadUri = imageDownloadUri;
   }
 
   @Override
@@ -39,19 +42,18 @@ public class UserImageServiceImpl
   }
 
   @Override
-  public UserImage saveImage(MultipartFile image, String fileBaseUri, int userId, int orderIndex) {
-    return super.save(storeImage(image, fileBaseUri, userId, orderIndex, false));
+  public UserImage saveImage(MultipartFile image, int userId, int orderIndex) {
+    return super.save(storeImage(image, userId, orderIndex, false));
   }
 
   private UserImage storeImage(
-      MultipartFile image, String fileBaseUri, int userId, int orderIndex, boolean profileImage) {
+      MultipartFile image, int userId, int orderIndex, boolean profileImage) {
     String fileName = makeFileName(userId, profileImage);
     String extension = makeFileExtension(image);
-    String fileUri = fileBaseUri + fileName + extension;
-    fileName += extension;
+    String fileUri = imageDownloadUri + fileName + extension;
 
     storageService.store(image, fileName, extension);
-    return new UserImage(fileName, fileUri, userId, orderIndex);
+    return new UserImage(fileName + extension, fileUri, userId, orderIndex);
   }
 
   private String makeFileName(int userId, boolean profileImage) {
@@ -74,11 +76,11 @@ public class UserImageServiceImpl
   }
 
   @Override
-  public UserImage saveNewProfileImage(MultipartFile image, String fileBaseUri, int userId) {
+  public UserImage saveNewProfileImage(MultipartFile image, int userId) {
     UserEntity userEntity = userRepository.findById(userId).orElseThrow();
     storageService.deleteWithAnyExtension(makeFileName(userEntity.getId(), true));
 
-    UserImage storedImage = storeImage(image, fileBaseUri, userId, 0, true);
+    UserImage storedImage = storeImage(image, userId, 0, true);
     userEntity.setProfileImageLink(storedImage.getLink());
     userRepository.save(userEntity);
 

@@ -26,7 +26,7 @@ public class CloudinaryStorageService implements StorageService {
           .upload(
               file.getBytes(),
               ObjectUtils.asMap(
-                  "resource_type", "auto", "folder", "uploads", "public_id", filename));
+                  "resource_type", "auto", "folder", "image-uploads", "public_id", filename));
     } catch (IOException e) {
       throw new StorageException("Failed to store file " + filename, e);
     }

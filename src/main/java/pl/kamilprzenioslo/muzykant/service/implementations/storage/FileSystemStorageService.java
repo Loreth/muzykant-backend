@@ -28,6 +28,7 @@ public class FileSystemStorageService implements StorageService {
 
   @Override
   public void store(MultipartFile file, String filename, String extension) {
+    filename += extension;
     log.debug("attempting to store file " + file.getOriginalFilename() + " as " + filename);
 
     try {
