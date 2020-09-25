@@ -27,7 +27,7 @@ public class AppConfig implements WebMvcConfigurer {
 
   @Bean
   @Profile("prod")
-  public Cloudinary cloudinary(@Value("app.storage.cloudinaryurl") String cloudinaryUrl) {
+  public Cloudinary cloudinary(@Value("${app.storage.cloudinaryurl}") String cloudinaryUrl) {
     return new Cloudinary(cloudinaryUrl);
   }
 }
