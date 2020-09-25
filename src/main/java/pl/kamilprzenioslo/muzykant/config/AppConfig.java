@@ -36,7 +36,7 @@ public class AppConfig implements WebMvcConfigurer {
   @Bean("imageDownloadUri")
   @Profile("dev")
   public String devImageDownloadUri() {
-    return "http://localhost:8080" + RestMappings.USER_IMAGE + RestMappings.IMAGE_UPLOADS + "/";
+    return "http://localhost:8080" + RestMappings.USER_IMAGE + RestMappings.IMAGE_UPLOADS;
   }
 
   @Bean("imageDownloadUri")

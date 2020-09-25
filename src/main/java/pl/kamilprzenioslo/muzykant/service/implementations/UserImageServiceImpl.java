@@ -50,7 +50,7 @@ public class UserImageServiceImpl
       MultipartFile image, int userId, int orderIndex, boolean profileImage) {
     String fileName = makeFileName(userId, profileImage);
     String extension = makeFileExtension(image);
-    String fileUri = imageDownloadUri + fileName + extension;
+    String fileUri = imageDownloadUri + "/" + fileName + extension;
 
     storageService.store(image, fileName, extension);
     return new UserImage(fileName + extension, fileUri, userId, orderIndex);
