@@ -77,7 +77,7 @@ class MusicianControllerIntegrationTest {
     ObjectReader listReader = objectMapper.readerFor(new TypeReference<List<Musician>>() {});
     List<Musician> responseAdList = listReader.readValue(jsonResponseBody.get("content"));
 
-    assertThat(responseAdList.stream().map(Musician::getId)).hasSize(1);
+    assertThat(responseAdList.stream().map(Musician::getId)).hasSize(2);
   }
 
   @FlywayTest

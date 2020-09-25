@@ -72,7 +72,7 @@ public abstract class BaseRestController<T extends IdentifiableDto<ID>, ID exten
   }
 
   private void verifyPutRequest(T dto, ID pathId) {
-    if (!dto.getId().equals(pathId)) {
+    if (!pathId.equals(dto.getId())) {
       throw new ResponseStatusException(
           HttpStatus.CONFLICT, ENTITY_ID_DIFFERENT_FROM_PATH_VARIABLE_ID);
     }

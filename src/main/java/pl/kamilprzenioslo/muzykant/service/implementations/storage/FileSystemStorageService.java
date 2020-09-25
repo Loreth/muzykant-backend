@@ -6,16 +6,16 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.stream.Stream;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
-import org.springframework.util.FileSystemUtils;
 import org.springframework.web.multipart.MultipartFile;
 import pl.kamilprzenioslo.muzykant.service.StorageService;
 
 @Service
+@Profile("dev")
 @Slf4j
 public class FileSystemStorageService implements StorageService {
 
@@ -23,11 +23,11 @@ public class FileSystemStorageService implements StorageService {
 
   public FileSystemStorageService(StorageProperties storageProperties) {
     this.rootLocation = Path.of(storageProperties.getLocation());
-    init();
+    initialize();
   }
 
   @Override
-  public void store(MultipartFile file, String filename) {
+  public void store(MultipartFile file, String filename, String extension) {
     log.debug("attempting to store file " + file.getOriginalFilename() + " as " + filename);
 
     try {
@@ -50,22 +50,6 @@ public class FileSystemStorageService implements StorageService {
   }
 
   @Override
-  public Stream<Path> loadAll() {
-    try {
-      return Files.walk(rootLocation, 1)
-          .filter(path -> !path.equals(rootLocation))
-          .map(rootLocation::relativize);
-    } catch (IOException e) {
-      throw new StorageException("Failed to read stored files", e);
-    }
-  }
-
-  @Override
-  public Path load(String filename) {
-    return rootLocation.resolve(filename);
-  }
-
-  @Override
   public Resource loadAsResource(String filename) {
     try {
       Path file = load(filename);
@@ -78,6 +62,10 @@ public class FileSystemStorageService implements StorageService {
     } catch (MalformedURLException e) {
       throw new StorageException("Could not read file: " + filename, e);
     }
+  }
+
+  private Path load(String filename) {
+    return rootLocation.resolve(filename);
   }
 
   @Override
@@ -99,13 +87,7 @@ public class FileSystemStorageService implements StorageService {
     }
   }
 
-  @Override
-  public void deleteAll() {
-    FileSystemUtils.deleteRecursively(rootLocation.toFile());
-  }
-
-  @Override
-  public void init() {
+  private void initialize() {
     try {
       Files.createDirectories(rootLocation);
     } catch (IOException e) {

@@ -1,8 +1,8 @@
 package pl.kamilprzenioslo.muzykant.controllers;
 
 import java.net.URI;
-import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -47,34 +47,16 @@ public class UserImageController
           boolean profileImage,
       @RequestParam("orderIndex") int orderIndex,
       HttpServletRequest request) {
-    String filename = userId + "_";
-    if (profileImage) {
-      filename += "profile-image";
-    } else {
-      filename += UUID.randomUUID().toString();
-    }
-
-    int indexOfExtension = file.getOriginalFilename().lastIndexOf(".");
-    if (indexOfExtension != -1) {
-      filename += file.getOriginalFilename().substring(indexOfExtension);
-    } else {
-      filename += "." + file.getContentType().substring(file.getContentType().lastIndexOf('/') + 1);
-    }
-
-    String fileUri =
+    String fileBaseUri =
         ServletUriComponentsBuilder.fromCurrentContextPath()
             .path(RestMappings.USER_IMAGE + RestMappings.IMAGE_UPLOADS + "/")
-            .path(filename)
             .toUriString();
 
     if (profileImage) {
-      userImageService.saveNewProfileImage(file, filename, fileUri, userId);
-      return ResponseEntity.ok()
-          .contentType(MediaType.APPLICATION_JSON)
-          .body(new UserImage(filename, fileUri, userId, orderIndex));
+      UserImage userImage = userImageService.saveNewProfileImage(file, fileBaseUri, userId);
+      return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(userImage);
     } else {
-      UserImage savedUserImage =
-          userImageService.save(file, new UserImage(filename, fileUri, userId, orderIndex));
+      UserImage savedUserImage = userImageService.saveImage(file, fileBaseUri, userId, orderIndex);
       URI entityMapping =
           new UriTemplate(request.getRequestURI() + RestMappings.ID).expand(savedUserImage.getId());
 
@@ -84,6 +66,7 @@ public class UserImageController
     }
   }
 
+  @Profile("dev")
   @GetMapping(RestMappings.IMAGE_UPLOADS + "/{filename:.+}")
   @ResponseBody
   public ResponseEntity<Resource> downloadUserImage(@PathVariable String filename) {

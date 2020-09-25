@@ -166,7 +166,7 @@ class JamSessionAdControllerIntegrationTest {
     HttpEntity<String> requestEntity = new HttpEntity<>(jwtHeaderForUserWithJamSessionAd);
 
     ResponseEntity<String> responseEntity =
-        restTemplate.exchange(RESOURCE_LINK + "/8", HttpMethod.DELETE, requestEntity, String.class);
+        restTemplate.exchange(RESOURCE_LINK + "/9", HttpMethod.DELETE, requestEntity, String.class);
 
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
   }
@@ -175,7 +175,7 @@ class JamSessionAdControllerIntegrationTest {
   @Test
   void shouldUpdateExistingEntityCorrectly() {
     ResponseEntity<JamSessionAd> initialResponse =
-        restTemplate.getForEntity(RESOURCE_LINK + "/8", JamSessionAd.class);
+        restTemplate.getForEntity(RESOURCE_LINK + "/9", JamSessionAd.class);
 
     JamSessionAd existingResourceDto = initialResponse.getBody();
     existingResourceDto.setLocation("new location");
@@ -184,10 +184,10 @@ class JamSessionAdControllerIntegrationTest {
     HttpEntity<JamSessionAd> requestEntity =
         new HttpEntity<>(existingResourceDto, jwtHeaderForUserWithJamSessionAd);
 
-    restTemplate.put(RESOURCE_LINK + "/8", requestEntity);
+    restTemplate.put(RESOURCE_LINK + "/9", requestEntity);
 
     ResponseEntity<JamSessionAd> afterUpdateResponse =
-        restTemplate.getForEntity(RESOURCE_LINK + "/8", JamSessionAd.class);
+        restTemplate.getForEntity(RESOURCE_LINK + "/9", JamSessionAd.class);
 
     JamSessionAd updatedResourceDto = afterUpdateResponse.getBody();
 
@@ -215,13 +215,13 @@ class JamSessionAdControllerIntegrationTest {
   @Test
   void shouldReturnDtoUnderExistingId() {
     ResponseEntity<JamSessionAd> responseEntity =
-        restTemplate.getForEntity(RESOURCE_LINK + "/8", JamSessionAd.class);
+        restTemplate.getForEntity(RESOURCE_LINK + "/9", JamSessionAd.class);
     JamSessionAd responseDto = responseEntity.getBody();
 
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     assertNotNull(responseDto.getDescription());
-    assertEquals("Radwanice", responseDto.getLocation());
-    assertEquals(LocalDate.parse("2020-06-10"), responseDto.getPublishedDate());
+    assertEquals("Radwanice/Wrocław", responseDto.getLocation());
+    assertEquals(LocalDate.parse("2020-07-23"), responseDto.getPublishedDate());
     assertEquals(3, responseDto.getUserId());
     assertFalse(responseDto.isCommercial());
   }

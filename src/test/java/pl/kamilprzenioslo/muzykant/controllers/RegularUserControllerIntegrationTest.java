@@ -88,7 +88,7 @@ class RegularUserControllerIntegrationTest {
     ObjectReader listReader = objectMapper.readerFor(new TypeReference<List<RegularUser>>() {});
     List<RegularUser> responseAdList = listReader.readValue(jsonResponseBody.get("content"));
 
-    assertThat(responseAdList).hasSize(1);
+    assertThat(responseAdList).hasSize(2);
   }
 
   @FlywayTest
@@ -140,7 +140,7 @@ class RegularUserControllerIntegrationTest {
     List<RegularUser> responseAdList = listReader.readValue(jsonResponseBody.get("content"));
 
     assertThat(responseAdList.stream().map(RegularUser::getId))
-        .hasSize(1)
+        .hasSize(2)
         .allMatch(Objects::nonNull);
   }
 

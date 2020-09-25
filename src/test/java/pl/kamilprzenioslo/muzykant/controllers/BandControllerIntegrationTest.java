@@ -169,7 +169,7 @@ class BandControllerIntegrationTest {
     assertEquals("new city", updatedResourceDto.getCity());
 
     assertThat(updatedResourceDto.getGenres().stream().map(Genre::getId))
-        .hasSize(5)
+        .hasSize(7)
         .contains(newGenre.getId());
   }
 

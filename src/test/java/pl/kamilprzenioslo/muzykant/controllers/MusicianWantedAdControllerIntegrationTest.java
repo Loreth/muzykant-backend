@@ -2,7 +2,6 @@ package pl.kamilprzenioslo.muzykant.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -61,9 +60,9 @@ class MusicianWantedAdControllerIntegrationTest {
             .queryParam("publishedDateAfterInclusive", "2020-07-03")
             .queryParam("publishedDateBeforeInclusive", "2020-07-19")
             .queryParam("minAge", 20)
-            .queryParam("maxAge", 123)
+            .queryParam("maxAge", 50)
             .queryParam("location", "Zamość")
-            .queryParam("preferredGenreIds", "22,12,7")
+            .queryParam("preferredGenreIds", "36,10,24")
             .build()
             .encode()
             .toUri();
@@ -83,7 +82,7 @@ class MusicianWantedAdControllerIntegrationTest {
   void shouldNotReturnAnyAdsForGivenGenres() throws IOException {
     URI requestUri =
         UriComponentsBuilder.fromHttpUrl(RESOURCE_LINK + "/search")
-            .queryParam("preferredGenreIds", "24,13,50")
+            .queryParam("preferredGenreIds", "25,33,50")
             .build()
             .encode()
             .toUri();
@@ -115,7 +114,7 @@ class MusicianWantedAdControllerIntegrationTest {
         objectMapper.readerFor(new TypeReference<List<MusicianWantedAd>>() {});
     List<MusicianWantedAd> responseAdList = listReader.readValue(jsonResponseBody.get("content"));
 
-    assertThat(responseAdList).hasSize(3);
+    assertThat(responseAdList).hasSize(1);
   }
 
   @FlywayTest
@@ -171,7 +170,7 @@ class MusicianWantedAdControllerIntegrationTest {
         objectMapper.readerFor(new TypeReference<List<MusicianWantedAd>>() {});
     List<MusicianWantedAd> responseAdList = listReader.readValue(jsonResponseBody.get("content"));
 
-    assertThat(responseAdList).hasSize(5);
+    assertThat(responseAdList).hasSize(6);
   }
 
   @FlywayTest
@@ -244,7 +243,7 @@ class MusicianWantedAdControllerIntegrationTest {
     assertEquals("E5", updatedResourceDto.getVocalRange().getHighestNote());
     assertTrue(updatedResourceDto.isCommercial());
     assertThat(updatedResourceDto.getPreferredGenres().stream().map(Genre::getId))
-        .hasSize(6)
+        .hasSize(5)
         .contains(newPreferredGenre.getId());
   }
 
@@ -259,7 +258,7 @@ class MusicianWantedAdControllerIntegrationTest {
     List<MusicianWantedAd> responseAdList = listReader.readValue(jsonResponseBody.get("content"));
 
     assertThat(responseAdList.stream().map(MusicianWantedAd::getId))
-        .hasSize(5)
+        .hasSize(6)
         .allMatch(Objects::nonNull);
   }
 
@@ -272,19 +271,16 @@ class MusicianWantedAdControllerIntegrationTest {
 
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     assertEquals((short) 20, responseDto.getMinAge());
-    assertEquals((short) 30, responseDto.getMaxAge());
-    assertEquals("F", responseDto.getPreferredGender());
-    assertEquals("Opis opis", responseDto.getDescription());
-    assertEquals("Warszawa", responseDto.getLocation());
-    assertEquals(LocalDate.parse("2020-08-13"), responseDto.getPublishedDate());
+    assertEquals((short) 50, responseDto.getMaxAge());
+    assertEquals("M", responseDto.getPreferredGender());
+    assertEquals(
+        "Szukam perkusisty do małej serii klubowych koncertów w duecie.",
+        responseDto.getDescription());
+    assertEquals("Warszawa i okolice", responseDto.getLocation());
+    assertEquals(LocalDate.parse("2020-08-15"), responseDto.getPublishedDate());
     assertEquals(3, responseDto.getUserId());
     assertEquals(UserType.MUSICIAN, responseDto.getUserType());
     assertEquals("Grajek", responseDto.getUserDisplayName());
-    assertThat(responseDto.getUserGenres().stream().map(Genre::getId))
-        .containsExactlyInAnyOrder(3, 11, 8);
-    assertEquals(
-        "http://localhost:8080/user-images/image-uploads/3_profile-image.jpg",
-        responseDto.getUserProfileImageLink());
-    assertFalse(responseDto.isCommercial());
+    assertTrue(responseDto.isCommercial());
   }
 }

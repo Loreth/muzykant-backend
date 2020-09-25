@@ -142,7 +142,7 @@ class GenreControllerIntegrationTest {
     Genre responseDto = responseEntity.getBody();
 
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-    assertEquals("New wave", responseDto.getName());
+    assertEquals("New Wave", responseDto.getName());
     assertEquals(27, responseDto.getId());
   }
 }

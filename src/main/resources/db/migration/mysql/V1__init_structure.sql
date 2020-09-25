@@ -220,6 +220,7 @@ CREATE TABLE Social_media_links
     youtube         varchar(1000),
     soundcloud      varchar(1000),
     webpage         varchar(1000),
+    version         int NOT NULL,
     PRIMARY KEY (user_profile_id),
     CONSTRAINT FK_Social_media_links_User_profile FOREIGN KEY (user_profile_id) REFERENCES User_profile (id) ON DELETE CASCADE
 );

@@ -14,6 +14,7 @@ public class SocialMediaLinks implements IdentifiableDto<Integer> {
   private String soundcloud;
   private String webpage;
   @NotNull private Integer userId;
+  private Integer version;
 
   @Override
   public Integer getId() {
