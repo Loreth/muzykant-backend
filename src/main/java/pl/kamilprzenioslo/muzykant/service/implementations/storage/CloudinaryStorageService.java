@@ -42,7 +42,7 @@ public class CloudinaryStorageService implements StorageService {
   @Override
   public void delete(String filename) {
     try {
-      String deletePath = cloudinaryImgDir + "/" + removeExtension(filename);
+      String deletePath = cloudinaryImgDir.substring(1) + "/" + removeExtension(filename);
       cloudinary.uploader().destroy(deletePath, ObjectUtils.asMap("invalidate", true));
     } catch (IOException e) {
       throw new StorageException("Failed to delete file " + filename, e);
