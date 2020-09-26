@@ -15,7 +15,8 @@ import pl.kamilprzenioslo.muzykant.controllers.RestMappings;
 
 @Configuration
 public class AppConfig implements WebMvcConfigurer {
-  private @Value("${app.storage.cloudinaryurl}") String cloudinaryUrl;
+  private @Value("${app.storage.cloudinary.url}") String cloudinaryUrl;
+  private @Value("${app.storage.cloudinary.image-dir}") String cloudinaryImgDir;
 
   @Override
   public void addArgumentResolvers(List<HandlerMethodArgumentResolver> argumentResolvers) {
@@ -42,6 +43,6 @@ public class AppConfig implements WebMvcConfigurer {
   @Bean("imageDownloadUri")
   @Profile("prod")
   public String prodImageDownloadUri() {
-    return cloudinary().url().generate("/image-uploads");
+    return cloudinary().url().generate(cloudinaryImgDir);
   }
 }

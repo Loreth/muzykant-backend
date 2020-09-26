@@ -5,6 +5,7 @@ import com.cloudinary.utils.ObjectUtils;
 import java.io.IOException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import pl.kamilprzenioslo.muzykant.service.StorageService;
 @Slf4j
 public class CloudinaryStorageService implements StorageService {
   private final Cloudinary cloudinary;
+  private final @Value("${app.storage.cloudinary.image-dir}") String cloudinaryImgDir;
 
   @Override
   public void store(MultipartFile file, String filename, String extension) {
@@ -40,9 +42,8 @@ public class CloudinaryStorageService implements StorageService {
   @Override
   public void delete(String filename) {
     try {
-      cloudinary
-          .uploader()
-          .destroy(removeExtension(filename), ObjectUtils.asMap("invalidate", true));
+      String deletePath = cloudinaryImgDir + "/" + removeExtension(filename);
+      cloudinary.uploader().destroy(deletePath, ObjectUtils.asMap("invalidate", true));
     } catch (IOException e) {
       throw new StorageException("Failed to delete file " + filename, e);
     }
