@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 @Profile("prod")
 public class ProdConfig {
+
   private @Value("${app.storage.cloudinary.url}") String cloudinaryUrl;
   private @Value("${app.storage.cloudinary.image-dir}") String cloudinaryImgDir;
 
