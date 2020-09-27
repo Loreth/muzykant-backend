@@ -47,6 +47,9 @@ public abstract class AdEntity extends AbstractPersistable<Integer> {
       inverseJoinColumns = @JoinColumn(name = "voivodeship_id"))
   private Set<VoivodeshipEntity> voivodeships;
 
+  @Column(name = "user_profile_id", insertable = false, updatable = false)
+  private Integer userId;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_profile_id", nullable = false)
   private UserEntity user;

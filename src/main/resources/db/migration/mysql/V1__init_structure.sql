@@ -112,7 +112,7 @@ CREATE TABLE Ad
     ad_type         varchar(30) NOT NULL,
     published_date  date,
     location        varchar(255),
-    description     varchar(400),
+    description     varchar(1000),
     commercial      bool        NOT NULL DEFAULT FALSE,
     user_profile_id int         NOT NULL,
     PRIMARY KEY (id),

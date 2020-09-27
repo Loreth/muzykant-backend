@@ -16,7 +16,7 @@ import pl.kamilprzenioslo.muzykant.persistance.entities.AdEntity;
       spec = Between.class),
   @Spec(path = "location", spec = LikeIgnoreCase.class),
   @Spec(path = "commercial", spec = Equal.class),
-  @Spec(path = "user.id", params = "userId", spec = Equal.class),
+  @Spec(path = "userId", params = "userId", spec = Equal.class),
   @Spec(path = "user.userType", params = "userType", spec = In.class)
 })
 public interface AdSpecification<T extends AdEntity> extends Specification<T> {}
