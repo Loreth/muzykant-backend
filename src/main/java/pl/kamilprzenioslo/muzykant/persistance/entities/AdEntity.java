@@ -33,7 +33,7 @@ public abstract class AdEntity extends AbstractPersistable<Integer> {
   @Column(name = "ad_type", nullable = false, insertable = false, updatable = false)
   private AdType adType;
 
-  @Column(name = "published_date")
+  @Column(name = "published_date", insertable = false, updatable = false)
   private LocalDate publishedDate;
 
   private String location;

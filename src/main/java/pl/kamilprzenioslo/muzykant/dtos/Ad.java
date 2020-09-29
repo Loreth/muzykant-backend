@@ -18,7 +18,7 @@ public class Ad extends BaseDto<Integer> {
   private AdType adType;
   private LocalDate publishedDate;
   private Set<Voivodeship> voivodeships;
-  private String location;
+  @NotNull private String location;
   private String description;
   private boolean commercial;
   private Set<Genre> preferredGenres;

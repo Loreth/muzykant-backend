@@ -1,5 +1,6 @@
 package pl.kamilprzenioslo.muzykant.security;
 
+import io.jsonwebtoken.JwtException;
 import java.io.IOException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -42,7 +43,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
       UsernamePasswordAuthenticationToken authentication = getAuthentication(authorizationHeader);
       SecurityContextHolder.getContext().setAuthentication(authentication);
       chain.doFilter(request, response);
-    } catch (UsernameNotFoundException ex) {
+    } catch (UsernameNotFoundException | JwtException ex) {
       handlerExceptionResolver.resolveException(request, response, null, ex);
     }
   }
