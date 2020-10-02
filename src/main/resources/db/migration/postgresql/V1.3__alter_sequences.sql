@@ -9,3 +9,4 @@ ALTER SEQUENCE user_profile_id_seq restart with 12;
 ALTER SEQUENCE credentials_id_seq restart with 16;
 ALTER SEQUENCE ad_id_seq restart with 12;
 ALTER SEQUENCE equipment_id_seq restart with 5;
+ALTER SEQUENCE equipment_id_seq restart with 7;
