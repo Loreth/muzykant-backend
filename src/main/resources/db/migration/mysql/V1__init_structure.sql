@@ -224,3 +224,14 @@ CREATE TABLE Social_media_links
     PRIMARY KEY (user_profile_id),
     CONSTRAINT FK_Social_media_links_User_profile FOREIGN KEY (user_profile_id) REFERENCES User_profile (id) ON DELETE CASCADE
 );
+CREATE TABLE Chat_message
+(
+    id                        bigint        NOT NULL AUTO_INCREMENT,
+    sender_user_profile_id    int           NOT NULL,
+    recipient_user_profile_id int           NOT NULL,
+    content                   varchar(2000) NOT NULL,
+    sent_at                   timestamp     NOT NULL DEFAULT (now()),
+    PRIMARY KEY (id),
+    CONSTRAINT FK_Chat_message_sender_User_profile FOREIGN KEY (sender_user_profile_id) REFERENCES User_profile (id) ON DELETE CASCADE,
+    CONSTRAINT FK_Chat_message_recipient_User_profile FOREIGN KEY (recipient_user_profile_id) REFERENCES User_profile (id) ON DELETE CASCADE
+)

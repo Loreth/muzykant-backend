@@ -108,13 +108,13 @@ CREATE TABLE Regular_user
 );
 CREATE TABLE Ad
 (
-    id              int         NOT NULL AUTO_INCREMENT,
-    ad_type         varchar(30) NOT NULL,
-    published_date  date,
-    location        varchar(255),
-    description     varchar(400),
-    commercial      bool        NOT NULL DEFAULT FALSE,
-    user_profile_id int         NOT NULL,
+    id              int          NOT NULL AUTO_INCREMENT,
+    ad_type         varchar(30)  NOT NULL,
+    published_date  date                  DEFAULT (curdate()),
+    location        varchar(255) NOT NULL,
+    description     varchar(1000),
+    commercial      bool         NOT NULL DEFAULT FALSE,
+    user_profile_id int          NOT NULL,
     PRIMARY KEY (id),
     CONSTRAINT FK_Ad_User_profile FOREIGN KEY (user_profile_id) REFERENCES User_profile (id) ON DELETE CASCADE
 );
@@ -220,6 +220,18 @@ CREATE TABLE Social_media_links
     youtube         varchar(1000),
     soundcloud      varchar(1000),
     webpage         varchar(1000),
+    version         int NOT NULL,
     PRIMARY KEY (user_profile_id),
     CONSTRAINT FK_Social_media_links_User_profile FOREIGN KEY (user_profile_id) REFERENCES User_profile (id) ON DELETE CASCADE
 );
+CREATE TABLE Chat_message
+(
+    id                        bigint        NOT NULL AUTO_INCREMENT,
+    sender_user_profile_id    int           NOT NULL,
+    recipient_user_profile_id int           NOT NULL,
+    content                   varchar(2000) NOT NULL,
+    sent_at                   timestamp     NOT NULL DEFAULT (now()),
+    PRIMARY KEY (id),
+    CONSTRAINT FK_Chat_message_sender_User_profile FOREIGN KEY (sender_user_profile_id) REFERENCES User_profile (id) ON DELETE CASCADE,
+    CONSTRAINT FK_Chat_message_recipient_User_profile FOREIGN KEY (recipient_user_profile_id) REFERENCES User_profile (id) ON DELETE CASCADE
+)

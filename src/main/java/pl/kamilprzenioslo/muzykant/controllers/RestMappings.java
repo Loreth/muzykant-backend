@@ -25,6 +25,7 @@ public final class RestMappings {
   public static final String VOCAL_TECHNIQUE = "/vocal-techniques";
   public static final String VOIVODESHIP = "/voivodeships";
   public static final String SOCIAL_MEDIA_LINKS = "/social-media-links";
+  public static final String CHAT_MESSAGES = "/chat-messages";
 
   public static final String IMAGE_UPLOAD = "/upload";
   public static final String IMAGE_UPLOADS = "/image-uploads";

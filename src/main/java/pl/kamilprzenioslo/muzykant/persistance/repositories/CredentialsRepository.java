@@ -9,4 +9,6 @@ public interface CredentialsRepository extends JpaRepository<CredentialsEntity, 
   Optional<CredentialsEntity> findByEmailIgnoreCase(String email);
 
   boolean existsByEmailIgnoreCase(String email);
+
+  Optional<CredentialsEntity> findByUser_LinkName(String linkName);
 }

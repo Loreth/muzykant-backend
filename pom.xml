@@ -21,8 +21,8 @@
     <db.jdbc.url>jdbc:mysql://localhost:3306/muzykant?serverTimezone=UTC</db.jdbc.url>
 
     <java.version>14</java.version>
-    <specification-arg-resolver.version>2.6.1</specification-arg-resolver.version>
-    <mapstruct.version>1.4.0.Beta3</mapstruct.version>
+    <specification-arg-resolver.version>2.6.2</specification-arg-resolver.version>
+    <mapstruct.version>1.4.0.Final</mapstruct.version>
     <flyway.version>6.5.0</flyway.version>
     <flyway-spring-test.version>6.4.0</flyway-spring-test.version>
     <hibernate-jpamodelgen.version>5.4.21.Final</hibernate-jpamodelgen.version>
@@ -78,6 +78,14 @@
           <artifactId>junit-vintage-engine</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-websocket</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.security</groupId>
+      <artifactId>spring-security-messaging</artifactId>
     </dependency>
 
     <dependency>

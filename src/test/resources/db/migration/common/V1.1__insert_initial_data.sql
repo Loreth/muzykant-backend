@@ -380,6 +380,6 @@ VALUES (1, 'Marshall DSL40', 2),
        (3, 'Shure SM47 x2', 2),
        (4, 'Yamaha PSR-EW410 (keyboard)', 4);
 
-INSERT INTO Social_media_links(user_profile_id, youtube, soundcloud, webpage)
-VALUES (3, null, 'https://soundcloud.com/muse', null);
+INSERT INTO Social_media_links(user_profile_id, youtube, soundcloud, webpage, version)
+VALUES (3, null, 'https://soundcloud.com/muse', null, 0);
 
