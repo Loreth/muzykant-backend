@@ -20,7 +20,7 @@
     <db.password>P@ssw0rd</db.password>
     <db.jdbc.url>jdbc:mysql://localhost:3306/muzykant?serverTimezone=UTC</db.jdbc.url>
 
-    <java.version>14</java.version>
+    <java.version>15</java.version>
     <specification-arg-resolver.version>2.6.2</specification-arg-resolver.version>
     <mapstruct.version>1.4.0.Final</mapstruct.version>
     <flyway.version>6.5.0</flyway.version>
