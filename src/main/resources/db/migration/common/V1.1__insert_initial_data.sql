@@ -405,4 +405,6 @@ VALUES (1, 1, 8, 'Dzień dobry. Zaintrygowała mnie państwa muzyka', '2020-09-2
         '2020-09-21 12:42:59'),
        (5, 1, 8, 'Czy termin 2021.05.25 by państwu odpowiadał?', '2020-09-21 12:45:14'),
        (6, 8, 1, 'Jak najbardziej. Proszę zadzwonić na numer 884231523, dogadamy szczegóły',
-        '2020-09-21 13:34:47');
+        '2020-09-21 13:34:47'),
+       (7, 1, 6, 'Czy byliby państwo zainteresowani zagraniem na ślubie?', '2020-09-17 22:02:14'),
+       (8, 6, 1, 'Przykro mi, ale nie jesteśmy zainteresowani', '2020-09-20 07:05:06');
