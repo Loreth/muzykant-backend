@@ -4,6 +4,7 @@ Technologies and tools used:
 - Java 15
 - Spring Boot
 - Spring Data JPA, Web, Validation, Security, Test, Mail, Websocket, Messaging
+- JPA (Hibernate)
 - Lombok
 - JWT Authentication/Authorization
 - STOMP over WebSocket
