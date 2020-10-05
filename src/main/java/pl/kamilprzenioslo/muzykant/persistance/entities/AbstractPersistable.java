@@ -19,10 +19,8 @@ public abstract class AbstractPersistable<ID extends Serializable> implements Pe
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Nullable
   private ID id;
 
-  @Nullable
   @Override
   public ID getId() {
     return id;
