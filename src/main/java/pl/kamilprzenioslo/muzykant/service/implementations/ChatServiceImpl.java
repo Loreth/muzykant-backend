@@ -70,8 +70,10 @@ public class ChatServiceImpl
       UserEntity user, UserEntity secondUser, ChatMessageEntity message) {
     return new Conversation(
         user.getLinkName(),
+        user.getDisplayName(),
         user.getProfileImageLink(),
         secondUser.getLinkName(),
+        secondUser.getDisplayName(),
         secondUser.getProfileImageLink(),
         mapper.mapToDto(message));
   }
