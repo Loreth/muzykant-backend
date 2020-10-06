@@ -17,6 +17,7 @@ import pl.kamilprzenioslo.muzykant.persistance.entities.AdEntity;
     mappingInheritanceStrategy = AUTO_INHERIT_FROM_CONFIG)
 public interface AdMapperConfig extends BaseMapper<Ad, AdEntity> {
 
+  @Mapping(target = "userLinkName", source = "user.linkName")
   @Mapping(target = "userProfileImageLink", source = "user.profileImageLink")
   @Mapping(target = "userId", source = "user.id")
   @Mapping(target = "userType", source = "user.userType")

@@ -14,8 +14,8 @@ public interface ChatMessageRepository
       id, sender_user_profile_id, recipient_user_profile_id, content, sent_at
   FROM (
     SELECT cm.*,
-    RANK() OVER (PARTITION BY least(cm.sender_user_profile_id, cm.recipient_user_profile_id), greatest(cm.sender_user_profile_id, cm.recipient_user_profile_id)
-    ORDER BY sent_at DESC) message_rank
+    ROW_NUMBER() OVER (PARTITION BY least(cm.sender_user_profile_id, cm.recipient_user_profile_id), greatest(cm.sender_user_profile_id, cm.recipient_user_profile_id)
+    ORDER BY sent_at DESC, id DESC) message_rank
     FROM chat_message cm
     WHERE cm.sender_user_profile_id = ?1 OR cm.recipient_user_profile_id = ?1
    ) um_with_rank

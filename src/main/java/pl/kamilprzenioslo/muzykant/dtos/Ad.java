@@ -28,4 +28,5 @@ public class Ad extends BaseDto<Integer> {
   private String userDisplayName;
   private List<Genre> userGenres;
   private String userProfileImageLink;
+  private String userLinkName;
 }
