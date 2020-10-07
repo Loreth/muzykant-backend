@@ -66,7 +66,7 @@ class ChatMessageControllerIntegrationTest {
       throws Exception {
     BlockingQueue<ChatMessage> messageQueue = new ArrayBlockingQueue<>(1);
     webSocketStompClient.setMessageConverter(new MappingJackson2MessageConverter());
-    ChatMessage chatMessage = new ChatMessage("Hello adi", "zagubieni", "adi", null);
+    ChatMessage chatMessage = new ChatMessage("Hello adi", "zagubieni", "adi", null, false);
     StompHeaders bandConnectHeaders = new StompHeaders();
     bandConnectHeaders.addAll(jwtHeaderForBand);
     StompHeaders regularUserConnectHeaders = new StompHeaders();
