@@ -30,4 +30,6 @@ public class ChatMessageEntity extends AbstractPersistable<Long> {
 
   @Column(name = "sent_at", insertable = false, updatable = false)
   private LocalDateTime sentAt;
+
+  private boolean seen;
 }

@@ -396,17 +396,19 @@ VALUES (1, 'Marshall DSL40', 2),
 INSERT INTO Social_media_links(user_profile_id, youtube, soundcloud, webpage, version)
 VALUES (3, null, 'https://soundcloud.com/muse', null, 0);
 
-INSERT INTO chat_message(id, sender_user_profile_id, recipient_user_profile_id, content, sent_at)
-VALUES (1, 1, 8, 'Dzień dobry. Zaintrygowała mnie państwa muzyka', '2020-09-20 20:00:01'),
+INSERT INTO chat_message(id, sender_user_profile_id, recipient_user_profile_id, content, sent_at,
+                         seen)
+VALUES (1, 1, 8, 'Dzień dobry. Zaintrygowała mnie państwa muzyka', '2020-09-20 20:00:01', true),
        (2, 1, 8,
         'Czy byliby państwo zainteresowani zagraniem na ślubie? Zdaję sobie sprawę, że nie jest to muzyka typowo spotykana na takiej imprezie, ale dzięki temu mogłoby to być wyjątkowe i oryginalne przeżycie :)',
-        '2020-09-20 20:02:22'),
-       (3, 8, 1, 'Pozdrawiamy!', '2020-09-21 12:42:36'),
+        '2020-09-20 20:02:22', true),
+       (3, 8, 1, 'Pozdrawiamy!', '2020-09-21 12:42:36', true),
        (4, 8, 1,
         'Nigdy nie graliśmy na ślubie, ale jesteśmy zwolennikami eksperymentalnych rozwiązań, więc jest to opcja do rozważenia :)',
-        '2020-09-21 12:42:59'),
-       (5, 1, 8, 'Czy termin 2021.05.25 by państwu odpowiadał?', '2020-09-21 12:45:14'),
+        '2020-09-21 12:42:59', true),
+       (5, 1, 8, 'Czy termin 2021.05.25 by państwu odpowiadał?', '2020-09-21 12:45:14', true),
        (6, 8, 1, 'Jak najbardziej. Proszę zadzwonić na numer 884231523, dogadamy szczegóły',
-        '2020-09-21 13:34:47'),
-       (7, 1, 6, 'Czy byliby państwo zainteresowani zagraniem na ślubie?', '2020-09-17 22:02:14'),
-       (8, 6, 1, 'Przykro mi, ale nie jesteśmy zainteresowani', '2020-09-20 07:05:06');
+        '2020-09-21 13:34:47', false),
+       (7, 1, 6, 'Czy byliby państwo zainteresowani zagraniem na ślubie?', '2020-09-17 22:02:14',
+        true),
+       (8, 6, 1, 'Przykro mi, ale nie jesteśmy zainteresowani', '2020-09-20 07:05:06', false);

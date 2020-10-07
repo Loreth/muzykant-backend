@@ -6,6 +6,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import pl.kamilprzenioslo.muzykant.dtos.ChatMessage;
 import pl.kamilprzenioslo.muzykant.dtos.Conversation;
+import pl.kamilprzenioslo.muzykant.dtos.Credentials;
 import pl.kamilprzenioslo.muzykant.persistance.entities.ChatMessageEntity;
 import pl.kamilprzenioslo.muzykant.persistance.entities.UserEntity;
 import pl.kamilprzenioslo.muzykant.persistance.repositories.ChatMessageRepository;
@@ -58,6 +59,12 @@ public class ChatServiceImpl
               return mapToConversation(user, secondUser, message);
             })
         .collect(Collectors.toList());
+  }
+
+  @Override
+  public void markMessagesFromUserAsSeen(Credentials principal, String senderUserLinkName) {
+    Integer senderId = userRepository.findByLinkName(senderUserLinkName).orElseThrow().getId();
+    repository.markMessagesAsSeenByRecipient(senderId, principal.getUserId());
   }
 
   private UserEntity getSecondUserForMessage(UserEntity firstUser, ChatMessageEntity chatMessage) {

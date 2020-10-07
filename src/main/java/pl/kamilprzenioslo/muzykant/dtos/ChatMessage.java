@@ -13,4 +13,5 @@ public class ChatMessage extends BaseDto<Long> {
   private String senderLinkName;
   private String recipientLinkName;
   private LocalDateTime sentAt;
+  private boolean seen;
 }

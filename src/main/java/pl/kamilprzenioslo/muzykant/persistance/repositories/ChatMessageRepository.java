@@ -3,6 +3,7 @@ package pl.kamilprzenioslo.muzykant.persistance.repositories;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import pl.kamilprzenioslo.muzykant.persistance.entities.ChatMessageEntity;
 
@@ -22,4 +23,8 @@ public interface ChatMessageRepository
   WHERE message_rank = 1;
   """, nativeQuery = true)
   List<ChatMessageEntity> getLastMessageFromEachConversation(int userId);
+
+  @Modifying(flushAutomatically = true, clearAutomatically = true)
+  @Query("UPDATE ChatMessageEntity cm set cm.seen = true WHERE cm.sender.id = ?1 AND cm.recipient.id =?2")
+  void markMessagesAsSeenByRecipient(int senderId, int recipientId);
 }

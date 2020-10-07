@@ -3,6 +3,7 @@ package pl.kamilprzenioslo.muzykant.service;
 import java.util.List;
 import pl.kamilprzenioslo.muzykant.dtos.ChatMessage;
 import pl.kamilprzenioslo.muzykant.dtos.Conversation;
+import pl.kamilprzenioslo.muzykant.dtos.Credentials;
 import pl.kamilprzenioslo.muzykant.persistance.entities.ChatMessageEntity;
 
 public interface ChatService
@@ -10,4 +11,6 @@ public interface ChatService
         CrudService<ChatMessage, Long> {
 
   List<Conversation> getUserConversations(int userId);
+
+  void markMessagesFromUserAsSeen(Credentials principal, String senderUserLinkName);
 }

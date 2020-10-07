@@ -7,12 +7,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.kamilprzenioslo.muzykant.dtos.ChatMessage;
 import pl.kamilprzenioslo.muzykant.dtos.Conversation;
+import pl.kamilprzenioslo.muzykant.dtos.Credentials;
 import pl.kamilprzenioslo.muzykant.service.ChatService;
 import pl.kamilprzenioslo.muzykant.specifications.ChatMessageIdSpecification;
 import pl.kamilprzenioslo.muzykant.specifications.ChatMessageSpecification;
@@ -31,6 +33,12 @@ public class ChatMessageController extends BaseRestController<ChatMessage, Long>
   @MessageMapping("/chat")
   public void receiveMessage(@Payload ChatMessage message) {
     chatService.save(message);
+  }
+
+  @MessageMapping("/seen-conversation")
+  public void markMessagesFromUserAsSeen(@Payload String userLinkName, Authentication authentication) {
+    chatService.markMessagesFromUserAsSeen(
+        (Credentials) authentication.getPrincipal(), userLinkName);
   }
 
   @GetMapping(RestMappings.CONVERSATIONS)
