@@ -14,6 +14,7 @@ import pl.kamilprzenioslo.muzykant.persistance.entities.JamSessionAdEntity;
 import pl.kamilprzenioslo.muzykant.service.JamSessionAdService;
 import pl.kamilprzenioslo.muzykant.specifications.AdWithPreferredGenresSpecification;
 import pl.kamilprzenioslo.muzykant.specifications.AdWithPreferredInstrumentsSpecification;
+import pl.kamilprzenioslo.muzykant.specifications.AdWithVoivodeshipsSpecification;
 import pl.kamilprzenioslo.muzykant.specifications.JamSessionAdSpecification;
 
 @RestController
@@ -30,6 +31,7 @@ public class JamSessionAdController extends BaseRestController<JamSessionAd, Int
   @GetMapping(RestMappings.SEARCH)
   public Page<JamSessionAd> getAllWithGivenParameters(
       JamSessionAdSpecification specification,
+      @RequestParam(required = false) List<Integer> voivodeshipIds,
       @RequestParam(required = false) List<Integer> preferredGenreIds,
       @RequestParam(required = false) List<Integer> preferredInstrumentIds,
       Pageable pageable) {
@@ -37,6 +39,7 @@ public class JamSessionAdController extends BaseRestController<JamSessionAd, Int
     return service.findAll(
         Stream.of(
                 specification,
+                new AdWithVoivodeshipsSpecification<JamSessionAdEntity>(voivodeshipIds),
                 new AdWithPreferredGenresSpecification<JamSessionAdEntity>(preferredGenreIds),
                 new AdWithPreferredInstrumentsSpecification<JamSessionAdEntity>(
                     preferredInstrumentIds))

@@ -246,7 +246,7 @@ VALUES (1, 'BAND_WANTED', '2020-07-19', 'Wrocław', null, false, 1),
         false, 3),
        (10, 'JAM_SESSION', '2020-07-24', 'Wrocław, klub Nietota',
         'Zapraszamy na jam session w naszym klubie każdego piątkowego wieczoru. Zainteresowanych prosimy o kontakt telefoniczny.',
-        false, 1),
+        false, 11),
        (11, 'MUSICIAN_WANTED', '2020-08-12', 'Warszawa',
         'Poszukujemy nowego członka zespołu. Jeśli chcesz się stać częścią czegoś prawdziwie wyjątkowego, to dobrze trafiłeś. Tworzymy muzykę z duszą, dając od siebie wszystko. Podróżujemy przez czas mieszając gatunki ze wszystkich dziesięcioleci. Nie interesuje nas Twój wiek ani staż muzyczny - ważna jest przede wszystkim kreatywność.',
         true, 8);
@@ -277,7 +277,9 @@ VALUES (1, 1),
        (6, 12),
        (7, 1),
        (8, 12),
-       (9, 1);
+       (9, 1),
+       (10, 1),
+       (11, 7);
 
 INSERT INTO Ad_preferred_genre(ad_id, genre_id)
 VALUES (1, 12),
