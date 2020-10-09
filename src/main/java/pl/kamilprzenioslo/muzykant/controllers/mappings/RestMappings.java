@@ -1,4 +1,4 @@
-package pl.kamilprzenioslo.muzykant.controllers;
+package pl.kamilprzenioslo.muzykant.controllers.mappings;
 
 /** API resource paths */
 public final class RestMappings {
@@ -21,12 +21,9 @@ public final class RestMappings {
   public static final String GENRE = "/genres";
   public static final String EQUIPMENT = "/equipments";
   public static final String USER_IMAGE = "/user-images";
-  public static final String PREDEFINED_VOCAL_RANGE = "/predefined-vocal-ranges";
-  public static final String VOCAL_TECHNIQUE = "/vocal-techniques";
   public static final String VOIVODESHIP = "/voivodeships";
   public static final String SOCIAL_MEDIA_LINKS = "/social-media-links";
   public static final String CHAT_MESSAGES = "/chat-messages";
-  public static final String LAST_MESSAGES = "/last-messages";
   public static final String CONVERSATIONS = "/conversations";
 
   public static final String IMAGE_UPLOAD = "/upload";

@@ -28,10 +28,6 @@ public class MusicianEntity extends UserEntity {
   @JoinColumn(name = "person_id", nullable = false)
   private PersonEntity person;
 
-  @OneToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "vocal_range_id")
-  private VocalRangeEntity vocalRange;
-
   @OneToMany(mappedBy = "musician", fetch = FetchType.LAZY)
   private Set<EquipmentEntity> equipment;
 

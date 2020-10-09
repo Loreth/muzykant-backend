@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.util.UriTemplate;
+import pl.kamilprzenioslo.muzykant.controllers.mappings.RestMappings;
 import pl.kamilprzenioslo.muzykant.dtos.UserImage;
 import pl.kamilprzenioslo.muzykant.persistance.entities.UserImageEntity;
 import pl.kamilprzenioslo.muzykant.service.StorageService;

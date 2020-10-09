@@ -2,7 +2,6 @@ package pl.kamilprzenioslo.muzykant.controllers;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -34,7 +33,6 @@ import pl.kamilprzenioslo.muzykant.config.TestSecurityConfiguration;
 import pl.kamilprzenioslo.muzykant.dtos.Ad;
 import pl.kamilprzenioslo.muzykant.dtos.Genre;
 import pl.kamilprzenioslo.muzykant.dtos.MusicianWantedAd;
-import pl.kamilprzenioslo.muzykant.dtos.VocalRange;
 import pl.kamilprzenioslo.muzykant.persistance.enums.UserType;
 
 @Import(TestSecurityConfiguration.class)
@@ -218,7 +216,6 @@ class MusicianWantedAdControllerIntegrationTest {
 
     MusicianWantedAd existingResourceDto = initialResponse.getBody();
     existingResourceDto.setLocation("new location");
-    existingResourceDto.setVocalRange(new VocalRange("E3", "E5"));
     existingResourceDto.setCommercial(true);
     Genre newPreferredGenre = new Genre();
     newPreferredGenre.setId(25);
@@ -238,9 +235,6 @@ class MusicianWantedAdControllerIntegrationTest {
     assertEquals(existingResourceDto.getId(), updatedResourceDto.getId());
     assertEquals(existingResourceDto.getMaxAge(), updatedResourceDto.getMaxAge());
     assertEquals("new location", updatedResourceDto.getLocation());
-    assertNotNull(updatedResourceDto.getVocalRange().getId());
-    assertEquals("E3", updatedResourceDto.getVocalRange().getLowestNote());
-    assertEquals("E5", updatedResourceDto.getVocalRange().getHighestNote());
     assertTrue(updatedResourceDto.isCommercial());
     assertThat(updatedResourceDto.getPreferredGenres().stream().map(Genre::getId))
         .hasSize(5)

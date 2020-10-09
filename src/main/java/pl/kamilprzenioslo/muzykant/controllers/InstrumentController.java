@@ -2,6 +2,7 @@ package pl.kamilprzenioslo.muzykant.controllers;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.kamilprzenioslo.muzykant.controllers.mappings.RestMappings;
 import pl.kamilprzenioslo.muzykant.dtos.Instrument;
 import pl.kamilprzenioslo.muzykant.persistance.entities.InstrumentEntity;
 import pl.kamilprzenioslo.muzykant.service.InstrumentService;

@@ -9,11 +9,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @Entity
 @Table(name = "chat_message")
 public class ChatMessageEntity extends AbstractPersistable<Long> {
@@ -32,4 +30,21 @@ public class ChatMessageEntity extends AbstractPersistable<Long> {
   private LocalDateTime sentAt;
 
   private boolean seen;
+
+  @Override
+  public String toString() {
+    return "ChatMessageEntity{"
+        + "content='"
+        + content
+        + '\''
+        + ", sender.id="
+        + sender.getId()
+        + ", recipient.id="
+        + recipient.getId()
+        + ", sentAt="
+        + sentAt
+        + ", seen="
+        + seen
+        + '}';
+  }
 }

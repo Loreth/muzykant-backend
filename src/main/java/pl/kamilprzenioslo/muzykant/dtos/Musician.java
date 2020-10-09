@@ -12,6 +12,5 @@ import lombok.NoArgsConstructor;
 public class Musician extends User {
 
   @NotNull private Person person;
-  private VocalRange vocalRange;
   private Set<Equipment> equipment;
 }

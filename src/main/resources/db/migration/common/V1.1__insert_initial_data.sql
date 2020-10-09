@@ -66,18 +66,6 @@ VALUES (1, 'Pop'),
        (37, 'Math Rock'),
        (38, 'Jazz');
 
-INSERT INTO Vocal_range(id, lowest_note, highest_note)
-VALUES (1, 'C4', 'C6'),
-       (2, 'A3', 'A5'),
-       (3, 'F3', 'E5'),
-       (4, 'H2', 'A4'),
-       (5, 'G2', 'F4'),
-       (6, 'E2', 'E4');
-
-INSERT INTO Vocal_technique(id, name)
-VALUES (1, 'Growl'),
-       (2, 'Vibrato');
-
 INSERT INTO Instrument(id, name)
 VALUES (1, 'Akordeon'),
        (2, 'Altówka'),
@@ -214,13 +202,13 @@ VALUES (6, 'Turbo akcja', 2016),
        (7, 'Szakalaka', 2020),
        (8, 'Zagubieni w czasie', 1999);
 
-INSERT INTO Musician(user_profile_id, person_id, vocal_range_id)
-VALUES (2, 2, null),
-       (3, 3, null),
-       (4, 4, null),
-       (5, 5, null),
-       (9, 6, null),
-       (10, 7, null);
+INSERT INTO Musician(user_profile_id, person_id)
+VALUES (2, 2),
+       (3, 3),
+       (4, 4),
+       (5, 5),
+       (9, 6),
+       (10, 7);
 
 INSERT INTO Regular_user(user_profile_id, person_id)
 VALUES (1, 1),
@@ -255,13 +243,13 @@ INSERT INTO Band_wanted_ad(ad_id)
 VALUES (1),
        (2);
 
-INSERT INTO Musician_wanted_ad(ad_id, preferred_gender, min_age, max_age, vocal_range_id)
-VALUES (3, null, null, null, null),
-       (4, 'M', 20, 50, null),
-       (5, null, 35, 58, null),
-       (6, 'F', 30, 60, null),
-       (7, 'M', null, null, null),
-       (11, null, null, null, null);
+INSERT INTO Musician_wanted_ad(ad_id, preferred_gender, min_age, max_age)
+VALUES (3, null, null, null),
+       (4, 'M', 20, 50),
+       (5, null, 35, 58),
+       (6, 'F', 30, 60),
+       (7, 'M', null, null),
+       (11, null, null, null);
 
 INSERT INTO Jam_session_ad(ad_id)
 VALUES (8),
@@ -316,14 +304,6 @@ VALUES (1, 5),
        (11, 41),
        (11, 17),
        (11, 21);
-
-INSERT INTO Predefined_vocal_range(vocal_range_id, name)
-VALUES (1, 'sopran'),
-       (2, 'mezzosopran'),
-       (3, 'kontralt'),
-       (4, 'tenor'),
-       (5, 'baryton'),
-       (6, 'bas');
 
 INSERT INTO User_genre(user_profile_id, genre_id)
 VALUES (2, 1),
@@ -382,10 +362,6 @@ VALUES (2, 7),
        (8, 25),
        (8, 26),
        (8, 36);
-
--- TODO
---  INSERT INTO User_vocal_technique(user_profile_id, vocal_technique_id)
---  VALUES ();
 
 INSERT INTO Equipment(id, name, musician_user_id)
 VALUES (1, 'Marshall DSL40', 2),

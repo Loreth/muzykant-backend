@@ -1,20 +1,20 @@
 package pl.kamilprzenioslo.muzykant.config;
 
-import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.BAND;
-import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.BAND_WANTED_AD;
-import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.CONFIRM_EMAIL;
-import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.EQUIPMENT;
-import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.ID;
-import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.IMAGE_UPLOAD;
-import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.JAM_SESSION_AD;
-import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.MUSICIAN;
-import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.MUSICIAN_WANTED_AD;
-import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.REGULAR_USER;
-import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.RESEND_MAIL;
-import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.SIGN_UP;
-import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.SOCIAL_MEDIA_LINKS;
-import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.USER;
-import static pl.kamilprzenioslo.muzykant.controllers.RestMappings.USER_IMAGE;
+import static pl.kamilprzenioslo.muzykant.controllers.mappings.RestMappings.BAND;
+import static pl.kamilprzenioslo.muzykant.controllers.mappings.RestMappings.BAND_WANTED_AD;
+import static pl.kamilprzenioslo.muzykant.controllers.mappings.RestMappings.CONFIRM_EMAIL;
+import static pl.kamilprzenioslo.muzykant.controllers.mappings.RestMappings.EQUIPMENT;
+import static pl.kamilprzenioslo.muzykant.controllers.mappings.RestMappings.ID;
+import static pl.kamilprzenioslo.muzykant.controllers.mappings.RestMappings.IMAGE_UPLOAD;
+import static pl.kamilprzenioslo.muzykant.controllers.mappings.RestMappings.JAM_SESSION_AD;
+import static pl.kamilprzenioslo.muzykant.controllers.mappings.RestMappings.MUSICIAN;
+import static pl.kamilprzenioslo.muzykant.controllers.mappings.RestMappings.MUSICIAN_WANTED_AD;
+import static pl.kamilprzenioslo.muzykant.controllers.mappings.RestMappings.REGULAR_USER;
+import static pl.kamilprzenioslo.muzykant.controllers.mappings.RestMappings.RESEND_MAIL;
+import static pl.kamilprzenioslo.muzykant.controllers.mappings.RestMappings.SIGN_UP;
+import static pl.kamilprzenioslo.muzykant.controllers.mappings.RestMappings.SOCIAL_MEDIA_LINKS;
+import static pl.kamilprzenioslo.muzykant.controllers.mappings.RestMappings.USER;
+import static pl.kamilprzenioslo.muzykant.controllers.mappings.RestMappings.USER_IMAGE;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;

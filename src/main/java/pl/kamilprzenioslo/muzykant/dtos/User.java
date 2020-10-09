@@ -35,6 +35,5 @@ public class User extends BaseDto<Integer> {
   private Set<UserImage> userImages;
   private Set<Genre> genres;
   private Set<Instrument> instruments;
-  private Set<VocalTechnique> vocalTechniques;
   private SocialMediaLinks socialMediaLinks;
 }

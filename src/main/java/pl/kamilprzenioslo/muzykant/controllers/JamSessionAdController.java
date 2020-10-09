@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import pl.kamilprzenioslo.muzykant.controllers.mappings.RestMappings;
 import pl.kamilprzenioslo.muzykant.dtos.JamSessionAd;
 import pl.kamilprzenioslo.muzykant.persistance.entities.JamSessionAdEntity;
 import pl.kamilprzenioslo.muzykant.service.JamSessionAdService;

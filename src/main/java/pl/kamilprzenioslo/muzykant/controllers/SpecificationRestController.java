@@ -7,6 +7,7 @@ import org.springframework.data.domain.Persistable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.kamilprzenioslo.muzykant.controllers.mappings.RestMappings;
 import pl.kamilprzenioslo.muzykant.dtos.IdentifiableDto;
 import pl.kamilprzenioslo.muzykant.service.CrudService;
 import pl.kamilprzenioslo.muzykant.service.SpecificationService;

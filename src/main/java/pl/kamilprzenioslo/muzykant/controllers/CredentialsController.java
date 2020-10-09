@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
+import pl.kamilprzenioslo.muzykant.controllers.mappings.RestMappings;
 import pl.kamilprzenioslo.muzykant.dtos.security.PasswordChangeRequest;
 import pl.kamilprzenioslo.muzykant.dtos.security.SignUpRequest;
 import pl.kamilprzenioslo.muzykant.service.CredentialsService;

@@ -21,19 +21,6 @@ CREATE TABLE Genre
     name varchar(30) NOT NULL UNIQUE,
     PRIMARY KEY (id)
 );
-CREATE TABLE Vocal_range
-(
-    id           int        NOT NULL AUTO_INCREMENT,
-    lowest_note  varchar(2) NOT NULL,
-    highest_note varchar(2) NOT NULL,
-    PRIMARY KEY (id)
-);
-CREATE TABLE Vocal_technique
-(
-    id   int         NOT NULL AUTO_INCREMENT,
-    name varchar(30) NOT NULL UNIQUE,
-    PRIMARY KEY (id)
-);
 CREATE TABLE Instrument
 (
     id   int         NOT NULL AUTO_INCREMENT,
@@ -92,11 +79,9 @@ CREATE TABLE Musician
 (
     user_profile_id int NOT NULL,
     person_id       int NOT NULL,
-    vocal_range_id  int,
     PRIMARY KEY (user_profile_id),
     CONSTRAINT FK_Musician_User_profile FOREIGN KEY (user_profile_id) REFERENCES User_profile (id) ON DELETE CASCADE,
-    CONSTRAINT FK_Musician_Person FOREIGN KEY (person_id) REFERENCES Person (id),
-    CONSTRAINT FK_Musician_Vocal_range FOREIGN KEY (vocal_range_id) REFERENCES Vocal_range (id)
+    CONSTRAINT FK_Musician_Person FOREIGN KEY (person_id) REFERENCES Person (id)
 );
 CREATE TABLE Regular_user
 (
@@ -130,10 +115,8 @@ CREATE TABLE Musician_wanted_ad
     preferred_gender varchar(1),
     min_age          smallint,
     max_age          smallint,
-    vocal_range_id   int,
     PRIMARY KEY (ad_id),
-    CONSTRAINT FK_Musician_wanted_Ad FOREIGN KEY (ad_id) REFERENCES Ad (id) ON DELETE CASCADE,
-    CONSTRAINT FK_Musician_wanted_Vocal_range FOREIGN KEY (vocal_range_id) REFERENCES Vocal_range (id)
+    CONSTRAINT FK_Musician_wanted_Ad FOREIGN KEY (ad_id) REFERENCES Ad (id) ON DELETE CASCADE
 );
 CREATE TABLE Jam_session_ad
 (
@@ -165,13 +148,6 @@ CREATE TABLE Ad_preferred_instrument
     CONSTRAINT FK_Ad_preferred_instrument_Ad FOREIGN KEY (ad_id) REFERENCES Ad (id) ON DELETE CASCADE,
     CONSTRAINT FK_Ad_preferred_instrument_Instrument FOREIGN KEY (instrument_id) REFERENCES Instrument (id)
 );
-CREATE TABLE Predefined_vocal_range
-(
-    vocal_range_id int         NOT NULL,
-    name           varchar(20) NOT NULL UNIQUE,
-    PRIMARY KEY (vocal_range_id),
-    CONSTRAINT FK_Predefined_vocal_range_Vocal_range FOREIGN KEY (vocal_range_id) REFERENCES Vocal_range (id)
-);
 CREATE TABLE User_genre
 (
     user_profile_id int NOT NULL,
@@ -187,14 +163,6 @@ CREATE TABLE User_instrument
     PRIMARY KEY (user_profile_id, instrument_id),
     CONSTRAINT FK_User_instrument_User_profile FOREIGN KEY (user_profile_id) REFERENCES User_profile (id) ON DELETE CASCADE,
     CONSTRAINT FK_User_instrument_Instrument FOREIGN KEY (instrument_id) REFERENCES Instrument (id)
-);
-CREATE TABLE User_vocal_technique
-(
-    user_profile_id    int NOT NULL,
-    vocal_technique_id int NOT NULL,
-    PRIMARY KEY (user_profile_id, vocal_technique_id),
-    CONSTRAINT FK_User_vocal_technique_User_profile FOREIGN KEY (user_profile_id) REFERENCES User_profile (id) ON DELETE CASCADE,
-    CONSTRAINT FK_User_vocal_technique_Vocal_technique FOREIGN KEY (vocal_technique_id) REFERENCES Vocal_technique (id)
 );
 CREATE TABLE Equipment
 (
@@ -230,7 +198,7 @@ CREATE TABLE Chat_message
     sender_user_profile_id    int           NOT NULL,
     recipient_user_profile_id int           NOT NULL,
     content                   varchar(2000) NOT NULL,
-    sent_at                   timestamp     NOT NULL DEFAULT (now()),
+    sent_at                   timestamp     NOT NULL DEFAULT (utc_timestamp()),
     seen                      boolean       NOT NULL DEFAULT (false),
     PRIMARY KEY (id),
     CONSTRAINT FK_Chat_message_sender_User_profile FOREIGN KEY (sender_user_profile_id) REFERENCES User_profile (id) ON DELETE CASCADE,

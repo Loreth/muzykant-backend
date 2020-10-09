@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import pl.kamilprzenioslo.muzykant.controllers.mappings.RestMappings;
+import pl.kamilprzenioslo.muzykant.controllers.mappings.WebsocketMappings;
 import pl.kamilprzenioslo.muzykant.dtos.ChatMessage;
 import pl.kamilprzenioslo.muzykant.dtos.Conversation;
 import pl.kamilprzenioslo.muzykant.dtos.Credentials;
@@ -30,13 +32,14 @@ public class ChatMessageController extends BaseRestController<ChatMessage, Long>
     this.chatService = chatService;
   }
 
-  @MessageMapping("/chat")
+  @MessageMapping(WebsocketMappings.CHAT)
   public void receiveMessage(@Payload ChatMessage message) {
     chatService.save(message);
   }
 
-  @MessageMapping("/seen-conversation")
-  public void markMessagesFromUserAsSeen(@Payload String userLinkName, Authentication authentication) {
+  @MessageMapping(WebsocketMappings.SEEN_CONVERSATION)
+  public void markMessagesFromUserAsSeen(
+      @Payload String userLinkName, Authentication authentication) {
     chatService.markMessagesFromUserAsSeen(
         (Credentials) authentication.getPrincipal(), userLinkName);
   }

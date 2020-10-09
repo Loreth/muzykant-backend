@@ -12,5 +12,4 @@ public class MusicianWantedAd extends Ad {
   private String preferredGender;
   private Short minAge;
   private Short maxAge;
-  private VocalRange vocalRange;
 }

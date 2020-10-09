@@ -1,7 +1,11 @@
 package pl.kamilprzenioslo.muzykant.service.implementations;
 
+import static pl.kamilprzenioslo.muzykant.controllers.mappings.WebsocketMappings.CHAT_QUEUE;
+import static pl.kamilprzenioslo.muzykant.controllers.mappings.WebsocketMappings.SEEN_MESSAGES_QUEUE;
+
 import java.util.List;
 import java.util.stream.Collectors;
+import javax.transaction.Transactional;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import pl.kamilprzenioslo.muzykant.dtos.ChatMessage;
@@ -44,7 +48,7 @@ public class ChatServiceImpl
             .orElseThrow()
             .getEmail();
     ChatMessage savedMessage = super.save(message);
-    messagingTemplate.convertAndSendToUser(recipientUsername, "/queue/chat", savedMessage);
+    messagingTemplate.convertAndSendToUser(recipientUsername, CHAT_QUEUE, savedMessage);
     return savedMessage;
   }
 
@@ -62,9 +66,21 @@ public class ChatServiceImpl
   }
 
   @Override
+  @Transactional
   public void markMessagesFromUserAsSeen(Credentials principal, String senderUserLinkName) {
     Integer senderId = userRepository.findByLinkName(senderUserLinkName).orElseThrow().getId();
-    repository.markMessagesAsSeenByRecipient(senderId, principal.getUserId());
+    String senderUsername =
+        credentialsRepository.findByUser_LinkName(senderUserLinkName).orElseThrow().getEmail();
+    var messages = repository.getUnseenMessagesFromTo(senderId, principal.getUserId());
+
+    if (!messages.isEmpty()) {
+      messages.forEach(message -> message.setSeen(true));
+      var messageDtos = mapper.mapToDtoList(messages);
+
+      messagingTemplate.convertAndSendToUser(
+          principal.getUsername(), SEEN_MESSAGES_QUEUE, messageDtos);
+      messagingTemplate.convertAndSendToUser(senderUsername, SEEN_MESSAGES_QUEUE, messageDtos);
+    }
   }
 
   private UserEntity getSecondUserForMessage(UserEntity firstUser, ChatMessageEntity chatMessage) {

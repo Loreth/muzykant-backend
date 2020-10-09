@@ -72,13 +72,6 @@ public class UserEntity extends AbstractPersistable<Integer> {
       inverseJoinColumns = @JoinColumn(name = "instrument_id"))
   private Set<InstrumentEntity> instruments;
 
-  @ManyToMany(fetch = FetchType.LAZY)
-  @JoinTable(
-      name = "user_vocal_technique",
-      joinColumns = @JoinColumn(name = "user_profile_id"),
-      inverseJoinColumns = @JoinColumn(name = "vocal_technique_id"))
-  private Set<VocalTechniqueEntity> vocalTechniques;
-
   @OneToOne(
       mappedBy = "user",
       orphanRemoval = true,

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.util.UriTemplate;
+import pl.kamilprzenioslo.muzykant.controllers.mappings.RestMappings;
 import pl.kamilprzenioslo.muzykant.dtos.IdentifiableDto;
 import pl.kamilprzenioslo.muzykant.service.CrudService;
 import pl.kamilprzenioslo.muzykant.validation.OnPost;

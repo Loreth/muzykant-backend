@@ -3,7 +3,7 @@ package pl.kamilprzenioslo.muzykant.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
-import pl.kamilprzenioslo.muzykant.controllers.RestMappings;
+import pl.kamilprzenioslo.muzykant.controllers.mappings.RestMappings;
 
 @Configuration
 @Profile("dev")

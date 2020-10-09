@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import pl.kamilprzenioslo.muzykant.controllers.mappings.RestMappings;
 import pl.kamilprzenioslo.muzykant.dtos.RegularUser;
 import pl.kamilprzenioslo.muzykant.persistance.entities.RegularUserEntity;
 import pl.kamilprzenioslo.muzykant.security.UserAuthority;

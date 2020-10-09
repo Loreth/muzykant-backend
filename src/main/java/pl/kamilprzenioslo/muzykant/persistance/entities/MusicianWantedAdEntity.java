@@ -1,11 +1,8 @@
 package pl.kamilprzenioslo.muzykant.persistance.entities;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import lombok.Getter;
@@ -30,8 +27,4 @@ public class MusicianWantedAdEntity extends AdEntity {
 
   @Column(name = "max_age")
   private Short maxAge;
-
-  @ManyToOne(cascade = CascadeType.ALL)
-  @JoinColumn(name = "vocal_range_id")
-  private VocalRangeEntity vocalRange;
 }

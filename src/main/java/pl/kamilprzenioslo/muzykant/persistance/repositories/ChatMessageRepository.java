@@ -1,18 +1,20 @@
 package pl.kamilprzenioslo.muzykant.persistance.repositories;
 
 import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.QueryByExampleExecutor;
 import pl.kamilprzenioslo.muzykant.persistance.entities.ChatMessageEntity;
 
 public interface ChatMessageRepository
-    extends JpaRepository<ChatMessageEntity, Long>, JpaSpecificationExecutor<ChatMessageEntity> {
+    extends JpaRepository<ChatMessageEntity, Long>, JpaSpecificationExecutor<ChatMessageEntity>,
+    QueryByExampleExecutor<ChatMessageEntity> {
 
   @Query(value = """
-  SELECT
-      id, sender_user_profile_id, recipient_user_profile_id, content, sent_at
+  SELECT um_with_rank.*
   FROM (
     SELECT cm.*,
     ROW_NUMBER() OVER (PARTITION BY least(cm.sender_user_profile_id, cm.recipient_user_profile_id), greatest(cm.sender_user_profile_id, cm.recipient_user_profile_id)
@@ -24,7 +26,6 @@ public interface ChatMessageRepository
   """, nativeQuery = true)
   List<ChatMessageEntity> getLastMessageFromEachConversation(int userId);
 
-  @Modifying(flushAutomatically = true, clearAutomatically = true)
-  @Query("UPDATE ChatMessageEntity cm set cm.seen = true WHERE cm.sender.id = ?1 AND cm.recipient.id =?2")
-  void markMessagesAsSeenByRecipient(int senderId, int recipientId);
+  @Query("SELECT cm FROM ChatMessageEntity cm WHERE cm.seen = false AND cm.sender.id = ?1 AND cm.recipient.id = ?2")
+  List<ChatMessageEntity> getUnseenMessagesFromTo(int senderId, int recipientId);
 }
