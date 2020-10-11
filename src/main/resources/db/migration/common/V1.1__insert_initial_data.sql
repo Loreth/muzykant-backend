@@ -131,7 +131,8 @@ VALUES (1, 'Akordeon'),
        (62, 'Flażolet'),
        (63, 'Fletnia Pana'),
        (64, 'Okaryna'),
-       (65, 'Szałamaja');
+       (65, 'Szałamaja'),
+       (66, 'Kazoo');
 
 INSERT INTO Authority(id, name)
 VALUES (1, 'ROLE_MUSICIAN'),
