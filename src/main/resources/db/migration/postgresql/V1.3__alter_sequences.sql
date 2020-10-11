@@ -1,7 +1,7 @@
 ALTER SEQUENCE voivodeship_id_seq restart with 17;
 ALTER SEQUENCE person_id_seq restart with 9;
 ALTER SEQUENCE genre_id_seq restart with 39;
-ALTER SEQUENCE instrument_id_seq restart with 49;
+ALTER SEQUENCE instrument_id_seq restart with 67;
 ALTER SEQUENCE authority_id_seq restart with 4;
 ALTER SEQUENCE user_profile_id_seq restart with 12;
 ALTER SEQUENCE credentials_id_seq restart with 16;
