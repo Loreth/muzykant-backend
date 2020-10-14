@@ -1,7 +1,7 @@
 # RESTful Backend for Engineering Thesis - Muzykant  
 ## Web application supporting musicians’ environment integration and unification of musical classified ads market in Poland
 
-![website preview image](https://raw.githubusercontent.com/Loreth/muzykant-frontend/gh-pages/main-view.png)
+![website preview image](https://raw.githubusercontent.com/Loreth/muzykant-frontend/master/main-view.png)
 
 Technologies and tools used:
 - Java 15
