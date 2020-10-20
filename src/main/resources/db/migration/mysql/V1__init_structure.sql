@@ -41,7 +41,7 @@ CREATE TABLE User_profile
     user_type          varchar(30) NOT NULL,
     link_name          varchar(30) NOT NULL UNIQUE,
     description        varchar(1000),
-    phone              varchar(60),
+    phone              varchar(9),
     city               varchar(60),
     voivodeship_id     int         NOT NULL,
     profile_image_link varchar(1000),

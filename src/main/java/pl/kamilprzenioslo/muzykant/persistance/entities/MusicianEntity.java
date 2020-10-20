@@ -2,6 +2,7 @@ package pl.kamilprzenioslo.muzykant.persistance.entities;
 
 import java.util.Set;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -29,6 +30,7 @@ public class MusicianEntity extends UserEntity {
   private PersonEntity person;
 
   @OneToMany(mappedBy = "musician", fetch = FetchType.LAZY)
+  @Column(insertable = false, updatable = false)
   private Set<EquipmentEntity> equipment;
 
   @Override

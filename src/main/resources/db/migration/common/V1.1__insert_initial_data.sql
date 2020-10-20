@@ -365,9 +365,9 @@ VALUES (2, 7),
        (8, 36);
 
 INSERT INTO Equipment(id, name, musician_user_id)
-VALUES (1, 'Marshall DSL40', 2),
-       (2, 'Vox AC30', 2),
-       (3, 'Shure SM47 x2', 2),
+VALUES (1, 'Marshall DSL40', 3),
+       (2, 'Vox AC30', 3),
+       (3, 'Shure SM47 x2', 3),
        (4, 'Yamaha PSR-EW410 (keyboard)', 4);
 
 INSERT INTO Social_media_links(user_profile_id, youtube, soundcloud, webpage, version)

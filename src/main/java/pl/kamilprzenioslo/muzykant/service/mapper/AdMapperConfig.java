@@ -23,6 +23,7 @@ public interface AdMapperConfig extends BaseMapper<Ad, AdEntity> {
   @Mapping(target = "userType", source = "user.userType")
   @Mapping(target = "userDisplayName", source = "user.displayName")
   @Mapping(target = "userGenres", source = "user.genres")
+  @Mapping(target = "userPhone", source = "user.phone")
   @Override
   Ad mapToDto(AdEntity entity);
 
