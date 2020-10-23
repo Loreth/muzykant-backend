@@ -3,6 +3,8 @@
 
 ![website preview image](https://raw.githubusercontent.com/Loreth/muzykant-frontend/master/main-view.png)
 
+[Video rapidly presenting majority of developed functionalities](https://www.youtube.com/watch?v=01drH3ga0BU)
+
 Technologies and tools used:
 - Java 15
 - Spring Boot
