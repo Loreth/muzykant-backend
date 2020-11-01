@@ -14,11 +14,9 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 import org.springframework.messaging.support.MessageHeaderAccessor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
-import pl.kamilprzenioslo.muzykant.security.JwtUtils;
-import pl.kamilprzenioslo.muzykant.service.CredentialsService;
+import pl.kamilprzenioslo.muzykant.security.AuthenticationTokenProvider;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -27,8 +25,7 @@ import pl.kamilprzenioslo.muzykant.service.CredentialsService;
 @Order(Ordered.HIGHEST_PRECEDENCE + 99)
 public class WebSocketAuthenticationConfig implements WebSocketMessageBrokerConfigurer {
 
-  private final JwtUtils jwtUtils;
-  private final CredentialsService credentialsService;
+  private final AuthenticationTokenProvider authenticationTokenProvider;
 
   @Override
   public void configureClientInboundChannel(ChannelRegistration registration) {
@@ -45,25 +42,11 @@ public class WebSocketAuthenticationConfig implements WebSocketMessageBrokerConf
                   "Authenticating CONNECT web socket message with header: {}", authorizationHeader);
 
               UsernamePasswordAuthenticationToken authentication =
-                  getAuthentication(authorizationHeader);
+                  authenticationTokenProvider.getAuthentication(authorizationHeader);
               accessor.setUser(authentication);
             }
             return message;
           }
         });
-  }
-
-  private UsernamePasswordAuthenticationToken getAuthentication(String authorizationHeader) {
-    String token = jwtUtils.parseJwtHeader(authorizationHeader);
-
-    if (token != null) {
-      jwtUtils.validateToken(token);
-      String username = jwtUtils.getUsernameFromToken(token);
-      UserDetails userDetails = credentialsService.loadUserByUsername(username);
-      return new UsernamePasswordAuthenticationToken(
-          userDetails, userDetails.getPassword(), userDetails.getAuthorities());
-    }
-
-    return null;
   }
 }

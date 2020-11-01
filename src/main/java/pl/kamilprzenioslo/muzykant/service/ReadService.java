@@ -14,6 +14,4 @@ public interface ReadService<T, ID> {
   boolean existsById(ID id);
 
   Optional<T> findById(ID id);
-
-  long count();
 }

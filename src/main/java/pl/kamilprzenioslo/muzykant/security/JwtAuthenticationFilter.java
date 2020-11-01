@@ -45,7 +45,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     try {
       LoginRequest loginRequest =
           objectMapper.readValue(request.getInputStream(), LoginRequest.class);
-
       UserDetails credentials = credentialsService.loadUserByUsername(loginRequest.getUsername());
 
       return authenticationManager.authenticate(

@@ -1,10 +1,10 @@
 ALTER SEQUENCE voivodeship_id_seq restart with 17;
 ALTER SEQUENCE person_id_seq restart with 9;
-ALTER SEQUENCE genre_id_seq restart with 39;
+ALTER SEQUENCE genre_id_seq restart with 40;
 ALTER SEQUENCE instrument_id_seq restart with 67;
 ALTER SEQUENCE authority_id_seq restart with 4;
 ALTER SEQUENCE user_profile_id_seq restart with 12;
 ALTER SEQUENCE credentials_id_seq restart with 16;
 ALTER SEQUENCE ad_id_seq restart with 12;
 ALTER SEQUENCE equipment_id_seq restart with 5;
-ALTER SEQUENCE chat_message_id_seq restart with 9;
+ALTER SEQUENCE chat_message_id_seq restart with 10;

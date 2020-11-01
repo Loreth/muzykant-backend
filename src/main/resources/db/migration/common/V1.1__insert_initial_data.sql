@@ -22,7 +22,7 @@ VALUES (1, 'Adam', 'Dąbek', 'Adi', 'M', '1997-02-03'),
        (3, 'Andrzej', 'Zalewski', 'Grajek', 'M', '1985-11-12'),
        (4, 'Joanna', 'Wieczorowska', null, 'F', '1990-08-15'),
        (5, 'Wiktoria', 'Dobrzyńska', 'Wiki', 'F', '2000-01-02'),
-       (6, 'Dorota', 'Kozera', null, 'F', '1950-02-16'),
+       (6, 'Dorota', 'Kozera', null, 'F', '1961-02-16'),
        (7, 'Adam', 'Kowalski', 'Adamkowski', 'M', '1941-06-23'),
        (8, 'Damian', 'Niedzielski', 'Klub Nietota', 'M', '1980-12-05');
 
@@ -64,7 +64,8 @@ VALUES (1, 'Pop'),
        (35, 'Muzyka weselna'),
        (36, 'Punk Rock'),
        (37, 'Math Rock'),
-       (38, 'Jazz');
+       (38, 'Jazz'),
+       (39, 'Symfonia');
 
 INSERT INTO Instrument(id, name)
 VALUES (1, 'Akordeon'),
@@ -157,7 +158,7 @@ Where the grass is green and the girls are pretty 😎🤘', '182543765', 'Katow
        (7, 'BAND', 'muzykanci', null, '123123123', 'Wrocław', 1),
        (8, 'BAND', 'zagubieni', 'Zagubieni w czasie. Zagubieni w muzyce.', '884231523', 'Warszawa',
         7),
-       (9, 'MUSICIAN', 'cool', null, null, 'Wrocław', 1),
+       (9, 'MUSICIAN', 'dkozera', null, null, 'Wrocław', 1),
        (10, 'MUSICIAN', 'kingkong', null, null, 'Sosnowiec', 12),
        (11, 'REGULAR', 'klub_nietota', 'Klub Nietota', '876421423', 'Wrocław', 1);
 
@@ -216,8 +217,12 @@ VALUES (1, 1),
        (11, 8);
 
 INSERT INTO Ad(id, ad_type, published_date, location, description, commercial, user_profile_id)
-VALUES (1, 'BAND_WANTED', '2020-07-19', 'Wrocław', null, false, 1),
-       (2, 'BAND_WANTED', '2020-08-10', 'Radwanice', null, true, 1),
+VALUES (1, 'BAND_WANTED', '2020-07-19', 'Wrocław',
+        'Szukam zespołu na wesele odbywające się w 3 kwartale przyszłego roku, bardzo proszę wszystkich zainteresowanych o kontakt!',
+        true, 1),
+       (2, 'BAND_WANTED', '2020-08-10', 'Wrocław, Kraków',
+        'Jestem doświadczoną wiolonczelistką, poszukuję orkiestry, do której mogłabym dołączyć',
+        false, 9),
        (3, 'MUSICIAN_WANTED', '2020-07-04', 'Wrocław', 'Zapraszam do wspólnej gry :)', false, 2),
        (4, 'MUSICIAN_WANTED', '2020-08-15', 'Warszawa i okolice',
         'Szukam perkusisty do małej serii klubowych koncertów w duecie.', true, 3),
@@ -227,8 +232,8 @@ VALUES (1, 'BAND_WANTED', '2020-07-19', 'Wrocław', null, false, 1),
        (6, 'MUSICIAN_WANTED', '2020-08-02', 'Katowice', null, false, 5),
        (7, 'MUSICIAN_WANTED', '2020-08-23', 'Wrocław',
         'Poszukiwany wokalista do nagrania okazjonalnych wstawek w naszych piosenkach', false, 6),
-       (8, 'JAM_SESSION', '2020-06-08', 'Radwanice',
-        'Ostrzegam, nie jestem najlepszy (głównie pentatonika), ale szybko się uczę :). Ktoś chętny na wspólny jam?',
+       (8, 'JAM_SESSION', '2020-06-08', 'Katowice, Sosnowiec',
+        'Ostrzegam, nie jestem najlepsza, ale szybko się uczę :). Czy ktoś bardziej doświadczony nie chciałby ze mną trochę pojamować i dać przy okazji parę wskazówek?',
         false, 5),
        (9, 'JAM_SESSION', '2020-07-23', 'Radwanice/Wrocław',
         'Mam studio (perkusja, bas, gitary, dużo ampów i wiele więcej - chętnie użyczę), można razem pobrzdąkać do woli',
@@ -271,27 +276,29 @@ VALUES (1, 1),
        (11, 7);
 
 INSERT INTO Ad_preferred_genre(ad_id, genre_id)
-VALUES (1, 12),
-       (1, 23),
-       (2, 5),
-       (2, 8),
+VALUES (1, 35),
+       (1, 4),
+       (1, 19),
+       (2, 39),
+       (2, 17),
        (4, 24),
        (4, 3),
        (5, 3),
        (5, 36),
        (5, 24),
        (5, 10),
-       (8, 35),
-       (8, 4),
+       (8, 15),
        (8, 3),
-       (9, 35),
+       (9, 3),
+       (9, 8),
+       (9, 10),
+       (9, 24),
+       (9, 11),
        (11, 13),
        (11, 14);
 
 INSERT INTO Ad_preferred_instrument(ad_id, instrument_id)
-VALUES (1, 5),
-       (1, 34),
-       (1, 15),
+VALUES (2, 42),
        (4, 28),
        (5, 45),
        (5, 46),
@@ -300,7 +307,9 @@ VALUES (1, 5),
        (6, 33),
        (7, 43),
        (7, 44),
-       (8, 7),
+       (8, 45),
+       (8, 4),
+       (8, 28),
        (11, 31),
        (11, 41),
        (11, 17),
@@ -335,7 +344,9 @@ VALUES (2, 1),
        (8, 14),
        (8, 25),
        (8, 26),
-       (8, 27);
+       (8, 27),
+       (9, 17),
+       (9, 39);
 
 INSERT INTO User_instrument(user_profile_id, instrument_id)
 VALUES (2, 7),
@@ -362,7 +373,8 @@ VALUES (2, 7),
        (8, 24),
        (8, 25),
        (8, 26),
-       (8, 36);
+       (8, 36),
+       (9, 42);
 
 INSERT INTO Equipment(id, name, musician_user_id)
 VALUES (1, 'Marshall DSL40', 3),
@@ -388,4 +400,5 @@ VALUES (1, 1, 8, 'Dzień dobry. Zaintrygowała mnie państwa muzyka', '2020-09-2
         '2020-09-21 13:34:47', false),
        (7, 1, 6, 'Czy byliby państwo zainteresowani zagraniem na ślubie?', '2020-09-17 22:02:14',
         true),
-       (8, 6, 1, 'Przykro mi, ale nie jesteśmy zainteresowani', '2020-09-20 07:05:06', false);
+       (8, 6, 1, 'Przykro mi, ale nie jesteśmy zainteresowani', '2020-09-20 07:05:06', false),
+       (9, 8, 3, 'Ooo, Ty też tutaj? Co tam u Ciebie słychać Andrzej?', '2020-10-14 16:33:03', false);

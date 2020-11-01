@@ -10,26 +10,21 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
-  private final JwtUtils jwtUtils;
-  private final UserDetailsService userDetailsService;
+  private final AuthenticationTokenProvider authenticationTokenProvider;
   private final HandlerExceptionResolver handlerExceptionResolver;
 
   public JwtAuthorizationFilter(
       AuthenticationManager authManager,
-      JwtUtils jwtUtils,
-      UserDetailsService userDetailsService,
+      AuthenticationTokenProvider authenticationTokenProvider,
       HandlerExceptionResolver handlerExceptionResolver) {
     super(authManager);
-    this.jwtUtils = jwtUtils;
-    this.userDetailsService = userDetailsService;
+    this.authenticationTokenProvider = authenticationTokenProvider;
     this.handlerExceptionResolver = handlerExceptionResolver;
   }
 
@@ -40,25 +35,12 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
     String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
     try {
-      UsernamePasswordAuthenticationToken authentication = getAuthentication(authorizationHeader);
+      UsernamePasswordAuthenticationToken authentication =
+          authenticationTokenProvider.getAuthentication(authorizationHeader);
       SecurityContextHolder.getContext().setAuthentication(authentication);
       chain.doFilter(request, response);
     } catch (UsernameNotFoundException | JwtException ex) {
       handlerExceptionResolver.resolveException(request, response, null, ex);
     }
-  }
-
-  private UsernamePasswordAuthenticationToken getAuthentication(String authorizationHeader) {
-    String token = jwtUtils.parseJwtHeader(authorizationHeader);
-
-    if (token != null) {
-      jwtUtils.validateToken(token);
-      String username = jwtUtils.getUsernameFromToken(token);
-      UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-      return new UsernamePasswordAuthenticationToken(
-          userDetails, userDetails.getPassword(), userDetails.getAuthorities());
-    }
-
-    return null;
   }
 }

@@ -31,9 +31,4 @@ public abstract class BaseCrudService<
   public void deleteById(ID id) {
     repository.deleteById(id);
   }
-
-  @Override
-  public void deleteAll() {
-    repository.deleteAll();
-  }
 }

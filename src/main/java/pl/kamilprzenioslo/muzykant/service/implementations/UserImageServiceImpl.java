@@ -37,11 +37,6 @@ public class UserImageServiceImpl
   }
 
   @Override
-  public List<UserImage> findByUserId(int userId) {
-    return mapper.mapToDtoList(repository.findByUser_Id(userId));
-  }
-
-  @Override
   public UserImage saveImage(MultipartFile image, int userId, int orderIndex) {
     return super.save(storeImage(image, userId, orderIndex, false));
   }

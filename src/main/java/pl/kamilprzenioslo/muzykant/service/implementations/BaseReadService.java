@@ -49,9 +49,4 @@ public abstract class BaseReadService<
 
     return entityOptional.map(mapper::mapToDto);
   }
-
-  @Override
-  public long count() {
-    return repository.count();
-  }
 }
