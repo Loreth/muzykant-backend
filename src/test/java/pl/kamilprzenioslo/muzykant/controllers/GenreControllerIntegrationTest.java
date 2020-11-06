@@ -118,7 +118,7 @@ class GenreControllerIntegrationTest {
   @Test
   void shouldReturnAllExistingResourcesPagedProperly() throws IOException {
     URI requestUri =
-        UriComponentsBuilder.fromHttpUrl(RESOURCE_LINK + "/search")
+        UriComponentsBuilder.fromHttpUrl(RESOURCE_LINK)
             .queryParam("size", 20)
             .build()
             .encode()

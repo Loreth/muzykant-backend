@@ -41,7 +41,7 @@ import pl.kamilprzenioslo.muzykant.dtos.UserImage;
 @Import(TestSecurityConfiguration.class)
 @FlywayTestExtension
 @FlywayTest
-@SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
+@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
 class UserImageControllerIntegrationTest {
 
   @Autowired private TestRestTemplate restTemplate;
@@ -221,7 +221,7 @@ class UserImageControllerIntegrationTest {
     String createdImageLink = responseEntity.getBody().getLink();
 
     assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
-    assertEquals(createdImageLink.substring(0, createdImageLink.indexOf("_")), RESOURCE_LINK + "/image-uploads/2");
+    assertEquals(RESOURCE_LINK + "/image-uploads/2", createdImageLink.substring(0, createdImageLink.indexOf("_")));
     Stream<Path> pathStream = Files
         .find(Path.of("./test-uploads"), 1, (path, file) -> path.getFileName().toString().startsWith("2_"));
 

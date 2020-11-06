@@ -16,16 +16,17 @@ import pl.kamilprzenioslo.muzykant.service.MailService;
 public class MailServiceImpl implements MailService {
 
   private static final String CONFIRM_MAIL_SUBJECT = "Potwierdź rejestrację";
-  private static final String MAIL_FROM = "muzykant.thesis@gmail.com";
+  private final String mailFromUsername;
   private final String mailConfirmationUrl;
   private final String confirmMailContent;
-
   private final JavaMailSender mailSender;
 
   public MailServiceImpl(
+      @Value("${spring.mail.username}") String mailFromUsername,
       JavaMailSender mailSender,
       @Value("${app.emailConfirmationTokenExpirationH}") int emailConfirmationTokenExpirationH,
       @Value("${app.mailConfirmationUrl}") String mailConfirmationUrl) {
+    this.mailFromUsername = mailFromUsername;
     this.mailSender = mailSender;
     this.mailConfirmationUrl = mailConfirmationUrl;
 
@@ -45,7 +46,7 @@ public class MailServiceImpl implements MailService {
     MimeMessage mimeMessage = mailSender.createMimeMessage();
     MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
     try {
-      mimeMessageHelper.setFrom(new InternetAddress(MAIL_FROM, "Muzykant"));
+      mimeMessageHelper.setFrom(new InternetAddress(mailFromUsername, "Muzykant"));
     } catch (UnsupportedEncodingException e) {
       e.printStackTrace();
     }

@@ -152,7 +152,7 @@ class MusicianControllerIntegrationTest {
 
     Musician existingResourceDto = initialResponse.getBody();
     existingResourceDto.setCity("new city");
-    existingResourceDto.setPhone("new phone 123456789");
+    existingResourceDto.setPhone("123456789");
     Instrument newInstrument = new Instrument();
     newInstrument.setId(24);
     existingResourceDto.getInstruments().add(newInstrument);

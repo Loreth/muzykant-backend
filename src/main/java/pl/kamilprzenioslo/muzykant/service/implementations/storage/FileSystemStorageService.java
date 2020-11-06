@@ -83,8 +83,10 @@ public class FileSystemStorageService implements StorageService {
     String[] foundFiles =
         rootLocation.toFile().list((dir, name) -> name.startsWith(filenameWithoutExtension));
 
-    for (String filename : foundFiles) {
-      delete(filename);
+    if (foundFiles != null) {
+      for (String filename : foundFiles) {
+        delete(filename);
+      }
     }
   }
 

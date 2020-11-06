@@ -152,7 +152,7 @@ class BandControllerIntegrationTest {
 
     Band existingResourceDto = initialResponse.getBody();
     existingResourceDto.setCity("new city");
-    existingResourceDto.setPhone("new phone 123456789");
+    existingResourceDto.setPhone("123456789");
     Genre newGenre = new Genre();
     newGenre.setId(10);
     existingResourceDto.getGenres().add(newGenre);
