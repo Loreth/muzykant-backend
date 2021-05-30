@@ -45,17 +45,17 @@ class CredentialsControllerTest {
   @FlywayTest
   @Test
   void shouldSignUpCorrectlyAndReturnOkStatus() {
-    SignUpRequest signUpRequest = new SignUpRequest("testmail@somesite.com", "3testpass3");
+    SignUpRequest signUpRequest = new SignUpRequest("testmail@example.com", "3testpass3");
     LocalDateTime justBeforeRequestDateTime = LocalDateTime.now();
 
     ResponseEntity<String> responseEntity =
         restTemplate.postForEntity(SERVER_URL + "/sign-up", signUpRequest, String.class);
 
     CredentialsEntity credentials =
-        credentialsRepository.findByEmailIgnoreCase("testmail@somesite.com").orElseThrow();
+        credentialsRepository.findByEmailIgnoreCase("testmail@example.com").orElseThrow();
 
     assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-    assertEquals("testmail@somesite.com", credentials.getEmail());
+    assertEquals("testmail@example.com", credentials.getEmail());
     assertTrue(new BCryptPasswordEncoder().matches("3testpass3", credentials.getPassword()));
     assertNotNull(credentials.getEmailConfirmation().getToken());
     assertTrue(
