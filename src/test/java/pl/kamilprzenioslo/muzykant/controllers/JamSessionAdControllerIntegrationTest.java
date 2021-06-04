@@ -18,7 +18,6 @@ import java.util.Objects;
 import java.util.Set;
 import org.flywaydb.test.annotation.FlywayTest;
 import org.flywaydb.test.junit5.annotation.FlywayTestExtension;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -52,7 +51,6 @@ class JamSessionAdControllerIntegrationTest {
     RESOURCE_LINK = "http://localhost:" + port + "/jam-session-ads";
   }
 
-  @Disabled
   @FlywayTest
   @Test
   void shouldReturnAllWithGivenParameters() throws IOException {
@@ -72,7 +70,7 @@ class JamSessionAdControllerIntegrationTest {
     ObjectReader listReader = objectMapper.readerFor(new TypeReference<List<JamSessionAd>>() {});
     List<JamSessionAd> responseAdList = listReader.readValue(jsonResponseBody.get("content"));
 
-    assertThat(responseAdList.stream().map(JamSessionAd::getId)).hasSize(1);
+    assertThat(responseAdList).hasSize(1);
   }
 
   @FlywayTest
