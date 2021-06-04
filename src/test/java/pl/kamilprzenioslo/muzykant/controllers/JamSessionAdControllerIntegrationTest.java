@@ -19,6 +19,7 @@ import java.util.Set;
 import org.flywaydb.test.annotation.FlywayTest;
 import org.flywaydb.test.junit5.annotation.FlywayTestExtension;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
@@ -51,6 +52,7 @@ class JamSessionAdControllerIntegrationTest {
     RESOURCE_LINK = "http://localhost:" + port + "/jam-session-ads";
   }
 
+  @DisabledIfEnvironmentVariable(named = "CIRCLE_CI_BUILD", matches = "true")
   @FlywayTest
   @Test
   void shouldReturnAllWithGivenParameters() throws IOException {
